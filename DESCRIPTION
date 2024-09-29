@@ -12,7 +12,7 @@ LazyData: true
 RoxygenNote: 7.3.2
 Depends:
   R (>= 4.3.1),
-  BiocManager
+  BiocManager (>= 1.30.23)
 biocViews:
 Imports: 
   shiny,
@@ -34,6 +34,8 @@ Imports:
   hdf5r,
   glmnet (>= 4.1.8),
   caret (>= 6.0.94)
+Remotes:
+  beauchamplab/raveio
 Collate: 
     'utilities.R'
     'Estimation.R'
