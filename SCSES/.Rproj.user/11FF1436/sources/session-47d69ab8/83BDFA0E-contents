@@ -1,0 +1,331 @@
+#------------------------
+#     FigS3 t-cell
+#------------------------
+rm(list = ls())
+# library(SeuratDisk)
+library(Seurat)
+library(plot1cell)
+setwd("/disk/lvxuan/pitnet/")
+seuratObject <- readRDS(file = "/share/huangyue/pitnets_seuratObject_Final.rds")
+seuratObject <- SetIdent(seuratObject, value = "newleiden3")
+table(seuratObject@meta.data$sampleID)
+table(seuratObject@meta.data$newleiden3)
+head(seuratObject@meta.data)
+dim(seuratObject)
+meta_new=read.table('metadata0909_newleiden.tsv')
+###############T cell sub clustering ###############
+seuratObject_t=subset(seuratObject,newleiden3=="Tcell")
+seuratObject_t=NormalizeData(seuratObject_t)
+seuratObject_t <- FindVariableFeatures(seuratObject_t,
+                                       selection.method = "vst",
+                                 nfeatures = 2000)
+seuratObject_t <- ScaleData(seuratObject_t, features = rownames(seuratObject_t))
+seuratObject_t <- RunPCA(seuratObject_t, features = VariableFeatures(seuratObject_t),
+                         npcs = 100)
+n_components=30
+seuratObject_t <- RunUMAP(seuratObject_t,dims = 1:n_components,
+                    metric="euclidean",reduction = "pca",
+                    n.neighbors = 30)
+#cluster
+seuratObject_t <- FindNeighbors(seuratObject_t, reduction="pca",
+                          dims = 1:n_components,
+                          k.param=30)
+seuratObject_t <- FindClusters(seuratObject_t, resolution = 0.3,algorithm=4)
+
+p1=DimPlot(seuratObject_t, reduction = "umap", label = TRUE, repel = TRUE,combine = TRUE)+
+  theme(legend.position = "none",
+        plot.title = element_text(hjust = 0.5,size = 20),
+        axis.text = element_text(size = 14))+ggtitle("Clustering")
+p2=DimPlot(seuratObject_t, reduction = "umap", group.by = "sampleID",label = F, repel = TRUE,combine = TRUE)+
+  theme(legend.position = "none",
+        plot.title = element_text(hjust = 0.5,size = 20),
+        axis.text = element_text(size = 14))+ggtitle("sampleID")
+p3=DimPlot(seuratObject_t, reduction = "umap", group.by = "Subtype",label = F, repel = TRUE,combine = TRUE)+
+  theme(legend.position = "none",
+        plot.title = element_text(hjust = 0.5,size = 20),
+        axis.text = element_text(size = 14))+ggtitle("Subtype")
+p4=DimPlot(seuratObject_t, reduction = "umap", group.by = "Pathological",label = F, repel = TRUE,combine = TRUE)+
+  theme(legend.position = "none",
+        plot.title = element_text(hjust = 0.5,size = 20),
+        axis.text = element_text(size = 14))+ggtitle("Pathological")
+(p1|p2)/(p3|p4)
+
+df_sample=table(seuratObject_t$seurat_clusters,seuratObject_t$sampleID)
+df_sample=df_sample/rowSums(df_sample)
+df_sample=melt(df_sample)
+df_sample$Var1=as.character(df_sample$Var1)
+p_sample_bar1=ggplot(data=df_sample,aes(Var1,value,fill=Var2))+
+  geom_bar(stat="identity",position="stack", color="black",
+           width=0.5,linewidth=base_line)+
+  guides(fill=guide_legend(title = ""))+
+  ylab("Proportion")+
+  xlab("")+
+  basic_theme
+df_sample=table(seuratObject_t$seurat_clusters,seuratObject_t$Subtype)
+df_sample=df_sample/rowSums(df_sample)
+df_sample=melt(df_sample)
+df_sample$Var1=as.character(df_sample$Var1)
+p_sample_bar2=ggplot(data=df_sample,aes(Var1,value,fill=Var2))+
+  geom_bar(stat="identity",position="stack", color="black",
+           width=0.5,linewidth=base_line)+
+  guides(fill=guide_legend(title = ""))+
+  ylab("Proportion")+
+  xlab("")+
+  basic_theme
+df_sample=table(seuratObject_t$seurat_clusters,seuratObject_t$Pathological)
+df_sample=df_sample/rowSums(df_sample)
+df_sample=melt(df_sample)
+df_sample$Var1=as.character(df_sample$Var1)
+p_sample_bar3=ggplot(data=df_sample,aes(Var1,value,fill=Var2))+
+  geom_bar(stat="identity",position="stack", color="black",
+           width=0.5,linewidth=base_line)+
+  guides(fill=guide_legend(title = ""))+
+  ylab("Proportion")+
+  xlab("")+
+  basic_theme
+p_sample_bar1|p_sample_bar2|p_sample_bar3
+
+###############T cell silhouette###############
+library(cluster)
+library(reticulate)
+library(clusterSim)
+library(lisi)
+ad <- import("anndata")
+data_h5 <- ad$read_h5ad("/disk/huangy/xtdisk/08_pituitary/06_scRNA/01_scanpy/20230926_6wf/Pituitary_scanpy_pc40_nb06_res08_out0927.h5ad")
+X=data_h5$obsm['X_pca']
+X=X[,1:40]
+rownames(X)=row.names(data_h5$obs)
+X=X[colnames(seuratObject_t),]
+cell_dist=dist(X)
+cell_dist=as.matrix(cell_dist)
+
+seuratObject_t$Pathological2=seuratObject_t$Pathological
+seuratObject_t$Pathological2[which(seuratObject_t$Pathological2=="PG")]="PRL"
+sil_sample=lapply(c("GH","Normal","PRL","SCA","TSH","GO"), function(x){
+# sil_sample=lapply(c("PIT1","TPIT"), function(x){
+  df=seuratObject_t@meta.data[which(seuratObject_t@meta.data$Pathological==x),]
+  # df=seuratObject_t@meta.data[which(seuratObject_t@meta.data$Subtype==x),]
+  ##sample to the same cell number
+  # t=table(df$sampleID)
+  # t=t[which(t!=0)]
+  # num_min=t[which.min(t)]
+  # sample_select=lapply(names(t),function(x){
+  #   cell_id_t=row.names(df)[which(df$sampleID==x)]
+  #   sample(x = cell_id_t,size = num_min)
+  # })
+  # sample_select=unlist(sample_select)
+  # df=df[sample_select,]
+  # cell_select_idx_tmp=match(row.names(df),cell_name)
+  # cell_dist=data_h5$obsp['distances']
+  cell_dist_tmp=cell_dist[row.names(df),row.names(df)]
+  sampleID=as.numeric(df$sampleID)
+  sil_sample=silhouette(sampleID,cell_dist_tmp)
+  sil_sample=as.data.frame(sil_sample)
+  name_match=data.frame(name1=levels(df$sampleID),
+                        name2=1:18)
+  sil_sample$cluster2=name_match$name1[match(sil_sample$cluster,name_match$name2)]
+  sil_sample$Pathological=x
+  sil_sample$cell_id=row.names(df)
+  # sil_sample$Subtype=x
+  return(sil_sample)
+})
+sil_sample=do.call(what = rbind,args = sil_sample)
+
+seuratObject_t$sil_sample=sil_sample$sil_width[match(row.names(seuratObject_t@meta.data),
+                                                     sil_sample$cell_id)]
+FeaturePlot(seuratObject_t,
+            cells = names(seuratObject_t$sampleID)[which(seuratObject_t$sampleID=="P13")],
+            features = "sil_sample",cols = c("gray","red"),
+            order = T)
+DimPlot(seuratObject_t,
+        cells = names(seuratObject_t$sampleID)[which(seuratObject_t$sampleID%in%c("P02","P07"))],
+        group.by = "sampleID")
+
+write.table(sil_sample,'/disk/lvxuan/pitnet/Tcell_sil_sample_per_Pathological.txt',sep="\t",
+            quote=F,row.names = F)
+# write.table(sil_sample,'/disk/lvxuan/pitnet/Tcell_sil_sample_per_Subtype.txt',sep="\t",
+#             quote=F,row.names = F)
+ggplot(sil_sample,mapping = aes(x = cluster2,y=sil_width))+
+  geom_boxplot()
+
+sampleID=as.numeric(seuratObject_t$sampleID)
+sil_sample=silhouette(sampleID,cell_dist)
+sil_sample=as.data.frame(sil_sample)
+name_match=data.frame(name1=levels(seuratObject_t$sampleID),
+                      name2=1:18)
+sil_sample$cluster2=name_match$name1[match(sil_sample$cluster,name_match$name2)]
+write.table(sil_sample,'/disk/lvxuan/pitnet/Tcell_sil_sample.txt',sep="\t",
+            quote=F,row.names = F)
+
+
+sil_sample=aggregate(sil_sample$sil_width,by=list(sil_sample$cluster),mean)
+sil_sample$Group=levels(seuratObject_t$sampleID)[-which(levels(seuratObject_t$sampleID)%in%c("P08","P09"))]
+sil_sample$type="sampleID"
+
+lisi_res <- compute_lisi(X, seuratObject_t@meta.data[,c("sampleID","Subtype","Pathological")],
+                    c("sampleID","Subtype","Pathological"),perplexity = 100)
+colnames(lisi_res)=paste0("lisi_",colnames(lisi_res))
+lisi_res <- cbind(lisi_res,seuratObject_t@meta.data[row.names(lisi_res),c("sampleID","Subtype","Pathological")])
+write.table(lisi_res,'/disk/lvxuan/pitnet/Tcell_lisi_all_100.txt',sep="\t",quote=F)
+
+table(seuratObject_t@meta.data$sampleID,seuratObject_t@meta.data$Pathological)
+lisi_res2=lapply(c("GH","Normal","PRL","SCA","TSH"), function(x){
+  df=seuratObject_t@meta.data[which(seuratObject_t@meta.data$Pathological==x),]
+  df_num=as.data.frame(table(df$sampleID))
+  df_num=df_num[which(df_num$Freq!=0),]
+  select_num=min(df_num$Freq)
+  select_cell=lapply(df_num$Var1, function(xx){
+    sample(row.names(df)[which(df$sampleID==xx)],size = select_num,replace = F)
+  })
+  select_cell=unlist(select_cell)
+  m=X[select_cell,]
+  tmp <- compute_lisi(m, seuratObject_t@meta.data[select_cell,c("sampleID"),drop=F],
+                           c("sampleID"),perplexity = 20)
+  tmp$Pathological=x
+  tmp$Sample_N=length(unique(seuratObject_t@meta.data[id,c("sampleID")]))
+  tmp$Select_cell_num=select_num
+  return(tmp)
+})
+lisi_res2=do.call(what = rbind,args = lisi_res2)
+aggregate(lisi_res2$sampleID,by=list(lisi_res2$Pathological),quantile)
+write.table(lisi_res2,'/disk/lvxuan/pitnet/Tcell_lisi_per_Pathological_random.txt',sep="\t",quote=F)
+
+
+lisi_sample=aggregate(lisi_res$lisi_sampleID,by=list(lisi_res$sampleID),mean)
+lisi_sample$type="sampleID"
+lisi_Subtype=aggregate(lisi_res$lisi_Subtype,by=list(lisi_res$Subtype),mean)
+lisi_Subtype$type="Subtype"
+lisi_Pathological=aggregate(lisi_res$lisi_Pathological,by=list(lisi_res$Pathological),mean)
+lisi_Pathological$type="Pathological"
+lisi_res_mean=rbind(lisi_sample,lisi_Subtype,lisi_Pathological)
+colnames(lisi_res_mean)[1:2]=c("Group","Mean Local Inverse Simpson Index")
+openxlsx::write.xlsx(lisi_res_mean,'Tcell_lisi.xlsx')
+
+db_sample <- index.DB(cell_dist, sampleID)$r
+db_sample <- db_sample[-c(8,9)]
+db_sample <- data.frame("Davies-Bouldin index"=db_sample,
+                        Group=sil_sample$Group,type="sampleID")
+
+db_sample_random <- index.DB(cell_dist, sampleID_random_num)$r
+db_sample_random <- db_sample_random[-c(8,9)]
+db_sample_random <- data.frame("Davies-Bouldin index"=db_sample_random,
+                        Group=sil_sample$Group,type="sampleID_random")
+db_sample=rbind(db_sample,db_sample_random)
+
+random_idx=1:length(sampleID)
+sampleID_random=rep("P01",length(sampleID))
+num=as.numeric(table(seuratObject_t$sampleID))
+names(num)=names(table(seuratObject_t$sampleID))
+num=num[which(num!=0)]
+for (x in 1:length(num)) {
+  xx=sample(random_idx,size = num[x])
+  sampleID_random[xx]=names(num)[x]
+  random_idx=random_idx[-which(random_idx%in%xx)]
+  print(length(random_idx))
+}
+sampleID_random=factor(sampleID_random,levels = levels(seuratObject_t$sampleID))
+sampleID_random_num=as.numeric(sampleID_random)
+# sil_sample_random=silhouette(sampleID_random_num,cell_dist)
+# sil_sample_random=as.data.frame(sil_sample_random)
+# sil_sample_random=aggregate(sil_sample_random$sil_width,by=list(sil_sample_random$cluster),mean)
+# sil_sample_random$Group=levels(sampleID_random)[-which(levels(sampleID_random)%in%c("P08","P09"))]
+# sil_sample_random$type="sampleID"
+
+
+Subtype=as.numeric(seuratObject_t$Subtype)
+sil_Subtype=silhouette(Subtype,cell_dist)
+sil_Subtype=as.data.frame(sil_Subtype)
+sil_Subtype=aggregate(sil_Subtype$sil_width,by=list(sil_Subtype$cluster),mean)
+sil_Subtype$Group=levels(seuratObject_t$Subtype)
+sil_Subtype$type="Subtype"
+db_Subtype <- index.DB(cell_dist, Subtype)$r
+db_Subtype <- data.frame("Davies-Bouldin index"=db_Subtype,
+                        Group=sil_Subtype$Group,type="Subtype")
+random_idx=1:length(Subtype)
+Subtype_random=rep("NUl",length(Subtype))
+num=as.numeric(table(seuratObject_t$Subtype))
+names(num)=names(table(seuratObject_t$Subtype))
+for (x in 1:length(num)) {
+  xx=sample(random_idx,size = num[x])
+  Subtype_random[xx]=names(num)[x]
+  random_idx=random_idx[-which(random_idx%in%xx)]
+  print(length(random_idx))
+}
+Subtype_random=factor(Subtype_random,levels = levels(seuratObject_t$Subtype))
+Subtype_random_num=as.numeric(Subtype_random)
+db_Subtype_random <- index.DB(cell_dist, Subtype_random_num)$r
+db_Subtype_random <- data.frame("Davies-Bouldin index"=db_Subtype_random,
+                         Group=sil_Subtype$Group,type="Subtype_random")
+db_Subtype=rbind(db_Subtype,db_Subtype_random)
+
+seuratObject_t$Pathological=factor(seuratObject_t$Pathological,levels = unique(seuratObject_t$Pathological))
+Pathological=as.numeric(seuratObject_t$Pathological)
+sil_Pathological=silhouette(Pathological,cell_dist)
+sil_Pathological=as.data.frame(sil_Pathological)
+sil_Pathological=aggregate(sil_Pathological$sil_width,by=list(sil_Pathological$cluster),mean)
+sil_Pathological$Group=levels(seuratObject_t$Pathological)
+sil_Pathological$type="Pathological"
+db_Pathological <- index.DB(cell_dist, Pathological)$r
+db_Pathological <- data.frame("Davies-Bouldin index"=db_Pathological,
+                         Group=sil_Pathological$Group,type="Pathological")
+
+random_idx=1:length(Pathological)
+Pathological_random=rep("NUl",length(Pathological))
+num=as.numeric(table(seuratObject_t$Pathological))
+names(num)=names(table(seuratObject_t$Pathological))
+for (x in 1:length(num)) {
+  xx=sample(random_idx,size = num[x])
+  Pathological_random[xx]=names(num)[x]
+  random_idx=random_idx[-which(random_idx%in%xx)]
+  print(length(random_idx))
+}
+Pathological_random=factor(Pathological_random,levels = levels(seuratObject_t$Pathological))
+Pathological_random_num=as.numeric(Pathological_random)
+db_Pathological_random <- index.DB(cell_dist, Pathological_random_num)$r
+db_Pathological_random <- data.frame("Davies-Bouldin index"=db_Pathological_random,
+                                Group=sil_Pathological$Group,type="Pathological_random")
+db_Pathological=rbind(db_Pathological,db_Pathological_random)
+
+sil_res=rbind(sil_sample,sil_Subtype,sil_Pathological)
+sil_res=sil_res[,-1]
+colnames(sil_res)[1]="Mean silhouette"
+openxlsx::write.xlsx(sil_res,'Tcell_silhouette.xlsx')
+
+db_res=rbind(db_sample,db_Subtype,db_Pathological)
+openxlsx::write.xlsx(db_res,'Tcell_Davies-Bouldin_Index.xlsx')
+
+###############newleiden3_umap_merge
+#umap_colors<- c("#7adacd","#dfaba2","#ccc500","#ff8acd","#8da4c2","#d35753","#2cc4d3","#b07dcb","#8fd470","#fa9f88","#4277b2","#ffc383","#ffa800")
+umap_colors<- c("#8dd0a4","#a57ab3","#cc9900","#bfbebe","#fa9f88","#81c6d3","#b4e1ff",
+                "#8fd470","#f6c554","#c6e5cf","#f595aa","#eacae0","#f29539")
+png('umap_merge.png', width = 5, height = 5, units = "in", res = 600, bg = "transparent")
+DimPlot(object = seuratObject, reduction = "umap", group.by = "newleiden3",raster=FALSE,pt.size =0.1,cols = umap_colors) & NoAxes() & theme(plot.title = element_blank(),legend.position = "none")
+dev.off()
+
+###############sampleID_umap_merge
+sample_colors=c("grey","#ffa800","#f59494","#d35753","#ed82b3","#7adacd",
+                "#f48231","#60DA99FF","#ffc383","#dfaba2","#98c8db",
+                "#8fd470","#447dbe","#62ab52","#a6d38e","#bda7ce")
+sample_colors=c("#0099ff","#0066cc","#deffff","#b4e1ff","#ccccff","#ffccff",
+                "#6666cc","#9999ff","#003399","#99ccff","#3d9ade",
+                "#0083d6","#ffcc66","#ff9933","#ffff99","#ffcc00")
+png('sampleID_umap_merge.png', width = 5, height = 5, units = "in", res = 600, bg = "transparent")
+#DimPlot(object = seuratObject, reduction = "umap", group.by = "sampleID",raster=FALSE,label.size = 3,cols = sample_colors) & NoAxes() & theme(plot.title = element_blank())
+DimPlot(object = seuratObject, reduction = "umap", group.by = "sampleID",raster=FALSE,cols = sample_colors) & NoAxes() & theme(plot.title = element_blank(),legend.position = "none")
+dev.off()
+png("Subtype_umap_merge.png", width = 5, height = 5, units = "in", res = 600, bg = "transparent")
+#umap_colors3<- c("#19a791","#c85551","#2eb9c6","#8bc66f","#bfbebe","#eb5f51","#f19b84","#7bc9c0","#f5a31c")  #Pathological
+#DimPlot(object = seuratObject, reduction = "umap", group.by = "Pathological",raster=FALSE, cols = umap_colors3) & NoAxes() & theme(plot.title = element_blank(),legend.position = "none")
+umap_colors3<- c("#bfbebe","#85c166","#ffdb9d","#81c6d3","#a8d7b8")  #Subtype
+DimPlot(object = seuratObject, reduction = "umap", group.by = "Subtype",raster=FALSE, cols = umap_colors3) & NoAxes() & theme(plot.title = element_blank(),legend.position = "none")
+dev.off()
+
+###############sampleID_umap_split
+umap_colors2<- c("#bfbebe","#81c6d3","#b4e1ff","#8dd0a4","#eacae0","#f595aa","#fa9f88","#f6c554",
+                 "#c6e5cf","#f29539","#a57ab3","#cc9900","#8fd470")
+seuratObject@meta.data$sampleID=factor(seuratObject@meta.data$sampleID,levels = c("P04","P05","P18","P03","P10","P11","P02","P07",
+                                                                                  "P06","P15","P16","P01","P12","P14","P13","P17"))
+png("sampleID_umap_split.png", width = 12, height = 12, units = "in", res = 600, bg = "transparent")
+#DimPlot(object = seuratObject, reduction = "umap", split.by = "sampleID",ncol = 4,raster=FALSE,label = FALSE,label.size = 2.5,cols =umap_colors2)
+DimPlot(object = seuratObject, reduction = "umap", split.by = "sampleID",ncol = 4,raster=FALSE,pt.size = 0.3,label = FALSE,cols =umap_colors2) & NoAxes() & theme(plot.title = element_blank(),axis.text = element_blank(),legend.position = "none",text=element_text(size=0))
+dev.off()

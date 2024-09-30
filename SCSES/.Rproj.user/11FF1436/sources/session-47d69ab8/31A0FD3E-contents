@@ -1,0 +1,487 @@
+setwd('/disk/lvxuan/R-loopImputation/result/')
+s.genes=cc.genes.updated.2019$s.genes
+g2m.genes=cc.genes.updated.2019$g2m.genes
+library(biomaRt)
+mouse <- useMart('ensembl',dataset = "mmusculus_gene_ensembl",
+                 host = "https://nov2020.archive.ensembl.org")
+human <- useMart('ensembl',dataset = "hsapiens_gene_ensembl",
+                 host = "https://nov2020.archive.ensembl.org")
+s.genes.m <- getLDS(attributes = c("external_gene_name"),
+                    filters = "external_gene_name",
+                    values = s.genes,
+                    mart = human,
+                    attributesL = c("external_gene_name"),
+                    martL = mouse,uniqueRows = F)[,2]
+g2m.genes.m <- getLDS(attributes = c("external_gene_name"),
+                      filters = "external_gene_name",
+                      values = g2m.genes,
+                      mart = human,
+                      attributesL = c("external_gene_name"),
+                      martL = mouse,uniqueRows = F)[,2]
+qc=read.table('anno_qc.txt')
+qc_rloop=read.table('anno_qc_rloop.txt')
+hist(qc_rloop$Library_size, breaks = 100)
+hist(qc_rloop$Detected_rloop_num, breaks = 100)
+rbp=openxlsx::read.xlsx('/disk/lvxuan/R-loopImputation/TableS3-filtered-RloopBindingProteins-mouse.xlsx',rowNames = T)
+rbp=rbp$Gene.Name
+
+# dropout stat before/after imputation ------------------------------------
+load('data.rna.filtered.rdata')
+load('data.rloop.filtered.rdata')
+load('imputation/data.rloop.imputed.kcell50.alphacell0.5.decaycell0.05.decay_final1.similarmethodeuclidean.similarity_typerna.RData')
+load('imputation/data.rna.imputed.kcell50.alphacell0.5.decaycell0.05.decay_final1.similarmethodeuclidean.similarity_typerna.RData')
+load('imputation/data.rloop.imputed.01.kcell30.alphacell0.5.decaycell0.05.decay_final1.similarmethodeuclidean.similarity_typerna.RData')
+cell_anno=lapply(colnames(data.rloop.matched),function(x){
+  unlist(strsplit(x,"_"))[2]
+})
+cell_anno=unlist(cell_anno)
+cell_anno=data.frame(group=cell_anno,row.names = colnames(data.rloop.matched))
+
+# data.rloop.matched.01=data.rloop.matched
+# data.rloop.matched.01[which(data.rloop.matched.01!=0)]=1
+# df=data.frame(knn=unlist(as.vector(data.rloop.imputed.01)),
+#               self=unlist(as.vector(data.rloop.matched.01)))
+# 
+# tb=table(df$knn,df$self)
+
+rbp=rbp[which(rbp%in%row.names(data.rna.matched))]
+df_dropout=rbind(data.frame(rate=colSums(data.rna.imputed==0)/nrow(data.rna.imputed),
+                      group="imputed"),
+                 data.frame(rate=colSums(data.rna.imputed[rbp,]==0)/nrow(data.rna.imputed[rbp,]),
+                            group="imputed rbp"),
+                 data.frame(rate=colSums(data.rna.matched==0)/nrow(data.rna.matched),
+                            group="raw"),
+                 data.frame(rate=colSums(data.rna.matched[rbp,]==0)/nrow(data.rna.matched[rbp,]),
+                            group="raw rbp"))
+df_dropout=rbind(data.frame(rate=colSums(data.rloop.imputed==0)/nrow(data.rloop.imputed),
+                            group="imputed"),
+                 data.frame(rate=colSums(data.rloop.matched==0)/nrow(data.rloop.matched),
+                            group="raw"))
+ggplot(df_dropout,aes(x=group,y=rate))+
+  geom_boxplot()+
+  ylab("Dropout")+
+  xlab("")+
+  basic_theme
+
+df_rc=rbind(data.frame(sum=rowSums(data.rloop.imputed),
+                            group="imputed"),
+                 data.frame(sum=rowSums(data.rloop.matched),
+                            group="raw"))
+ggplot(df_rc,aes(x=group,y=log(sum)))+
+  geom_boxplot()+
+  ylab("Read Sum per rloop")+
+  xlab("")+
+  basic_theme
+
+rc_v=rbind(data.frame(sum=unlist(as.vector(data.rloop.imputed)),
+                 group="imputed"),
+      data.frame(sum=unlist(as.vector(data.rloop.matched)),
+                 group="raw"))
+ggplot(rc_v[which(rc_v$sum!=0),],aes(color=group,x=sum))+
+  geom_density()+
+  ylab("Read")+
+  xlab("")+
+  basic_theme
+
+rc_cutoff=quantile(rc_v$sum[which(rc_v$group=="imputed")])[3]
+data.rloop.imputed[which(data.rloop.imputed<rc_cutoff)]=0
+
+data.rloop.imputed.01=data.rloop.imputed
+data.rloop.imputed.01[which(data.rloop.imputed.01!=0)]=1
+
+# data.rloop.imputed[which(data.rloop.imputed.01<5&data.rloop.matched.01==0)]=0
+
+# cell clustering before imputation ------------------------------------
+rloop.seu <- CreateSeuratObject(counts = data.rloop.matched,
+                                meta.data = cell_anno,assay = 'RNA')
+rloop.seu<-SetAssayData(object=rloop.seu, layer="data", 
+                        new.data = rloop.seu@assays$RNA$counts)
+rloop.seu <- FindVariableFeatures(rloop.seu, 
+                                  selection.method = "vst", 
+                                  nfeatures = 2000)
+rloop.seu <- ScaleData(rloop.seu, features = rownames(rloop.seu))
+rloop.seu <- RunPCA(rloop.seu, features = VariableFeatures(rloop.seu),
+                    npcs = 100)
+ElbowPlot(rloop.seu)
+n_components=5
+rloop.seu <- RunUMAP(rloop.seu,dims = 1:n_components,
+                     reduction = "pca",
+                     n.neighbors = 30)
+#cluster
+rloop.seu <- FindNeighbors(rloop.seu, reduction="pca",
+                           dims = 1:n_components,
+                           k.param=30)
+rloop.seu <- FindClusters(rloop.seu, resolution = 0.3,
+                          algorithm=4)
+umap_1_rloop=DimPlot(rloop.seu, reduction = "umap", label = TRUE, 
+                     pt.size = 0.1,
+                     repel = TRUE,combine = TRUE)+
+  theme(legend.position = "none",
+        plot.title = element_text(hjust = 0.5,size = 20),
+        axis.text = element_text(size = 14))+ggtitle("Raw Rloop")
+umap_2_rloop=DimPlot(rloop.seu, reduction = "umap", label = F, 
+                     pt.size = 0.1,group.by = "group",
+                     repel = TRUE,combine = TRUE)+
+  theme(legend.position = "right",
+        plot.title = element_text(hjust = 0.5,size = 20),
+        axis.text = element_text(size = 14))+ggtitle("Raw Rloop")
+
+umap_1_rloop|umap_2_rloop
+
+# cell clustering using expr ------------------------------------
+expr.seu <- CreateSeuratObject(counts = data.rna.imputed,
+                               meta.data = cell_anno,
+                               assay = 'RNA')
+expr.seu<-SetAssayData(object=expr.seu, layer="data",
+                        new.data = expr.seu@assays$RNA$counts)
+expr.seu <- FindVariableFeatures(expr.seu, 
+                                 selection.method = "vst", 
+                                 nfeatures = 2000)
+expr.seu <- ScaleData(expr.seu, features = rownames(expr.seu))
+expr.seu <- RunPCA(expr.seu, features = VariableFeatures(expr.seu),
+                   npcs = 100)
+ElbowPlot(expr.seu)
+n_components=5
+expr.seu <- RunUMAP(expr.seu,dims = 1:n_components,
+                    reduction = "pca",
+                    n.neighbors = 30)
+#cluster
+expr.seu <- FindNeighbors(expr.seu, reduction="pca",
+                          dims = 1:n_components,
+                          k.param=30)
+expr.seu <- FindClusters(expr.seu, resolution = 0.3,
+                         algorithm=4)
+library(UCell)
+expr.seu <- AddModuleScore_UCell(expr.seu,features=list(s.genes.m =s.genes.m ,
+                                                        g2m.genes.m=g2m.genes.m))
+
+umap_1_expr=DimPlot(expr.seu, reduction = "umap", label = TRUE, 
+                    pt.size = 0.1,
+                    repel = TRUE,combine = TRUE)+
+  theme(legend.position = "none",
+        plot.title = element_text(hjust = 0.5,size = 20),
+        axis.text = element_text(size = 14))+ggtitle("Imputed EXP")
+umap_2_expr=DimPlot(expr.seu, reduction = "umap", label = F, 
+                    pt.size = 0.1,group.by = "group",
+                    repel = TRUE,combine = TRUE)+
+  theme(legend.position = "right",
+        plot.title = element_text(hjust = 0.5,size = 20),
+        axis.text = element_text(size = 14))+ggtitle("Imputed EXP")
+umap_1_expr|umap_2_expr
+
+# DimPlot(expr.seu, reduction = "umap", label = F, 
+#         pt.size = 0.1,group.by = "rloop_cluster",
+#         repel = TRUE,combine = TRUE)+
+#   theme(legend.position = "right",
+#         plot.title = element_text(hjust = 0.5,size = 20),
+#         axis.text = element_text(size = 14))+ggtitle("Imputed EXP")
+
+# cell clustering after imputation ------------------------------------
+rloop.seu.imputed <- CreateSeuratObject(counts = data.rloop.imputed,
+                               meta.data = cell_anno,assay = 'RNA')
+# rloop.seu.imputed<-NormalizeData(object = rloop.seu.imputed)
+rloop.seu.imputed<-SetAssayData(object=rloop.seu.imputed, layer="data",
+                               new.data = rloop.seu.imputed@assays$RNA$counts)
+rloop.seu.imputed <- FindVariableFeatures(rloop.seu.imputed, 
+                                         selection.method = "vst", 
+                                 nfeatures = 2000)
+rloop.seu.imputed <- ScaleData(rloop.seu.imputed, features = rownames(rloop.seu.imputed))
+rloop.seu.imputed <- RunPCA(rloop.seu.imputed, features = VariableFeatures(rloop.seu.imputed),
+                   npcs = 100)
+ElbowPlot(rloop.seu.imputed)
+n_components=5
+rloop.seu.imputed <- RunUMAP(rloop.seu.imputed,dims = 1:n_components,
+                    reduction = "pca",
+                    n.neighbors = 30)
+#cluster
+rloop.seu.imputed <- FindNeighbors(rloop.seu.imputed, reduction="pca",
+                          dims = 1:n_components,
+                          k.param=30)
+rloop.seu.imputed <- FindClusters(rloop.seu.imputed, resolution = 0.2,
+                         algorithm=4)
+rloop.seu.imputed$expr_cluster=expr.seu$seurat_clusters
+rloop.seu.imputed$raw_rloop_cluster=rloop.seu$seurat_clusters
+umap_1=DimPlot(rloop.seu.imputed, reduction = "umap", label = TRUE, 
+                pt.size = 0.1,
+                repel = TRUE,combine = TRUE)+
+  theme(legend.position = "none",
+        plot.title = element_text(hjust = 0.5,size = 20),
+        axis.text = element_text(size = 14))+ggtitle("Imputed Rloop")
+umap_2=DimPlot(rloop.seu.imputed, reduction = "umap", label = F, 
+               pt.size = 0.1,group.by = "group",
+               repel = TRUE,combine = TRUE)+
+  theme(legend.position = "right",
+        plot.title = element_text(hjust = 0.5,size = 20),
+        axis.text = element_text(size = 14))+ggtitle("Imputed Rloop")
+umap_3=DimPlot(rloop.seu.imputed, reduction = "umap", label = F, 
+               pt.size = 0.1,group.by = "expr_cluster",
+               repel = TRUE,combine = TRUE)+
+  theme(legend.position = "right",
+        plot.title = element_text(hjust = 0.5,size = 20),
+        axis.text = element_text(size = 14))+ggtitle("Imputed Rloop")
+
+umap_1|umap_2
+
+expr.seu$rloop_cluster=rloop.seu.imputed$seurat_clusters
+marker_gene_rloop=lapply(unique(expr.seu$rloop_cluster), function(x){
+  df=FindMarkers(object = expr.seu,group.by = "rloop_cluster",ident.1 = x)
+  df$rloop_cluster=x
+  df$gene=row.names(df)
+  return(df)
+})
+marker_gene_rloop=do.call(what = rbind,args = marker_gene_rloop)
+marker_gene_rloop=marker_gene_rloop[which(marker_gene_rloop$p_val_adj<0.05),]
+openxlsx::write.xlsx(x = marker_gene_rloop,
+                     file = 'marker_gene_rloop_sig.xlsx')
+intersect(marker_gene_rloop$gene,rbp)
+top10=lapply(unique(marker_gene_rloop$rloop_cluster),function(x){
+  df=marker_gene_rloop[which(marker_gene_rloop$rloop_cluster==x),]
+  df$gene[order(df$avg_log2FC,decreasing = T)[1:10]]
+})
+top10=unlist(top10)
+DoHeatmap(expr.seu, features = top10,group.by = "rloop_cluster")
+DotPlot(expr.seu, features = top10) + RotatedAxis()
+library(clusterProfiler)
+library(msigdbr)
+library(org.Mm.eg.db)
+marker_gene_rloop=marker_gene_rloop[which(marker_gene_rloop$avg_log2FC> (0.7)),]
+go_marker_deg=lapply(unique(marker_gene_rloop$rloop_cluster), function(x){
+  go.res=enrichGO(gene = unique(marker_gene_rloop$gene[which(marker_gene_rloop$rloop_cluster==x)]),
+                  OrgDb = 'org.Mm.eg.db',
+                  keyType = "SYMBOL",qvalueCutoff = 0.1,
+                  ont = "BP")
+  dotplot(go.res)
+  go.res=go.res@result
+  go.res$group=x
+  return(go.res)
+})
+go_marker_deg=do.call(what = rbind,args = go_marker_deg)
+go_marker_deg_sig=go_marker_deg[which(go_marker_deg$p.adjust<0.05),]
+View(go_marker_deg_sig[which(go_marker_deg_sig$group==3),])
+
+#Apoe/Apoa2/Scd1/Apoa1
+rloop.seu.imputed$gene=as.numeric(data.rna.matched["Apoa2",])
+
+rloop.seu.imputed$gene=as.numeric(data.rna.imputed["Mthfd1",])
+FeaturePlot(object = rloop.seu.imputed,features = "gene",order = T)&
+  ggtitle("Mthfd1")
+
+VlnPlot(expr.seu,features = c("s.genes.m_UCell","g2m.genes.m_UCell"),group.by = "rloop_cluster")
+
+rloop.seu.imputed$library_size=qc[colnames(rloop.seu.imputed),'Library_size']
+rloop.seu.imputed$library_size_rloop=qc_rloop[colnames(rloop.seu.imputed),'Library_size']
+p1=FeaturePlot(object = rloop.seu.imputed,features = "library_size",order = T)
+p2=FeaturePlot(object = rloop.seu.imputed,features = "library_size_rloop",order = T)
+p1|p2|umap_2
+
+
+marker_rloop=FindAllMarkers(rloop.seu.imputed,logfc.threshold = 0.1,
+                            min.pct = 0.01)
+colnames(marker_rloop)[7]="rloop_id"
+marker_rloop=merge(marker_rloop,rloop_df)
+rna_mean=lapply(unique(rloop.seu.imputed$seurat_clusters), function(x){
+  cell1=names(rloop.seu.imputed$seurat_clusters)[which(rloop.seu.imputed$seurat_clusters==x)]
+  m1=rowMeans(data.rna.imputed[,cell1])
+  cell2=names(rloop.seu.imputed$seurat_clusters)[-which(rloop.seu.imputed$seurat_clusters==x)]
+  m2=rowMeans(data.rna.imputed[,cell2])
+  data.frame(gene_name=row.names(data.rna.imputed),EXP_mean_cells=m1,
+             EXP_mean_other=m2,cluster=x)
+})
+rna_mean=do.call(what = rbind,args = rna_mean)
+marker_rloop=merge(marker_rloop,rna_mean)
+marker_rloop$EXP_log2FC=log2(marker_rloop$EXP_mean_cells/marker_rloop$EXP_mean_other)
+
+top10_rloop_id=lapply(unique(marker_rloop$cluster),function(x){
+  df=marker_rloop[which(marker_rloop$cluster==x),]
+  df$rloop_id[order(df$avg_log2FC,decreasing = T)[1:10]]
+})
+top10_rloop_id=unlist(top10_rloop_id)
+DoHeatmap(rloop.seu.imputed, features = top10_rloop_id)
+
+# marker_rloop_sig=marker_rloop[which(marker_rloop$p_val_adj<0.05&
+#                                       marker_rloop$avg_log2FC>1&
+#                                       !is.na(marker_rloop$EXP_avg_log2FC)&
+#                                       marker_rloop$cluster==marker_rloop$EXP_rloop_cluster),]
+marker_rloop_sig=marker_rloop[which(marker_rloop$p_val_adj<0.001&
+                                      marker_rloop$avg_log2FC>1),]
+rloop.seu.imputed2=subset(rloop.seu.imputed,features=marker_rloop_sig$rloop_id)
+gene_name=marker_rloop_sig$gene_name[match(row.names(rloop.seu.imputed2),
+                                           marker_rloop_sig$rloop_id)]
+row.names(rloop.seu.imputed2)=paste(gene_name,
+                                    row.names(rloop.seu.imputed2))
+DoHeatmap(rloop.seu.imputed2, features = paste(marker_rloop_sig$gene_name,
+                                               marker_rloop_sig$rloop_id))
+
+ggplot(data = marker_rloop[which(marker_rloop$cluster==4),],
+       mapping = aes(x = pct.1,y = EXP_log2FC))+
+  geom_point()
+
+FeaturePlot(rloop.seu.imputed,features = "chr3:84040000-84044000")
+VlnPlot(rloop.seu.imputed,features = "chr9:107768000-107772000")
+
+go.res=enrichGO(gene = unique(marker_rloop_sig$gene_name[which(marker_rloop_sig$cluster==3)]),
+                OrgDb = 'org.Mm.eg.db',
+                keyType = "SYMBOL",qvalueCutoff = 0.1,
+                ont = "BP")
+dotplot(go.res)
+go.res=go.res@result
+#	Csnk1g2/Mapk14/Strn/Mbd2/Invs
+View(marker_gene_rloop[which(marker_gene_rloop$gene%in%marker_rloop_sig$gene_name),])
+
+rloop.seu$rloop_cluster=rloop.seu.imputed$seurat_clusters
+marker_rloop_raw=lapply(unique(rloop.seu$rloop_cluster), function(x){
+  df=FindMarkers(object = rloop.seu,group.by = "rloop_cluster",ident.1 = x)
+  df$rloop_cluster=x
+  df$rloop_id=row.names(df)
+  return(df)
+})
+marker_rloop_raw=do.call(what = rbind,args = marker_rloop_raw)
+marker_rloop_raw=marker_rloop_raw[which(marker_rloop_raw$p_val<0.05),]
+View(marker_rloop_raw[which(marker_rloop_raw$rloop_cluster==4),])
+
+library(ggalluvial)
+anno_cluster=rloop.seu.imputed@meta.data[,c("expr_cluster","seurat_clusters")]
+anno_cluster$expr_cluster=paste0("Imputed",anno_cluster$expr_cluster)
+anno_cluster$seurat_clusters=paste0("Imputed",anno_cluster$seurat_clusters)
+anno_cluster$id=row.names(anno_cluster)
+anno_cluster=melt(anno_cluster,id.vars = c('id'))
+anno_cluster$variable=factor(anno_cluster$variable,levels = c("expr_cluster","seurat_clusters"))
+p_flow=ggplot(anno_cluster, 
+              aes(x = variable, fill=value,label=value,
+                  stratum = value, alluvium  = id))+
+  geom_flow(width = 0.5,
+            curve_type = "sine",
+            alpha = 0.5,
+            color = 'white',
+            linewidth = base_line)+
+  geom_stratum(width = 0.28,linewidth = base_line)+
+  geom_text(stat = "stratum", aes(label = after_stat(stratum)))+
+  ylab("Proportion")+
+  scale_x_discrete(labels=c("raw_rloop_cluster"="Raw",
+                            "expr_cluster"="Imputed exp",
+                            "seurat_clusters"="R-loop"),
+                   expand = c(0,0))+
+  basic_theme+
+  theme(legend.position = 'none',axis.title.x = element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y = element_blank())
+p_flow
+library(ggalluvial)
+anno_cluster=rloop.seu.imputed@meta.data[,c("raw_rloop_cluster","seurat_clusters")]
+anno_cluster$raw_rloop_cluster=paste0("Raw",anno_cluster$raw_rloop_cluster)
+anno_cluster$seurat_clusters=paste0("Imputed",anno_cluster$seurat_clusters)
+anno_cluster$id=row.names(anno_cluster)
+anno_cluster=melt(anno_cluster,id.vars = c('id'))
+anno_cluster$variable=factor(anno_cluster$variable,levels = c("raw_rloop_cluster","seurat_clusters"))
+p_flow=ggplot(anno_cluster, 
+              aes(x = variable, fill=value,label=value,
+                  stratum = value, alluvium  = id))+
+  geom_flow(width = 0.5,
+            curve_type = "sine",
+            alpha = 0.5,
+            color = 'white',
+            linewidth = base_line)+
+  geom_stratum(width = 0.28,linewidth = base_line)+
+  geom_text(stat = "stratum", aes(label = after_stat(stratum)))+
+  ylab("Proportion")+
+  scale_x_discrete(labels=c("raw_rloop_cluster"="Raw",
+                            "expr_cluster"="Raw exp",
+                            "seurat_clusters"="R-loop"),
+                   expand = c(0,0))+
+  basic_theme+
+  theme(legend.position = 'none',axis.title.x = element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y = element_blank())
+p_flow
+
+# cell clustering using expr and rloop ------------------------------------
+data1=expr.seu@assays$RNA$data[VariableFeatures(expr.seu),]
+data2=data.rloop.imputed[VariableFeatures(rloop.seu.imputed),]
+comb.seu <- CreateSeuratObject(counts = rbind(data1,data2),
+                               meta.data = cell_anno,
+                               assay = 'RNA')
+comb.seu<-SetAssayData(object=comb.seu, layer="data",
+                       new.data = comb.seu@assays$RNA$counts)
+comb.seu <- FindVariableFeatures(comb.seu, 
+                                 selection.method = "vst", 
+                                 nfeatures = 4000)
+comb.seu <- ScaleData(comb.seu, features = rownames(comb.seu))
+comb.seu <- RunPCA(comb.seu, features = VariableFeatures(comb.seu),
+                   npcs = 100)
+ElbowPlot(comb.seu)
+n_components=10
+comb.seu <- RunUMAP(comb.seu,dims = 1:n_components,
+                    reduction = "pca",
+                    n.neighbors = 30)
+#cluster
+comb.seu <- FindNeighbors(comb.seu, reduction="pca",
+                          dims = 1:n_components,
+                          k.param=30)
+comb.seu <- FindClusters(comb.seu, resolution = 0.5,
+                         algorithm=4)
+comb.seu$expr_cluster=expr.seu$seurat_clusters
+umap_1_comb=DimPlot(comb.seu, reduction = "umap", label = TRUE, 
+                    pt.size = 0.1,
+                    repel = TRUE,combine = TRUE)+
+  theme(legend.position = "none",
+        plot.title = element_text(hjust = 0.5,size = 20),
+        axis.text = element_text(size = 14))+ggtitle("Rloop+EXP")
+umap_2_comb=DimPlot(comb.seu, reduction = "umap", label = F, 
+                    pt.size = 0.1,group.by = "group",
+                    repel = TRUE,combine = TRUE)+
+  theme(legend.position = "right",
+        plot.title = element_text(hjust = 0.5,size = 20),
+        axis.text = element_text(size = 14))+ggtitle("Rloop+EXP")
+umap_3_comb=DimPlot(comb.seu, reduction = "umap", label = F, 
+                    pt.size = 0.1,group.by = "expr_cluster",
+                    repel = TRUE,combine = TRUE)+
+  theme(legend.position = "right",
+        plot.title = element_text(hjust = 0.5,size = 20),
+        axis.text = element_text(size = 14))+ggtitle("Raw EXP")
+umap_1_comb|umap_2_comb
+(umap_1_comb|umap_2_comb)/(umap_3_comb|umap_1_expr)
+
+
+# 48H cell clustering after imputation ------------------------------------
+rloop.seu.imputed <- CreateSeuratObject(counts = data.rloop.imputed,
+                                        meta.data = cell_anno,assay = 'RNA')
+rloop.seu.imputed<-SetAssayData(object=rloop.seu.imputed, layer="data",
+                                new.data = rloop.seu.imputed@assays$RNA$counts)
+rloop.seu.imputed <- FindVariableFeatures(rloop.seu.imputed, 
+                                          selection.method = "vst", 
+                                          nfeatures = 2000)
+rloop.seu.imputed <- ScaleData(rloop.seu.imputed, features = rownames(rloop.seu.imputed))
+rloop.seu.imputed <- RunPCA(rloop.seu.imputed, features = VariableFeatures(rloop.seu.imputed),
+                            npcs = 100)
+ElbowPlot(rloop.seu.imputed)
+n_components=10
+rloop.seu.imputed <- RunUMAP(rloop.seu.imputed,dims = 1:n_components,
+                             reduction = "pca",
+                             n.neighbors = 30)
+#cluster
+rloop.seu.imputed <- FindNeighbors(rloop.seu.imputed, reduction="pca",
+                                   dims = 1:n_components,
+                                   k.param=30)
+rloop.seu.imputed <- FindClusters(rloop.seu.imputed, resolution = 0.3,
+                                  algorithm=4)
+rloop.seu.imputed$expr_cluster=expr.seu$seurat_clusters
+umap_1=DimPlot(rloop.seu.imputed, reduction = "umap", label = TRUE, 
+               pt.size = 0.1,
+               repel = TRUE,combine = TRUE)+
+  theme(legend.position = "none",
+        plot.title = element_text(hjust = 0.5,size = 20),
+        axis.text = element_text(size = 14))+ggtitle("Imputed Rloop")
+umap_2=DimPlot(rloop.seu.imputed, reduction = "umap", label = F, 
+               pt.size = 0.1,group.by = "group",
+               repel = TRUE,combine = TRUE)+
+  theme(legend.position = "right",
+        plot.title = element_text(hjust = 0.5,size = 20),
+        axis.text = element_text(size = 14))+ggtitle("Imputed Rloop")
+umap_3=DimPlot(rloop.seu.imputed, reduction = "umap", label = F, 
+               pt.size = 0.1,group.by = "expr_cluster",
+               repel = TRUE,combine = TRUE)+
+  theme(legend.position = "right",
+        plot.title = element_text(hjust = 0.5,size = 20),
+        axis.text = element_text(size = 14))+ggtitle("Imputed Rloop")
+
+umap_1|umap_2
