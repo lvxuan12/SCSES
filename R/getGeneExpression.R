@@ -20,34 +20,36 @@ getGeneExpression <- function(
     ref=paras$Basic$refgenome$ref_path,
     dataset=paras$DataSet, pair=paras$Basic$paired,
     core=paras$Basic$core) {
-  #script
-  script=paras$Task$featureCounts$script
-  featureCounts_path=paras$Basic$featureCounts_path
-  # output
-  work_path = paras$Basic$work_path
-  featurecounts.work.path <- paste0(work_path, "/expr/")
-  cmd <- paste(
-    "bash", script,
-    featurecounts.work.path,
-    ref,
-    gtf,
-    bam_path,
-    core,
-    dataset,
-    featureCounts_path,
-    pair
-  )
-  msg <- paste0("[", Sys.time(), "] ", "Detect gene expression: ", cmd)
-  print(msg)
-  system(command = cmd, intern = T, wait = T, show.output.on.console = T)
-  msg <- paste0("[", Sys.time(), "] ", "Detect gene expression Finish.")
-  print(msg)
-  return(featurecounts.work.path)
+    #script
+    dir_shell <- system.file("shell", package = "SCSES")
+    filename <- "run_featurecounts.sh"
+    script <- file.path(dir_shell, filename)
+    featureCounts_path=paras$Basic$featureCounts_path
+    # output
+    work_path = paras$Basic$work_path
+    featurecounts.work.path <- paste0(work_path, "/expr/")
+    cmd <- paste(
+        "bash", script,
+        featurecounts.work.path,
+        ref,
+        gtf,
+        bam_path,
+        core,
+        dataset,
+        pair,
+        featureCounts_path
+    )
+    msg <- paste0("[", Sys.time(), "] ", "Detect gene expression: ", cmd)
+    print(msg)
+    system(command = cmd, intern = T, wait = T, show.output.on.console = T)
+    msg <- paste0("[", Sys.time(), "] ", "Detect gene expression Finish.")
+    print(msg)
+    return(featurecounts.work.path)
 }
 
 #' @title Get gene expression matrix
 #' @description save gene expression count and TPM matrix to work_path/rds/
-#'
+#' 
 #'
 #' @param paras list fromJSON(paras_file)
 #' Default dataset, filter.mt, filter.rp from paras
@@ -62,41 +64,38 @@ getGeneExpression <- function(
 #' @importFrom stats median
 
 getEXPmatrix <- function(
-    paras, expr_path = NULL,
+    paras, expr_path = paste0(paras$Basic$work_path, "/expr/"),
     dataset = paras$DataSet,
-    filter.mt = paras$Basic$filter_sc$filter.mt,
+    filter.mt = paras$Basic$filter_sc$filter.mt, 
     filter.rp = paras$Basic$filter_sc$filter.rp) {
-  if (is.null(expr_path)) {
-    expr_path <- paste0(paras$Basic$work_path, "/expr/")
-  }
-  fea_file <- paste0(expr_path, "/", dataset, "_count.txt")
-  output_path <- paste0(dirname(expr_path), "/rds/")
-  if (!dir.exists(output_path)) {
-    dir.create(output_path)
-  }
-  fea <- read.table(fea_file, comment.char = "#", sep = "\t", header = T, check.names = F)
-  row.names(fea) <- fea$Geneid
-  # filter Mitochondrial genes
-  if (filter.mt) {
-    fea <- fea[!grepl("^MT-|^mt-", row.names(fea)), ]
-  }
-  # filter ribosomal genes
-  if (filter.rp) {
-    fea <- fea[!grepl("^RP[SL]|^Rp[sl]", row.names(fea)), ]
-  }
-  fea_kb <- fea$Length / 1000
-  fea <- fea[, -c(1:6), drop = F]
-  fea_rpk <- fea / fea_kb
-  fea_tpm <- t(t(fea_rpk) / colSums(fea_rpk) * 10^6)
-  fea_tpm <- as.data.frame(fea_tpm)
-  colnames(fea) <- sapply(colnames(fea), function(x) {
-    unlist(strsplit(x, "/"))[length(unlist(strsplit(x, "/")))]
-  })
-  colnames(fea_tpm) <- sapply(colnames(fea_tpm), function(x) {
-    unlist(strsplit(x, "/"))[length(unlist(strsplit(x, "/")))]
-  })
-  fea_tpm <- log2(fea_tpm + 1)
-  saveRDS(fea, paste0(output_path, "/count.rds"))
-  saveRDS(fea_tpm, paste0(output_path, "/TPM.rds"))
-  return(output_path)
+    fea_file <- paste0(expr_path, "/", dataset, "_count.txt")
+    output_path <- paste0(dirname(expr_path), "/rds/")
+    if (!dir.exists(output_path)) {
+        dir.create(output_path)
+    }
+    fea <- read.table(fea_file, comment.char = "#", sep = "\t", header = T, check.names = F)
+    row.names(fea) <- fea$Geneid
+    # filter Mitochondrial genes
+    if (filter.mt) {
+        fea <- fea[!grepl("^MT-|^mt-", row.names(fea)), ]
+    }
+    # filter ribosomal genes
+    if (filter.rp) {
+        fea <- fea[!grepl("^RP[SL]|^Rp[sl]", row.names(fea)), ]
+    }
+    fea_kb <- fea$Length / 1000
+    fea <- fea[, -c(1:6), drop = F]
+    fea_rpk <- fea / fea_kb
+    fea_tpm <- t(t(fea_rpk) / colSums(fea_rpk) * 10^6)
+    fea_tpm <- as.data.frame(fea_tpm)
+    colnames(fea) <- sapply(colnames(fea), function(x) {
+        unlist(strsplit(x, "/"))[length(unlist(strsplit(x, "/")))]
+    })
+    colnames(fea_tpm) <- sapply(colnames(fea_tpm), function(x) {
+        unlist(strsplit(x, "/"))[length(unlist(strsplit(x, "/")))]
+    })
+    fea_tpm <- log2(fea_tpm + 1)
+    saveRDS(fea, paste0(output_path, "/count.rds"))
+    saveRDS(fea_tpm, paste0(output_path, "/TPM.rds"))
+    return(output_path)
 }

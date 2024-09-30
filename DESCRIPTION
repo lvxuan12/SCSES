@@ -11,7 +11,7 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.3.2
 Depends:
-  R (>= 4.3.2),
+  R (>= 4.3.1),
   BiocManager (>= 1.30.23)
 biocViews: 
 Imports: 
