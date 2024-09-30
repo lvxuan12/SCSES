@@ -41,10 +41,15 @@ getGeneExpression <- function(
     )
     msg <- paste0("[", Sys.time(), "] ", "Detect gene expression: ", cmd)
     print(msg)
-    system(command = cmd, intern = T, wait = T, show.output.on.console = T)
-    msg <- paste0("[", Sys.time(), "] ", "Detect gene expression Finish.")
-    print(msg)
-    return(featurecounts.work.path)
+    res <- system(command = cmd, intern = T, wait = T)
+    if (!is.null(attributes(res)) && attributes(res)$status == 1) {
+        msg <- paste0("[", Sys.time(), "] ", "Run featureCounts Error.")
+        stop(msg)
+    } else {
+        msg <- paste0("[", Sys.time(), "] ", "Detect gene expression Finish.")
+        print(msg)
+        return(featurecounts.work.path)
+    }
 }
 
 #' @title Get gene expression matrix

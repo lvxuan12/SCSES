@@ -48,14 +48,20 @@ detectEvents <- function(paras) {
   if (file.exists(log_file)) {
     file.remove(log_file)
   }
+  # script
+  dir_shell <- system.file("shell", package = "SCSES")
   if (SS) {
     majiq.work.path <- paste0(work_path, "/majiq/")
     msg <- paste0("[", Sys.time(), "] ", "MAJIQ...")
     print(msg)
     dir.create(path = majiq.work.path, recursive = T)
-    script_majiq <- paras$Task$MAJIQ$script
-    MAJIQ_env <- paras$Basic$MAJIQ_env
-    res <- getA35SSALevent(majiq.work.path, bam_path, gff, script_majiq, core, genome_name, junctionReads, MAJIQ_env, log_file)
+    # script
+    filename <- "run_majiq.sh"
+    script_majiq <- file.path(dir_shell, filename)
+    res <- getA35SSALevent(
+      majiq.work.path, bam_path, gff, script_majiq,
+      core, genome_name, junctionReads, log_file
+    )
   }
   if (RI) {
     irfinder.work.path <- paste0(work_path, "/IRFinder/")
@@ -70,21 +76,31 @@ detectEvents <- function(paras) {
     if (is.null(irfinder_ref_path)) {
       irfinder_ref_path <- "null"
     }
-    script_irfinder <- paras$Task$IRFinder$script
+    # script
+    filename <- "run_irfinder.sh"
+    script_irfinder <- file.path(dir_shell, filename)
     irfinder_path <- paras$Basic$IRFinder_path
-    star_path <- paras$Basic$STAR_path
     samtools_path <- paras$Basic$samtools_path
-    res <- getRIevent(irfinder.work.path, bam_path, gtf, ref, readlength, core, star_ref_path, irfinder_ref_path, script_irfinder, irfinder_path, star_path, samtools_path, log_file)
+    res <- getRIevent(
+      irfinder.work.path, bam_path, gtf, ref,
+      core, script_irfinder, irfinder_path,
+      samtools_path, log_file
+    )
   }
   if (SEMX) {
     rmats.work.path <- paste0(work_path, "/rMats/")
     msg <- paste0("[", Sys.time(), "] ", "rMats...")
     print(msg)
     dir.create(path = rmats.work.path, recursive = T)
-    script_rmats <- paras$Task$rMats$script
+    # script
+    filename <- "run_rmats.sh"
+    script_rmats <- file.path(dir_shell, filename)
     rmats_path <- paras$Basic$rMATs
     py_path <- paras$Basic$rMATs_py
-    res <- getSEevent(rmats.work.path, bam_path, gtf, paired, readlength, rmats_path, py_path, script_rmats, core, log_file)
+    res <- getSEevent(
+      rmats.work.path, bam_path, gtf, paired, readlength,
+      rmats_path, py_path, script_rmats, core, log_file
+    )
   }
   event_num_list <- lapply(event_types, function(type) {
     fun <- get(paste0("get", type, "id"))
@@ -166,14 +182,20 @@ getEvent <- function(paras, event_type) {
     SS <- ifelse(length(intersect(event_type, c("A3SS", "A5SS", "AL"))) > 0, TRUE, FALSE)
     SEMX <- ifelse(length(intersect(event_type, c("SE", "MXE"))) > 0, TRUE, FALSE)
     RI <- ifelse(length(intersect(event_type, "RI")) > 0, TRUE, FALSE)
+    # script
+    dir_shell <- system.file("shell", package = "SCSES")
     if (SS) {
       majiq.work.path <- paste0(work_path, "/majiq/")
       msg <- paste0("[", Sys.time(), "] ", "MAJIQ...")
       print(msg)
       dir.create(path = majiq.work.path, recursive = T)
-      script_majiq <- paras$Task$MAJIQ$script
-      MAJIQ_env <- paras$Basic$MAJIQ_env
-      res <- getA35SSALevent(majiq.work.path, bam_path, gff, script_majiq, core, genome_name, junctionReads, MAJIQ_env, log_file)
+      # script
+      filename <- "run_majiq.sh"
+      script_majiq <- file.path(dir_shell, filename)
+      res <- getA35SSALevent(
+        majiq.work.path, bam_path, gff, script_majiq,
+        core, genome_name, junctionReads, log_file
+      )
     }
     if (RI) {
       irfinder.work.path <- paste0(work_path, "/IRFinder/")
@@ -188,21 +210,31 @@ getEvent <- function(paras, event_type) {
       if (is.null(irfinder_ref_path)) {
         irfinder_ref_path <- "null"
       }
-      script_irfinder <- paras$Task$IRFinder$script
+      # script
+      filename <- "run_irfinder.sh"
+      script_irfinder <- file.path(dir_shell, filename)
       irfinder_path <- paras$Basic$IRFinder_path
-      star_path <- paras$Basic$STAR_path
       samtools_path <- paras$Basic$samtools_path
-      res <- getRIevent(irfinder.work.path, bam_path, gtf, ref, readlength, core, star_ref_path, irfinder_ref_path, script_irfinder, irfinder_path, star_path, samtools_path, log_file)
+      res <- getRIevent(
+        irfinder.work.path, bam_path, gtf, ref,
+        core, script_irfinder, irfinder_path,
+        samtools_path, log_file
+      )
     }
     if (SEMX) {
       rmats.work.path <- paste0(work_path, "/rMats/")
       msg <- paste0("[", Sys.time(), "] ", "rMats...")
       print(msg)
       dir.create(path = rmats.work.path, recursive = T)
-      script_rmats <- paras$Task$rMats$script
+      # script
+      filename <- "run_rmats.sh"
+      script_rmats <- file.path(dir_shell, filename)
       rmats_path <- paras$Basic$rMATs
       py_path <- paras$Basic$rMATs_py
-      res <- getSEevent(rmats.work.path, bam_path, gtf, paired, readlength, rmats_path, py_path, script_rmats, core, log_file)
+      res <- getSEevent(
+        rmats.work.path, bam_path, gtf, paired, readlength,
+        rmats_path, py_path, script_rmats, core, log_file
+      )
     }
   }
   return(work_path)
@@ -228,14 +260,14 @@ getEvent <- function(paras, event_type) {
 getSEevent <- function(work_path, bam_path, gtf, paired, readlength, rmats_path, py_path, script_rmats, core, log_file) {
   cmd <- paste(
     "bash", script_rmats,
-    rmats_path,
-    py_path,
     work_path,
     bam_path,
     gtf,
     paired,
     readlength,
-    core, ">>", log_file, "2>&1"
+    core,
+    rmats_path,
+    py_path, ">>", log_file, "2>&1"
   )
   msg <- paste0("[", Sys.time(), "] ", "Run rMats: ", cmd)
   print(msg)
@@ -256,13 +288,9 @@ getSEevent <- function(work_path, bam_path, gtf, paired, readlength, rmats_path,
 #' @param bam_path directory to Pseudobulk bam file
 #' @param gtf the gene annotation in gtf format
 #' @param ref fasta file
-#' @param readlength the length of each read
 #' @param core the number of threads
-#' @param star_ref_path directory to STAR reference used to build IRFinder reference
-#' @param irfinder_ref_path directory to IRFinder reference
 #' @param script_irfinder directory to script for running IRFinder
 #' @param irfinder_path directory to executable file of IRFinder
-#' @param star_path directory to STAR used when star_ref_path and irfinder_ref_path are both absent
 #' @param samtools_path directory to samtools
 #' @param log_file file saving stdout and stderr information
 #'
@@ -270,20 +298,18 @@ getSEevent <- function(work_path, bam_path, gtf, paired, readlength, rmats_path,
 #'
 #' @export
 
-getRIevent <- function(work_path, bam_path, gtf, ref, readlength, core, star_ref_path, irfinder_ref_path, script_irfinder, irfinder_path, star_path, samtools_path, log_file) {
+getRIevent <- function(
+    work_path, bam_path, gtf, ref, core,
+    script_irfinder, irfinder_path, samtools_path, log_file) {
   cmd <- paste(
     "bash", script_irfinder,
-    irfinder_path,
-    star_path,
-    samtools_path,
     work_path,
     ref,
     gtf,
     bam_path,
     core,
-    readlength,
-    star_ref_path,
-    irfinder_ref_path, ">>", log_file, "2>&1"
+    irfinder_path,
+    samtools_path, ">>", log_file, "2>&1"
   )
   msg <- paste0("[", Sys.time(), "] ", "Run IRFinder: ", cmd)
   print(msg)
@@ -307,16 +333,14 @@ getRIevent <- function(work_path, bam_path, gtf, ref, readlength, core, star_ref
 #' @param core the number of threads
 #' @param junctionReads the minimum total number of reads for any junction
 #' @param script_majiq directory to script for running MAJIQ
-#' @param MAJIQ_env the name of conda env of MAJIQ
 #' @param log_file file saving stdout and stderr information
 
 #' @return Splicing event directory
 #' @export
 
-getA35SSALevent <- function(work_path, bam_path, gff, script_majiq, core, genome_name, junctionReads, MAJIQ_env, log_file) {
+getA35SSALevent <- function(work_path, bam_path, gff, script_majiq, core, genome_name, junctionReads, log_file) {
   cmd <- paste(
     "bash", script_majiq,
-    MAJIQ_env,
     work_path,
     bam_path,
     gff,
