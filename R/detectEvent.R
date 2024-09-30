@@ -20,7 +20,7 @@ detectEvents <- function(paras) {
   }
   print(paste(length(cells), "cells are considered."))
   print("Checking events...")
-  event_types <- paras$Task$generate_event_id$event_type
+  event_types <- paras$Task$event$event_type
   event_types <- unlist(strsplit(event_types, ";"))
   event_types <- check.valid(x = event_types, select = c("A3SS", "A5SS", "AL", "SE", "MXE", "RI"))
   print(paste0("event_type=", paste(event_types, collapse = ";"), "  checked"))
@@ -34,7 +34,7 @@ detectEvents <- function(paras) {
   genome_name <- paras$Basic$refgenome$genome_name
   readlength <- paras$Basic$readlength
   paired <- paras$Basic$paired
-  remove.chr <- paras$Task$generate_event_id$remove_chr
+  remove.chr <- paras$Task$event$remove_chr
   core <- paras$Basic$core
   ExonToIntronReads <- paras$Basic$filter_merged_bam$ExonToIntronReads
   junctionReads <- paras$Basic$filter_merged_bam$junctionReads
