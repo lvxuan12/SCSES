@@ -145,22 +145,26 @@ getClassifierFeature <- function(
 #' @importFrom stats rbinom coef predict quantile
 #' @importFrom caret downSample
 #' @importFrom glmnet cv.glmnet
+#' @param genome_name Genome name, hg19 or hg38
 #' 
 FtClassifier <- function(
     paras, rds_path = NULL, rds_ft_path = NULL, 
     rds_cell_similarity_path = NULL, 
-    decay_impute = paras$Task$impute$decay_impute) {
+    decay_impute = paras$Task$impute$decay_impute,
+    genome_name = paras$Basic$refgenome$genome_name) {
     # script----
-    mat_impute_v1 <- paste0(paras$Basic$matlab_script, "/imputation1/run_imputation1.sh")
+    matlab_path <- system.file("matlab", package = "SCSES")
+    mat_impute_v1 <- paste0(matlab_path, "/imputation1/run_imputation1.sh")
     mcr_path <- paras$Basic$mcr_path
     # build in data----
-    psi_gtex_path = paras$Task$impute$psi_gtex_path
+    extdata_path <- system.file("extdata", package = "SCSES")
+    psi_gtex_path <- paste0(extdata_path, "/ftevents/", genome_name, "/psi/psi_gtex_select.txt")
     print("Reading true Ft PSI...")
     psi_gtex <- read.table(psi_gtex_path, header = T)
     psi_gtex <- rowMeans(psi_gtex)
     print("Loading Pre-training classifer...")
-    model1_path = paras$Task$impute$model1
-    model2_path = paras$Task$impute$model2
+    model1_path = paste0(extdata_path, "/model/model_change_nonchange.rdata")
+    model2_path = paste0(extdata_path, "/model/model_change_01_change_other.rdata")
     model1 <- get(load(model1_path))
     model2 <- get(load(model2_path))
     msg <- paste0("[", Sys.time(), "] ", "Classifer fine tune")

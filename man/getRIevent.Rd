@@ -9,13 +9,9 @@ getRIevent(
   bam_path,
   gtf,
   ref,
-  readlength,
   core,
-  star_ref_path,
-  irfinder_ref_path,
   script_irfinder,
   irfinder_path,
-  star_path,
   samtools_path,
   log_file
 )
@@ -29,19 +25,11 @@ getRIevent(
 
 \item{ref}{fasta file}
 
-\item{readlength}{the length of each read}
-
 \item{core}{the number of threads}
-
-\item{star_ref_path}{directory to STAR reference used to build IRFinder reference}
-
-\item{irfinder_ref_path}{directory to IRFinder reference}
 
 \item{script_irfinder}{directory to script for running IRFinder}
 
 \item{irfinder_path}{directory to executable file of IRFinder}
-
-\item{star_path}{directory to STAR used when star_ref_path and irfinder_ref_path are both absent}
 
 \item{samtools_path}{directory to samtools}
 

@@ -9,7 +9,8 @@ FtClassifier(
   rds_path = NULL,
   rds_ft_path = NULL,
   rds_cell_similarity_path = NULL,
-  decay_impute = paras$Task$impute$decay_impute
+  decay_impute = paras$Task$impute$decay_impute,
+  genome_name = paras$Basic$refgenome$genome_name
 )
 }
 \arguments{
@@ -23,6 +24,8 @@ Default decay_impute from paras}
 \item{rds_cell_similarity_path}{path to cell similarity, list with name(EXP_RBP, RC and PSI)}
 
 \item{decay_impute}{threshold of change in the similarity matrix}
+
+\item{genome_name}{Genome name, hg19 or hg38}
 }
 \value{
 path to final classifer

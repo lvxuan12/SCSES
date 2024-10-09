@@ -51,7 +51,8 @@ ImputationAll <- function(
     rc = NULL, psi = NULL, event.info = NULL,
     cell_similarity = NULL, event_similarity = NULL) {
     # script----
-    mat_scses <- paste0(paras$Basic$matlab_script, "/scses/run_scses.sh")
+    matlab_path <- system.file("matlab", package = "SCSES")
+    mat_scses <- paste0(matlab_path, "/scses/run_scses.sh")
     mcr_path <- paras$Basic$mcr_path
     msg <- paste0("[", Sys.time(), "] ", "Get imputed result using cell similarity and event similarity.")
     print(msg)
@@ -232,7 +233,8 @@ Imputation <- function(
     cell_similarity = NULL, event_similarity = NULL,
     cell_similarity_type) {
     # script----
-    mat_scses <- paste0(paras$Basic$matlab_script, "/scses/run_scses.sh")
+    matlab_path <- system.file("matlab", package = "SCSES")
+    mat_scses <- paste0(matlab_path, "/scses/run_scses.sh")
     mcr_path <- paras$Basic$mcr_path
     msg <- paste0("[", Sys.time(), "] ", "Get imputed result using cell similarity and event similarity.")
     print(msg)

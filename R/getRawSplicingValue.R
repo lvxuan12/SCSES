@@ -23,7 +23,7 @@ getRawRC <- function(
     event_types = NULL) {
   options("scipen" = 100)
   # script
-  java_path <- paras$Basic$jar_path
+  java_path <- system.file("java", package = "SCSES")
   # input
   print("Checking events...")
   event_path <- paste0(paras$Basic$work_path, "/events/")

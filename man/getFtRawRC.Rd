@@ -8,7 +8,8 @@ getFtRawRC(
   paras,
   bam_path = paras$Basic$bam_path,
   core = paras$Basic$core,
-  sequence = paras$Basic$sequence
+  sequence = paras$Basic$sequence,
+  genome_name = paras$Basic$refgenome$genome_name
 )
 }
 \arguments{
@@ -20,6 +21,8 @@ Default bam_path, java_path, core, and sequence from paras}
 \item{core}{the number of threads}
 
 \item{sequence}{full_length or UMI}
+
+\item{genome_name}{Genome name, hg19 or hg38}
 }
 \value{
 raw read path

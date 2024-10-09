@@ -7,6 +7,7 @@
 #' @param bam_path The path to save single cell bam file
 #' @param core the number of threads
 #' @param sequence full_length or UMI
+#' @param genome_name Genome name, hg19 or hg38
 
 #' @return raw read path
 #'
@@ -15,14 +16,16 @@
 
 getFtRawRC <- function(
     paras, bam_path = paras$Basic$bam_path,
-    core = paras$Basic$core, sequence = paras$Basic$sequence) {
+    core = paras$Basic$core, sequence = paras$Basic$sequence,
+    genome_name = paras$Basic$refgenome$genome_name) {
     options("scipen" = 100)
     # script
-    java_path = paras$Basic$jar_path
+    java_path <- system.file("java", package = "SCSES")
     # input
     # Built-in data
     print("Loading splicing events for classifer fine tune...")
-    event_path <- paras$Task$event$ft_event_path
+    extdata_path <- system.file("extdata", package = "SCSES")
+    event_path <- paste0(extdata_path, "/ftevents/", genome_name,"/")
     event_types <- gsub(".txt", "", list.files(event_path, "*.txt"))
     print("Checking cells...")
     cells <- list.files(paras$Basic$bam_path, "*bam$", recursive = F)
@@ -236,7 +239,9 @@ getFtRawPSI <- function(paras) {
     }
     print("Loading splicing events for classifer fine tune...")
     # Built-in data
-    event_path <- paras$Task$event$ft_event_path
+    extdata_path <- system.file("extdata", package = "SCSES")
+    genome_name = paras$Basic$refgenome$genome_name
+    event_path <- paste0(extdata_path, "/ftevents/", genome_name, "/")
     event_types <- gsub(".txt", "", list.files(event_path, "*.txt"))
     for (type in event_types) {
         msg <- paste0("[", Sys.time(), "] ", "Calculating PSI value of", type, "events...")

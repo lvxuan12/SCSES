@@ -158,13 +158,15 @@ createBSgenome <- function(ref_path,out_path,pkg) {
 getCellSimilarity <- function(
     paras, rds_path = NULL,output_path=NULL,feature_num = paras$Task$impute$feature_num,
     rbp = paras$Task$impute$rbp,cell_similarity_data = paras$Task$impute$cell_similarity_data, 
-    distance_method = paras$Task$impute$KNN$cell$distance_method, 
-    alpha_cell = paras$Task$impute$KNN$cell$alpha, 
-    decay_cell = paras$Task$impute$KNN$cell$decay, 
-    kcell_max = paras$Task$impute$KNN$cell$kmax, 
+    distance_method = paras$Task$impute$KNN$cell$distance_method,
+    alpha_cell = paras$Task$impute$KNN$cell$alpha,
+    decay_cell = paras$Task$impute$KNN$cell$decay,
+    kcell_max = paras$Task$impute$KNN$cell$kmax,
     kcell_min = paras$KNN$cell$kmin,cell.select = NULL) {
     msg <- paste0("[", Sys.time(), "] ", "Calculate cell similarity...")
     print(msg)
+    #script
+    srcpath = system.file("python", package = "SCSES")
     # Input
     if (is.null(rds_path)) {
         rds_path <- paste0(paras$Basic$work_path, "/rds_processed/")
@@ -313,15 +315,15 @@ getCellSimilarity <- function(
                     "Cannot find scipy, please install through pip (e.g. pip install scipy)."
                 )
             }
-            script_cell_similarity = paste0(paras$Basic$srcpath, "/impute/Dynamic_Kcell2.py")
+            script_cell_similarity = paste0(srcpath, "/Dynamic_Kcell2.py")
             source_python(script_cell_similarity)
             cell.similars.res[[type]] <- cell_similarity(D_reduct_res, param_cell_list)
         }else if(nrow(D_reduct_res)>3){
-            script_cell_similarity = paste0(paras$Basic$srcpath, "/impute/Dynamic_Kcell.py")
+            script_cell_similarity = paste0(srcpath, "/Dynamic_Kcell.py")
             source_python(script_cell_similarity)
             cell.similars.res[[type]] <- cell_similarity(D_reduct_res, param_cell_list)
         }else{
-            script_cell_similarity = paste0(paras$Basic$srcpath, "/impute/Cell_similarity.py")
+            script_cell_similarity = paste0(srcpath, "/Cell_similarity.py")
             source_python(script_cell_similarity)
             cell.similars.res[[type]] <- cell_similarity(D_reduct_res, list(similar_method = distance_method))
         }
@@ -406,11 +408,12 @@ getEventSimilarity <- function(
     dir.create(output_path, recursive = T)
     print(paste0("Output: ", output_path))
     # script
-    srcpath = paras$Basic$srcpath
+    matlab_path <- system.file("matlab", package = "SCSES")
     mcr_path = paras$Basic$mcr_path
-    mat_combineDistance = paste0(paras$Basic$srcpath, "/impute/src_matlab/combineDistance/run_combineDistance.sh")
-    mat_knn_similarity = paste0(paras$Basic$srcpath, "/impute/src_matlab/knn_similarity_from_path/run_knn_similarity_from_path.sh")
-    source_python(paste0(srcpath, "/impute/seqsim/AE.py"))
+    mat_combineDistance = paste0(matlab_path, "/combineDistance/run_combineDistance.sh")
+    mat_knn_similarity = paste0(matlab_path, "/knn_similarity_from_path/run_knn_similarity_from_path.sh")
+    py_path <- system.file("python", package = "SCSES")
+    source_python(paste0(py_path, "AE.py"))
     # validate parameters----
     alpha_event <- check.int.or.null(x = alpha_event, default = 0.8)
     print(paste0("alpha_event=", paste(alpha_event, collapse = ";"), "  checked"))
@@ -602,7 +605,7 @@ getEventSimilarity <- function(
     # AE embedding----
     if (!py_module_available(module = "keras")) {
         stop(
-            "Cannot find keras, please install through pip (e.g. pip install keras)."
+            "Cannot find keras, please install through conda (e.g. conda install tensorflow keras)."
         )
     }
     if (!py_module_available(module = "pandas")) {

@@ -18,7 +18,6 @@ detectEvents <- function(paras) {
     msg <- paste("There is no bam file in", bam_path, "!")
     stop(msg)
   }
-  print(paste(length(cells), "cells are considered."))
   print("Checking events...")
   event_types <- paras$Task$event$event_type
   event_types <- unlist(strsplit(event_types, ";"))
@@ -95,8 +94,8 @@ detectEvents <- function(paras) {
     # script
     filename <- "run_rmats.sh"
     script_rmats <- file.path(dir_shell, filename)
-    rmats_path <- paras$Basic$rMATs
-    py_path <- paras$Basic$rMATs_py
+    rmats_path <- paras$Basic$rMATS_path
+    py_path <- paras$Basic$python_path
     res <- getSEevent(
       rmats.work.path, bam_path, gtf, paired, readlength,
       rmats_path, py_path, script_rmats, core, log_file

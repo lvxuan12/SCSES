@@ -12,7 +12,6 @@ getA35SSALevent(
   core,
   genome_name,
   junctionReads,
-  MAJIQ_env,
   log_file
 )
 }
@@ -30,8 +29,6 @@ getA35SSALevent(
 \item{genome_name}{Genome name required by MAJIQ}
 
 \item{junctionReads}{the minimum total number of reads for any junction}
-
-\item{MAJIQ_env}{the name of conda env of MAJIQ}
 
 \item{log_file}{file saving stdout and stderr information}
 }

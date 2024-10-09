@@ -6,7 +6,7 @@
 \usage{
 getEXPmatrix(
   paras,
-  expr_path = NULL,
+  expr_path = paste0(paras$Basic$work_path, "/expr/"),
   dataset = paras$DataSet,
   filter.mt = paras$Basic$filter_sc$filter.mt,
   filter.rp = paras$Basic$filter_sc$filter.rp

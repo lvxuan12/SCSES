@@ -7,7 +7,8 @@
 createPseudobulk(
   paras,
   bam_path = paras$Basic$bam_path,
-  core = paras$Basic$core
+  core = paras$Basic$core,
+  overwrite = TRUE
 )
 }
 \arguments{
