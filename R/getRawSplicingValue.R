@@ -18,7 +18,7 @@
 #' @import parallel
 
 getRawRC <- function(
-    paras, bam_path = paras$Basic$bam_path,
+    paras,bam_path = paras$Basic$bam_path,
     core = paras$Basic$core, sequence = paras$Basic$sequence,
     event_types = NULL) {
   options("scipen" = 100)

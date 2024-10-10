@@ -416,7 +416,7 @@ getSEid <- function(file, outfile, remove.chr = F, junctionReads) {
 getRIid <- function(file, base = 5, outfile, remove.chr = F, junctionReads, ExonToIntronReads, gtf) {
   file2 <- system(paste0("find ", file, " -name IRFinder-IR-nondir.txt"), show.output.on.console = F, intern = T)
   data <- read.table(file2, header = T, sep = "\t")
-  data <- data[which((data$ExonToIntronReadsLeft > ExonToIntronReads | data$ExonToIntronReadsRight > ExonToIntronReads) & data$SpliceExact > junctionReads & data$IntronDepth > 0 & data$Warnings == "-"), ]
+  data <- data[which((data$ExonToIntronReadsLeft > ifelse(ExonToIntronReads / 10 > 10, ExonToIntronReads / 10, 10) | data$ExonToIntronReadsRight > ifelse(ExonToIntronReads / 10 > 10, ExonToIntronReads / 10, 10)) & data$SpliceExact > junctionReads & data$IntronDepth > 0 & data$Warnings == "-"), ]
   if (nrow(data) > 0) {
     if (remove.chr) {
       data$Chr <- sub(pattern = "chr", replacement = "", x = data$Chr)
