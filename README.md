@@ -4,6 +4,8 @@ Menu
 - [SCSES](#scses)
   - [Installation](#installation)
     - [Dependencies and requirements](#dependencies-and-requirements)
+      - [1. python module](#1-python-module)
+      - [2. Softwares](#2-softwares)
     - [Installation from GitHub](#installation-from-github)
   - [SCSES input](#scses-input)
   - [Getting started](#getting-started)
@@ -44,21 +46,20 @@ conda create -n SCSES_test python=3.11
 conda activate SCSES_test
 ```
 
-Besides, [samtools](https://github.com/samtools/samtools) should be
-downloded.
-
-1.  python module
+#### 1. python module
 
 ``` bash
 pip install pandas numpy scipy scikit-learn
 conda install tensorflow keras
 ```
 
-2.  Softwares To detect splicing events You will need to install rMATS,
-    MAJIQ, IRFinder. MAJIQ and rMATS should be built in the same
-    environment with SCSES (same python).
+#### 2. Softwares
 
-2.1 [rMATS](https://github.com/Xinglab/rmats-turbo)
+To detect splicing events You will need to install rMATS, MAJIQ,
+IRFinder. MAJIQ and rMATS should be built in the same environment with
+SCSES (same python).
+
+##### 2.1 [rMATS](https://github.com/Xinglab/rmats-turbo)
 
 ``` bash
 wget https://github.com/Xinglab/rmats-turbo/releases/download/v4.3.0/rmats_turbo_v4_3_0.tar.gz
@@ -68,7 +69,7 @@ pip install Cython
 export PATH=/path/to/rmats_turbo_v4_3_0/:$PATH
 ```
 
-2.2 [MAJIQ](https://biociphers.bitbucket.io/majiq-docs/index.html)
+##### 2.2 [MAJIQ](https://biociphers.bitbucket.io/majiq-docs/index.html)
 
 ``` bash
 pip install git+https://bitbucket.org/biociphers/majiq_academic.git
@@ -77,7 +78,7 @@ export MAJIQ_LICENSE_FILE=/path/to/majiq_license_academic_official.lic
 
 MAJIQ will not function without providing the license file.
 
-2.3 [IRFinder](https://github.com/dgaolab/IRFinder)
+##### 2.3 [IRFinder](https://github.com/dgaolab/IRFinder)
 
 ``` bash
 wget https://github.com/dgaolab/IRFinder/archive/refs/tags/v1.3.1.tar.gz
@@ -87,6 +88,8 @@ export PATH=/path/to/IRFinder-2.0.1/bin/:$PATH
 
 [STAR](https://github.com/alexdobin/STAR) will be needed to build
 IRFinder reference
+
+##### 2.4 [samtools](https://github.com/samtools/samtools)
 
 ### Installation from GitHub
 
@@ -98,7 +101,7 @@ remotes::install_github("lvxuan12/SCSES")
 
 ## SCSES input
 
-SCSES requires three inputs from the user
+SCSES requires four inputs from the user
 
 ##### 1. bam files sorted by coordinate
 

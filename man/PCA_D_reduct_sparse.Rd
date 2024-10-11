@@ -15,6 +15,6 @@ PCA_D_reduct_sparse(data, id_select)
 principal components retain ~90% of the variation in the data
 }
 \description{
-Perform a principal components analysis on the given sparse 
+Perform a principal components analysis on the given sparse
 matrix and return the results
 }

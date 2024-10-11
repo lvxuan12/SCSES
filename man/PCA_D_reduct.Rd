@@ -15,6 +15,6 @@ PCA_D_reduct(data, id_select)
 principal components retain ~90% of the variation in the data
 }
 \description{
-Perform a principal components analysis on the given data 
+Perform a principal components analysis on the given data
 and return the results
 }

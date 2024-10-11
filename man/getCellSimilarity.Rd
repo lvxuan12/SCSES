@@ -36,7 +36,7 @@ rbp, kevent, alpha_event,decay_event from paras}
 Choose at least on from EXP_RBP, RC, and PSI, seperated by ";",
 EXP_RBP means TPM/normalized UMI counts for rbp, default: extract from rds_processed/expr.rds
 RC means read counts associated with splicing events,  default: rds_processed/rc.rds
-PSI meand psi value of splicing events,  default: rds_processed/psi.rds}
+PSI means psi value of splicing events,  default: rds_processed/psi.rds}
 
 \item{distance_method}{method used to calculate distance,
 euclidean or cosine}
@@ -54,8 +54,8 @@ of single-cell bam file name excluding the .bam suffix}
 }
 \value{
 path to cell similarity
-save a list of different types of cell similarity and a list of the number 
-of neighbors to rds file to work_path/imputation/cell_similarity/cell.similars.rds 
+save a list of different types of cell similarity and a list of the number
+of neighbors to rds file to work_path/imputation/cell_similarity/cell.similars.rds
 and work_path/imputation/cell_similarity/dyk.cell.rds
 }
 \description{

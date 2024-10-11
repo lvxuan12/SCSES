@@ -10,22 +10,21 @@ Estimation(
   output_path = NULL,
   cell_similarity = NULL,
   dyk_cell = NULL,
-  rc,
-  psi,
-  expr,
-  event,
-  model_ft
+  rc = NULL,
+  psi = NULL,
+  expr = NULL,
+  event = NULL
 )
 }
 \arguments{
 \item{paras}{list fromJSON(paras_file)}
 
-\item{rds_imputed_file}{path to the list of three imputation strategies results 
+\item{rds_imputed_file}{path to the list of three imputation strategies results
 named by the strategies}
 
 \item{output_path}{path to save the final imputation of PSI values}
 
-\item{cell_similarity}{a list of cell similarity named by the data 
+\item{cell_similarity}{a list of cell similarity named by the data
 type (EXP_RBP, RC, and PSI) or path to a rds file
 default: imputation/cell_similarity/cell.similars.rds}
 
@@ -54,7 +53,7 @@ path to save the final imputation of PSI values
 The names of the lists represent different cell similarities
 }
 \description{
-strategy1 for pairs in ND, 
+strategy1 for pairs in ND,
 strategy2 for pairs in BD and TD+Info, and strategy3 for pairs in T0-Info.
 For each event-cell pair, the different imputation results are combined with
 the probabilities of different groups as the coefficients.

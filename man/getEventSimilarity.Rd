@@ -55,6 +55,6 @@ save a list of event similarity for different types of splicing events to
 work_path/imputation/event_similarity/event.similars.rds
 }
 \description{
-Computes splicing event features and the k nearest 
+Computes splicing event features and the k nearest
 neighbors for given dataset by event types
 }
