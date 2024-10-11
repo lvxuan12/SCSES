@@ -1,7 +1,7 @@
 #' @include utilities.R
 
 #' @title Calculate features for classifer
-#' 
+#'
 #' @param cell_similarity matrix of cell similarity
 #' @param psi matrix of psi value
 #' @param rc matrix of normalized splicing events associated read counts
@@ -12,8 +12,8 @@
 #' @param rc_imputed matrix of psi value calculated using reads after
 #' imputation with information from similar cells  (Strategy 2)
 #' @param psi_imputed matrix of imputed psi with information from similar cells (Strategy 1)
-#' 
-#' 
+#'
+#'
 #' @return a data.frame of features
 #'
 #' @export
@@ -146,10 +146,10 @@ getClassifierFeature <- function(
 #' @importFrom caret downSample
 #' @importFrom glmnet cv.glmnet
 #' @param genome_name Genome name, hg19 or hg38
-#' 
+#'
 FtClassifier <- function(
-    paras, rds_path = NULL, rds_ft_path = NULL, 
-    rds_cell_similarity_path = NULL, 
+    paras, rds_path = NULL, rds_ft_path = NULL,
+    rds_cell_similarity_path = NULL,
     decay_impute = paras$Task$impute$decay_impute,
     genome_name = paras$Basic$refgenome$genome_name) {
     # script----
@@ -270,7 +270,7 @@ FtClassifier <- function(
             names(all_data) <- colnames(event[, -1])
             saveHdf5File(datapath, list(
                 similarity = cell_similarity_type, data = all_data,
-                parameter = list(decay = decay_impute), data_type = "RC", 
+                parameter = list(decay = decay_impute), data_type = "RC",
                 similarity_type = "cell"
             ))
             cmd <- paste("bash", mat_impute_v1, mcr_path, datapath, resultpath)
@@ -374,7 +374,7 @@ FtClassifier <- function(
         ".rds"
     )
     saveRDS(res_list, output_name)
-    
+
     ## feature
     model_list <- list()
     for (type in cell_similarity_data) {
@@ -461,7 +461,7 @@ FtClassifier <- function(
 #'
 #' @export
 #' @importFrom stats predict
-#' 
+#'
 getPredictProb <- function(feature_df, model1, model2, psi) {
     num_r = nrow(psi)
     num_c = ncol(psi)
@@ -509,16 +509,16 @@ getPredictProb <- function(feature_df, model1, model2, psi) {
 }
 
 #' @title Combining different imputation strategies
-#' @description strategy1 for pairs in ND, 
+#' @description strategy1 for pairs in ND,
 #' strategy2 for pairs in BD and TD+Info, and strategy3 for pairs in T0-Info.
 #' For each event-cell pair, the different imputation results are combined with
 #' the probabilities of different groups as the coefficients.
 #'
 #' @param paras list fromJSON(paras_file)
-#' @param rds_imputed_file path to the list of three imputation strategies results 
+#' @param rds_imputed_file path to the list of three imputation strategies results
 #' named by the strategies
 #' @param output_path path to save the final imputation of PSI values
-#' @param cell_similarity a list of cell similarity named by the data 
+#' @param cell_similarity a list of cell similarity named by the data
 #' type (EXP_RBP, RC, and PSI) or path to a rds file
 #' default: imputation/cell_similarity/cell.similars.rds
 #' @param dyk_cell a list of Neighbor number named by the data
@@ -544,7 +544,7 @@ getPredictProb <- function(feature_df, model1, model2, psi) {
 #'
 Estimation <- function(
     paras, rds_imputed_file, output_path = NULL, cell_similarity = NULL,
-    dyk_cell = NULL, rc, psi, expr, event, model_ft) {
+    dyk_cell = NULL, rc = NULL, psi = NULL, expr = NULL, event = NULL) {
     msg <- paste0("[", Sys.time(), "] ", "Combine imputed psi.")
     print(msg)
     # validate input----
@@ -565,7 +565,22 @@ Estimation <- function(
     print("cell similarity checked")
     dyk_cell <- check.readRDS2(dyk_cell, default = paste0(paras$Basic$work_path, "/imputation/cell_similarity/dyk.cell.rds"))
     print("dynamic cell knn checked")
-    model_ft <- check.readRDS2(model_ft, default = paste0(paras$Basic$work_path, "/classifer/model_ft.rds"))
+    if(file.exists(paste0(paras$Basic$work_path, "/classifer/model_ft.rds"))){
+      print("Fine tune model will be used.")
+      model = readRDS(paste0(paras$Basic$work_path, "/classifer/model_ft.rds"))
+    }else{
+      print("Pre-trained model will be used.")
+      extdata_path <- system.file("extdata", package = "SCSES")
+      model1_path = paste0(extdata_path, "/model/model_change_nonchange.rdata")
+      model2_path = paste0(extdata_path, "/model/model_change_01_change_other.rdata")
+      model1 <- get(load(model1_path))
+      model2 <- get(load(model2_path))
+      model <- lapply(names(model1), function(x){
+        return(list(model1=model1[[x]],
+                    model2=model2[[x]]))
+      })
+      names(model) <- names(model1)
+    }
     print("classifer checked")
     if (is.null(output_path)) {
         output_path <- paste0(paras$Basic$work_path, "/imputation/")
@@ -621,3 +636,4 @@ Estimation <- function(
     print(msg)
     return(output_name)
 }
+

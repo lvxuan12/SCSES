@@ -1,13 +1,13 @@
 #' @include utilities.R
 #' @include eventFeatureFunction.R
-#' 
+#'
 
 #' @title PCA
-#' @description Perform a principal components analysis on the given data 
+#' @description Perform a principal components analysis on the given data
 #' and return the results
 #' @param data a matrix or data frame
 #' @param id_select used features
-#' 
+#'
 #' @return principal components retain ~90% of the variation in the data
 #'
 #' @export
@@ -25,7 +25,7 @@ PCA_D_reduct <- function(data, id_select) {
 }
 
 #' @title PCA for sparse matrix
-#' @description Perform a principal components analysis on the given sparse 
+#' @description Perform a principal components analysis on the given sparse
 #' matrix and return the results
 #' @param data a sparse matrix
 #' @param id_select used features
@@ -61,13 +61,13 @@ PCA_D_reduct_sparse <- function(data, id_select) {
 #' @param ref_path reference fasta file
 #' @param out_path path to save the package
 #' @param pkg the name of pkg
-#' 
+#'
 #' @return package path
 #'
 #' @export
 #' @importFrom Biostrings readDNAStringSet writeXStringSet
 #' @importFrom BSgenome forgeBSgenomeDataPkg
-#' 
+#'
 createBSgenome <- function(ref_path,out_path,pkg) {
     out_path = paste0(out_path, "/", pkg, "/")
     dir.create(out_path, recursive = T)
@@ -134,7 +134,7 @@ createBSgenome <- function(ref_path,out_path,pkg) {
 #' Choose at least on from EXP_RBP, RC, and PSI, seperated by ";",
 #' EXP_RBP means TPM/normalized UMI counts for rbp, default: extract from rds_processed/expr.rds
 #' RC means read counts associated with splicing events,  default: rds_processed/rc.rds
-#' PSI meand psi value of splicing events,  default: rds_processed/psi.rds
+#' PSI means psi value of splicing events,  default: rds_processed/psi.rds
 #' @param distance_method method used to calculate distance,
 #' euclidean or cosine
 #' @param alpha_cell restart probability for random walk
@@ -144,8 +144,8 @@ createBSgenome <- function(ref_path,out_path,pkg) {
 #' @param cell.select cells selected for analysis, should match the name
 #' of single-cell bam file name excluding the .bam suffix
 #' @return path to cell similarity
-#' save a list of different types of cell similarity and a list of the number 
-#' of neighbors to rds file to work_path/imputation/cell_similarity/cell.similars.rds 
+#' save a list of different types of cell similarity and a list of the number
+#' of neighbors to rds file to work_path/imputation/cell_similarity/cell.similars.rds
 #' and work_path/imputation/cell_similarity/dyk.cell.rds
 #'
 #' @export
@@ -153,11 +153,11 @@ createBSgenome <- function(ref_path,out_path,pkg) {
 #' @import Matrix
 #' @importFrom reticulate source_python py_module_available
 #' @importFrom stats var
-#' 
-#' 
+#'
+#'
 getCellSimilarity <- function(
     paras, rds_path = NULL,output_path=NULL,feature_num = paras$Task$impute$feature_num,
-    rbp = paras$Task$impute$rbp,cell_similarity_data = paras$Task$impute$cell_similarity_data, 
+    rbp = paras$Task$impute$rbp,cell_similarity_data = paras$Task$impute$cell_similarity_data,
     distance_method = paras$Task$impute$KNN$cell$distance_method,
     alpha_cell = paras$Task$impute$KNN$cell$alpha,
     decay_cell = paras$Task$impute$KNN$cell$decay,
@@ -181,7 +181,7 @@ getCellSimilarity <- function(
     }
     dir.create(output_path, recursive = T)
     print(paste0("Output: ", output_path))
-    
+
     # validate parameters
     feature_num <- check.int.or.null(x = feature_num, default = 2000)
     print(paste0("feature_num=", feature_num, "  checked"))
@@ -229,7 +229,7 @@ getCellSimilarity <- function(
                     nrow(rc), "reads", "are used to calculate cell similarity",
                 ))
             }
-            
+
         } else if (type == "EXP_RBP") {
             if ("expr.rds" %in% rds_files) {
                 expr <- readRDS(file = paste0(rds_path, "/expr.rds"))
@@ -341,10 +341,10 @@ getCellSimilarity <- function(
 
 
 #' @title KNN graph construction for events
-#' @description Computes splicing event features and the k nearest 
+#' @description Computes splicing event features and the k nearest
 #' neighbors for given dataset by event types
-#' 
-#' 
+#'
+#'
 #' @param paras list fromJSON(paras_file)
 #' Default core, pkg, ref_path,phast.path,chr.prefix, ae.para,
 #' rbp, kevent, alpha_event,decay_event from paras
@@ -360,7 +360,7 @@ getCellSimilarity <- function(
 #' @param kevent the number of neighbors
 #' @param alpha_event restart probability for random walk
 #' @param decay_event threshold of change in the similarity matrix
-#' 
+#'
 #' @return path to event similarity
 #' save a list of event similarity for different types of splicing events to
 #' work_path/imputation/event_similarity/event.similars.rds
@@ -379,8 +379,8 @@ getCellSimilarity <- function(
 #' @import hdf5r
 #' @importFrom GenomicRanges GRanges
 #' @importFrom IRanges IRanges
-#' 
-#' 
+#'
+#'
 getEventSimilarity <- function(
     paras,rds_path = NULL,output_path=NULL,core = paras$Basic$core,
     pkg = paras$Basic$refgenome$genome_name,ref_path = paras$Basic$refgenome$ref_path,
@@ -444,7 +444,7 @@ getEventSimilarity <- function(
     event_types = names(event.info)
     event_types <- check.valid(x = event_types, select = c("A3SS", "A5SS", "AL", "SE", "MXE", "RI"))
     print(paste0("event_type=", paste(event_types, collapse = ";"), "  checked"))
-    
+
     # get events feature----
     msg <- paste0("[", Sys.time(), "] ", "Calculate events feature...")
     print(msg)
@@ -696,7 +696,7 @@ getEventSimilarity <- function(
     {
         h5write(obj = event.info[[type]]$event, file = distance_path, name = paste0("/event_names/", type), )
     }
-    
+
     msg = paste0("[", Sys.time(), "] ", "Calculate event similarity...")
     print(msg)
     event.similars = list()
