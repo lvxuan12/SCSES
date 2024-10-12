@@ -1,7 +1,7 @@
 #' @title Create configure file
 #' @param host The IPv4 address that the application should listen on, default: 127.0.0.1
 #' @param port The TCP port that the application should listen on, default: 9999
-#' @param browser The HTML browser to be used by shiny
+#' @param launch.browser If true, the system's default web browser will be launched automatically after the app is started.
 #' @return NULL
 #' @export
 #' @importFrom shiny runApp
