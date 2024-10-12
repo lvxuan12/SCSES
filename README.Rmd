@@ -29,13 +29,17 @@ Single-cell Splicing Estimation based on Network Diffusion
 
 ### Dependencies and requirements
 
-To use SCSES, you will need to install R, Python, Matlab, and Java.
-
-We recommend conda to install the package:
+We recommend a new conda environment to install SCSES:
 
 ``` bash
 conda create -n SCSES_test python=3.11
 conda activate SCSES_test
+```
+
+To use SCSES, you will need to install R, Python, Matlab, and Java.
+
+``` bash
+conda install -c conda-forge r-base=4.3.1
 ```
 
 #### 1. python module
@@ -88,6 +92,11 @@ SCSES is installed directly from github using the following command:
 remotes::install_github("lvxuan12/SCSES")
 ```
 
+#### tips
+
+if you have
+
+
 ## SCSES input
 
 SCSES requires four inputs from the user
@@ -98,7 +107,7 @@ Test bam files can be downloaded from ...
 
 ##### 2. genome FASTA file and annotation GTF file
 
-##### 3.configure file
+##### 3. configure file
 
 You can use `createConfigshiny` to generate configure file for your dataset.
 
@@ -108,7 +117,7 @@ createConfigshiny(host, port)
 
 A json file will be generated in the work_path you provided.
 
-##### 4.phast conservation file in bigWig format
+##### 4. phast conservation file in bigWig format
 
 For human and mouse, you could download it directly from UCSC browser: [mm10.60way.phastCons.bw](http://hgdownload.cse.ucsc.edu/goldenPath/mm10/phastCons60way/), [hg38.phastCons100way.bw](http://hgdownload.cse.ucsc.edu/goldenPath/hg38/phastCons100way/) and [hg19.100way.phastCons.bw](http://hgdownload.cse.ucsc.edu/goldenPath/hg19/phastCons100way/).
 
@@ -251,5 +260,3 @@ Imputed.data.path = Estimation(paras,rds_imputed_file)
 A list of final imputation of PSI values will be saved to `work_path/imputation/`.
 
 ### Run SCSES using one command:
-
-### Running SCSES on UMI-based scRNA-seq data

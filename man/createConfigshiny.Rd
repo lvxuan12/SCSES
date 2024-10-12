@@ -4,12 +4,14 @@
 \alias{createConfigshiny}
 \title{Create configure file}
 \usage{
-createConfigshiny(host = "127.0.0.1", port = 9999, ...)
+createConfigshiny(host = "127.0.0.1", port = 9999, browser = "firefox", ...)
 }
 \arguments{
 \item{host}{The IPv4 address that the application should listen on, default: 127.0.0.1}
 
 \item{port}{The TCP port that the application should listen on, default: 9999}
+
+\item{browser}{The HTML browser to be used by shiny}
 }
 \description{
 Create configure file

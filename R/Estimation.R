@@ -533,8 +533,6 @@ getPredictProb <- function(feature_df, model1, model2, psi) {
 #' default: rds_processed/expr.rds
 #' @param event data.frame of events information or path to a rds file,
 #' default: rds_processed/event.rds
-#' @param model_ft a list of final classifer, model1 is a logistical model to distinguish BD and TD,
-#' model2 is a logistical model to distinguish TD+Info and TD-Info
 
 #' @return path to save the final imputation of PSI values
 #' The names of the lists represent different cell similarities
