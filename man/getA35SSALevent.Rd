@@ -12,7 +12,8 @@ getA35SSALevent(
   core,
   genome_name,
   junctionReads,
-  log_file
+  log_file,
+  license_file
 )
 }
 \arguments{

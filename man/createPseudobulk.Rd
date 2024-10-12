@@ -18,6 +18,8 @@ Default bam_path, samtools_path, core from paras}
 \item{bam_path}{directory to single cell bam file}
 
 \item{core}{the number of threads}
+
+\item{overwrite}{overwrite the output bam if exist}
 }
 \value{
 Pseudobulk path

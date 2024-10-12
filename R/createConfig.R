@@ -10,11 +10,10 @@
 #' @import fs
 #' @import shinyWidgets
 
-createConfigshiny <-function(host="127.0.0.1",port = 9999,browser = 'firefox',...){
-    options(browser = browser)
+createConfigshiny <-function(host="127.0.0.1",port = 9999,launch.browser=F,...){
     shiny_path <- system.file("shiny", package = "SCSES")
     shiny::runApp(shiny_path,
-        host = host, port = port, ...
+        host = host, port = port,launch.browser, ...
     )
     return(NULL)
 }

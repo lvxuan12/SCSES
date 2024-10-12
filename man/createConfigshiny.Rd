@@ -4,7 +4,7 @@
 \alias{createConfigshiny}
 \title{Create configure file}
 \usage{
-createConfigshiny(host = "127.0.0.1", port = 9999, browser = "firefox", ...)
+createConfigshiny(host = "127.0.0.1", port = 9999, launch.browser = F, ...)
 }
 \arguments{
 \item{host}{The IPv4 address that the application should listen on, default: 127.0.0.1}
