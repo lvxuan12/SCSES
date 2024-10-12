@@ -28,6 +28,7 @@ getGeneExpression <- function(
     # output
     work_path = paras$Basic$work_path
     featurecounts.work.path <- paste0(work_path, "/expr/")
+    log_file <- paste0(work_path, "/runfeatureCounts.log")
     cmd <- paste(
         "bash", script,
         featurecounts.work.path,
@@ -37,7 +38,7 @@ getGeneExpression <- function(
         core,
         dataset,
         pair,
-        featureCounts_path
+        featureCounts_path, ">>", log_file, "2>&1"
     )
     msg <- paste0("[", Sys.time(), "] ", "Detect gene expression: ", cmd)
     print(msg)
@@ -54,7 +55,7 @@ getGeneExpression <- function(
 
 #' @title Get gene expression matrix
 #' @description save gene expression count and TPM matrix to work_path/rds/
-#' 
+#'
 #'
 #' @param paras list fromJSON(paras_file)
 #' Default dataset, filter.mt, filter.rp from paras
@@ -71,7 +72,7 @@ getGeneExpression <- function(
 getEXPmatrix <- function(
     paras, expr_path = paste0(paras$Basic$work_path, "/expr/"),
     dataset = paras$DataSet,
-    filter.mt = paras$Basic$filter_sc$filter.mt, 
+    filter.mt = paras$Basic$filter_sc$filter.mt,
     filter.rp = paras$Basic$filter_sc$filter.rp) {
     fea_file <- paste0(expr_path, "/", dataset, "_count.txt")
     output_path <- paste0(dirname(expr_path), "/rds/")

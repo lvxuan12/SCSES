@@ -4,6 +4,7 @@
 #' Default bam_path, samtools_path, core from paras
 #' @param bam_path directory to single cell bam file
 #' @param core the number of threads
+#' @param overwrite overwrite the output bam if exist
 #'
 #' @return Pseudobulk path
 #' @export

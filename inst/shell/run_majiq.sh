@@ -13,6 +13,8 @@ gff=$3
 core=$4
 genome_name=$5
 junctionReads=$6
+license_file=$7
+export MAJIQ_LICENSE_FILE=$license_file
 mkdir -p $workpath
 echo -e "[info]\nbamdirs=$bampath\ngenome=$genome_name\nstrandness=None\n\n[experiments]" > $workpath/majiq_build_config.ini
 for f in `ls $bampath/*bam`

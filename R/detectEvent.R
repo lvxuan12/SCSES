@@ -1,3 +1,4 @@
+#' @include utilities.R
 #' @title Detect splicing events and generate event id
 #' @description Detect splicing events based on Pseudobulk bam
 #' in work_path/data and generate event id saved to work_path/events
@@ -37,6 +38,7 @@ detectEvents <- function(paras) {
   core <- paras$Basic$core
   ExonToIntronReads <- paras$Basic$filter_merged_bam$ExonToIntronReads
   junctionReads <- paras$Basic$filter_merged_bam$junctionReads
+  license_file <-paras$Task$eventmajiq_license_file
   # output
   work_path <- paste0(paras$Basic$work_path, "/events/")
   print(paste0("Output: ", work_path))
@@ -59,7 +61,7 @@ detectEvents <- function(paras) {
     script_majiq <- file.path(dir_shell, filename)
     res <- getA35SSALevent(
       majiq.work.path, bam_path, gff, script_majiq,
-      core, genome_name, junctionReads, log_file
+      core, genome_name, junctionReads, log_file, license_file
     )
   }
   if (RI) {
@@ -173,6 +175,7 @@ getEvent <- function(paras, event_type) {
   paired <- paras$Basic$paired
   core <- paras$Basic$core
   junctionReads <- paras$Basic$filter_merged_bam$junctionReads
+  license_file <-paras$Task$eventmajiq_license_file
   if (!event_type %in% c("A3SS", "A5SS", "AL", "SE", "MXE", "RI")) {
     print(paste(c("Invalid type:", event_type, "Supported splicing event types: A3SS,A5SS,AL,SE,MXE,RI."), collapse = " "))
   } else {
@@ -193,7 +196,7 @@ getEvent <- function(paras, event_type) {
       script_majiq <- file.path(dir_shell, filename)
       res <- getA35SSALevent(
         majiq.work.path, bam_path, gff, script_majiq,
-        core, genome_name, junctionReads, log_file
+        core, genome_name, junctionReads, log_file, license_file
       )
     }
     if (RI) {
@@ -337,7 +340,9 @@ getRIevent <- function(
 #' @return Splicing event directory
 #' @export
 
-getA35SSALevent <- function(work_path, bam_path, gff, script_majiq, core, genome_name, junctionReads, log_file) {
+getA35SSALevent <- function(work_path, bam_path, gff, script_majiq,
+                            core, genome_name, junctionReads, log_file,
+                            license_file) {
   cmd <- paste(
     "bash", script_majiq,
     work_path,
@@ -345,7 +350,8 @@ getA35SSALevent <- function(work_path, bam_path, gff, script_majiq, core, genome
     gff,
     core,
     genome_name,
-    junctionReads, ">>", log_file, "2>&1"
+    junctionReads,
+    license_file, ">>", log_file, "2>&1"
   )
   msg <- paste0("[", Sys.time(), "] ", "Run MAJIQ: ", cmd)
   print(msg)
