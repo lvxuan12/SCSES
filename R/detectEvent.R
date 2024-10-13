@@ -38,7 +38,7 @@ detectEvents <- function(paras) {
   core <- paras$Basic$core
   ExonToIntronReads <- paras$Basic$filter_merged_bam$ExonToIntronReads
   junctionReads <- paras$Basic$filter_merged_bam$junctionReads
-  license_file <-paras$Task$eventmajiq_license_file
+  license_file <-paras$Task$event$majiq_license_file
   # output
   work_path <- paste0(paras$Basic$work_path, "/events/")
   print(paste0("Output: ", work_path))
@@ -175,7 +175,7 @@ getEvent <- function(paras, event_type) {
   paired <- paras$Basic$paired
   core <- paras$Basic$core
   junctionReads <- paras$Basic$filter_merged_bam$junctionReads
-  license_file <-paras$Task$eventmajiq_license_file
+  license_file <-paras$Task$event$majiq_license_file
   if (!event_type %in% c("A3SS", "A5SS", "AL", "SE", "MXE", "RI")) {
     print(paste(c("Invalid type:", event_type, "Supported splicing event types: A3SS,A5SS,AL,SE,MXE,RI."), collapse = " "))
   } else {

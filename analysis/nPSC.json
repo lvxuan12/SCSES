@@ -39,7 +39,8 @@
   "Task": {
     "event": {
       "remove_chr": "false",
-      "event_type": "A3SS;A5SS;RI;SE;MXE"
+      "event_type": "A3SS;A5SS;RI;SE;MXE",
+      "majiq_license_file": "/home/Liulab/wenx/majiq_license_academic_official.lic"
     },
     "impute": {
       "rbp": "/disk/lvxuan/Single-Splicing/refgenome/rbp/human_rbp.txt",
