@@ -21,7 +21,7 @@ samtools_path=$8
 star_path=$9
 #export LD_LIBRARY_PATH="/disk/lvxuan/lib:$LD_LIBRARY_PATH"
 
-export PATH=$(dirname {$samtools_path}):$PATH
+export PATH=$(dirname ${samtools_path}):$PATH
 
 mkdir -p $workpath
 cd $workpath

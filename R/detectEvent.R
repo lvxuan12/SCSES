@@ -59,9 +59,12 @@ detectEvents <- function(paras) {
     # script
     filename <- "run_majiq.sh"
     script_majiq <- file.path(dir_shell, filename)
+    majiq_path <- paras$Basic$MAJIQ_path
+    voila_path <- paras$Basic$VOILA_path
     res <- getA35SSALevent(
       majiq.work.path, bam_path, gff, script_majiq,
-      core, genome_name, junctionReads, log_file, license_file
+      core, genome_name, junctionReads, log_file,
+      majiq_path,voila_path,license_file
     )
   }
   if (RI) {
@@ -187,9 +190,12 @@ getEvent <- function(paras, event_type) {
       # script
       filename <- "run_majiq.sh"
       script_majiq <- file.path(dir_shell, filename)
+      majiq_path <- paras$Basic$MAJIQ_path
+      voila_path <- paras$Basic$VOILA_path
       res <- getA35SSALevent(
         majiq.work.path, bam_path, gff, script_majiq,
-        core, genome_name, junctionReads, log_file, license_file
+        core, genome_name, junctionReads, log_file,
+        majiq_path,voila_path,license_file
       )
     }
     if (RI) {
@@ -292,6 +298,8 @@ getRIevent <- function(
     work_path, bam_path, gtf, ref, core,readlength,
     script_irfinder, irfinder_path, samtools_path,
     star_path, log_file) {
+  old.path=Sys.getenv("PATH")
+  Sys.setenv(PATH=paste0(dirname(samtools_path),":",old.path))
   cmd <- paste(
     "bash", script_irfinder,
     work_path,
@@ -333,7 +341,7 @@ getRIevent <- function(
 
 getA35SSALevent <- function(work_path, bam_path, gff, script_majiq,
                             core, genome_name, junctionReads, log_file,
-                            license_file) {
+                            majiq_path,voila_path,license_file) {
   cmd <- paste(
     "bash", script_majiq,
     work_path,
@@ -342,6 +350,8 @@ getA35SSALevent <- function(work_path, bam_path, gff, script_majiq,
     core,
     genome_name,
     junctionReads,
+    majiq_path,
+    voila_path,
     license_file, ">>", log_file, "2>&1"
   )
   msg <- paste0("[", Sys.time(), "] ", "Run MAJIQ: ", cmd)
