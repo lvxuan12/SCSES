@@ -69,23 +69,16 @@ detectEvents <- function(paras) {
     msg <- paste0("[", Sys.time(), "] ", "IRFinder...")
     print(msg)
     dir.create(path = irfinder.work.path, recursive = T)
-    star_ref_path <- paras$Task$IRFinder$star_ref_path
-    irfinder_ref_path <- paras$Task$IRFinder$irfinder_ref
-    if (is.null(star_ref_path)) {
-      star_ref_path <- "null"
-    }
-    if (is.null(irfinder_ref_path)) {
-      irfinder_ref_path <- "null"
-    }
     # script
     filename <- "run_irfinder.sh"
     script_irfinder <- file.path(dir_shell, filename)
     irfinder_path <- paras$Basic$IRFinder_path
     samtools_path <- paras$Basic$samtools_path
+    star_path <- paras$Basic$STAR_path
     res <- getRIevent(
-      irfinder.work.path, bam_path, gtf, ref,
-      core, script_irfinder, irfinder_path,
-      samtools_path, log_file
+      irfinder.work.path, bam_path, gtf, ref, core,readlength,
+      script_irfinder, irfinder_path, samtools_path,
+      star_path, log_file
     )
   }
   if (SEMX) {
@@ -204,23 +197,16 @@ getEvent <- function(paras, event_type) {
       msg <- paste0("[", Sys.time(), "] ", "IRFinder...")
       print(msg)
       dir.create(path = irfinder.work.path, recursive = T)
-      star_ref_path <- paras$Task$IRFinder$star_ref_path
-      irfinder_ref_path <- paras$Task$IRFinder$irfinder_ref
-      if (is.null(star_ref_path)) {
-        star_ref_path <- "null"
-      }
-      if (is.null(irfinder_ref_path)) {
-        irfinder_ref_path <- "null"
-      }
       # script
       filename <- "run_irfinder.sh"
       script_irfinder <- file.path(dir_shell, filename)
       irfinder_path <- paras$Basic$IRFinder_path
       samtools_path <- paras$Basic$samtools_path
+      star_path <- paras$Basic$STAR_path
       res <- getRIevent(
-        irfinder.work.path, bam_path, gtf, ref,
-        core, script_irfinder, irfinder_path,
-        samtools_path, log_file
+        irfinder.work.path, bam_path, gtf, ref, core,readlength,
+        script_irfinder, irfinder_path, samtools_path,
+        star_path, log_file
       )
     }
     if (SEMX) {
@@ -291,9 +277,11 @@ getSEevent <- function(work_path, bam_path, gtf, paired, readlength, rmats_path,
 #' @param gtf the gene annotation in gtf format
 #' @param ref fasta file
 #' @param core the number of threads
+#' @param readlength the length of each read
 #' @param script_irfinder directory to script for running IRFinder
 #' @param irfinder_path directory to executable file of IRFinder
 #' @param samtools_path directory to samtools
+#' @param star_path directory to STAR
 #' @param log_file file saving stdout and stderr information
 #'
 #' @return Splicing event directory
@@ -301,8 +289,9 @@ getSEevent <- function(work_path, bam_path, gtf, paired, readlength, rmats_path,
 #' @export
 
 getRIevent <- function(
-    work_path, bam_path, gtf, ref, core,
-    script_irfinder, irfinder_path, samtools_path, log_file) {
+    work_path, bam_path, gtf, ref, core,readlength,
+    script_irfinder, irfinder_path, samtools_path,
+    star_path, log_file) {
   cmd <- paste(
     "bash", script_irfinder,
     work_path,
@@ -310,8 +299,10 @@ getRIevent <- function(
     gtf,
     bam_path,
     core,
+    readlength,
     irfinder_path,
-    samtools_path, ">>", log_file, "2>&1"
+    samtools_path,
+    star_path, ">>", log_file, "2>&1"
   )
   msg <- paste0("[", Sys.time(), "] ", "Run IRFinder: ", cmd)
   print(msg)

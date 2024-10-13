@@ -5,17 +5,24 @@
 # $3:gtf file
 # $4:bam file directory
 # $5:core
-# $6:path to IRFinder
-# $7:path to samtools
+# $6:readlength
+# $7:path to IRFinder
+# $8:path to samtools
+# $9:path to star
 set -e
 workpath=$1
 ref=$2
 gtf=$3
 bampath=$4
 core=$5
-IRFinder_path=$6
-samtools_path=$7
+readlength=$6
+IRFinder_path=$7
+samtools_path=$8
+star_path=$9
 #export LD_LIBRARY_PATH="/disk/lvxuan/lib:$LD_LIBRARY_PATH"
+
+export PATH=$(dirname {$samtools_path}):$PATH
+
 mkdir -p $workpath
 cd $workpath
 
@@ -24,10 +31,20 @@ then
     rm -r $workpath/REF
     echo "$workpath/REF should not yet exist! Remove $workpath/REF"
 fi
-mkdir $workpath/REF
-ln -s $ref $workpath/REF/genome.fa
-ln -s $gtf $workpath/REF/transcripts.gtf 
-${IRFinder_path} -m BuildRefProcess -r $workpath/REF
+
+$star_path --runMode genomeGenerate --runThreadN $core \
+     --genomeDir $workpath/STAR_Reference \
+     --genomeFastaFiles $ref \
+     --sjdbGTFfile $gtf \
+     --sjdbOverhang $((readlength-1))
+star_ref=$workpath/STAR_Reference
+$IRFinder_path BuildRefFromSTARRef -r $workpath/REF \
+-x $star_ref \
+-f $ref \
+-g $gtf \
+-t $core
+rm -r $workpath/STAR_Reference
+
 for bam in `ls $bampath/*bam`
 do
     name=`echo $bam | awk -F'/' '{print $NF}' | sed 's/.bam//'`
