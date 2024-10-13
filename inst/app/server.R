@@ -27,12 +27,15 @@ server=function(input,output,session){
     } 
   }
   
-  updateTextInput(session = session,inputId = gsub(pattern = "_",replacement = "",x = 'SCESC_src'),value = dirname(normalizePath('./')))
-  updateTextInput(session = session,inputId = gsub(pattern = "_",replacement = "",x = 'Rscript_path'),value = getDefaultPath(cmd = 'Rscript'))
+  updateTextInput(session = session, inputId = gsub(pattern = "_", replacement = "", x = "python_path"), value = getDefaultPath(cmd = "python"))
   updateTextInput(session = session,inputId = gsub(pattern = "_",replacement = "",x = 'JAVA_path'),value = getDefaultPath(cmd = 'java'))
   updateTextInput(session = session,inputId = gsub(pattern = "_",replacement = "",x = 'Samtools_path'),value = getDefaultPath(cmd = 'samtools'))
   updateTextInput(session = session,inputId = gsub(pattern = "_",replacement = "",x = 'featurecounts_path'),value = getDefaultPath(cmd = 'featureCounts'))
-  # updateTextInput(session = session,inputId = gsub(pattern = "_",replacement = "",x = 'Matlab_path'),value = getDefaultPath(cmd = 'Matlab_path'))
+  updateTextInput(session = session, inputId = gsub(pattern = "_", replacement = "", x = "IRFinder_path"), value = getDefaultPath(cmd = "IRFinder"))
+  updateTextInput(session = session, inputId = gsub(pattern = "_", replacement = "", x = "STAR_path"), value = getDefaultPath(cmd = "STAR"))
+  updateTextInput(session = session, inputId = gsub(pattern = "_", replacement = "", x = "MAJIQ_path"), value = getDefaultPath(cmd = "majiq"))
+  updateTextInput(session = session, inputId = gsub(pattern = "_", replacement = "", x = "rmats_path"), value = getDefaultPath(cmd = "rmats.py"))
+# updateTextInput(session = session,inputId = gsub(pattern = "_",replacement = "",x = 'Matlab_path'),value = getDefaultPath(cmd = 'Matlab_path'))
   
   # textinput action----
   observeEvent(c(input$cellinfo_file,input$cellinfofile),{

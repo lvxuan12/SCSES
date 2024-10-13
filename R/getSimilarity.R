@@ -167,6 +167,8 @@ getCellSimilarity <- function(
     print(msg)
     #script
     srcpath = system.file("python", package = "SCSES")
+    py_path <- paras$Basic$python_path
+    use_python(py_path)
     # Input
     if (is.null(rds_path)) {
         rds_path <- paste0(paras$Basic$work_path, "/rds_processed/")
