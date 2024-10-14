@@ -124,7 +124,7 @@ createBSgenome <- function(ref_path,out_path,pkg) {
 #' neighbors for given dataset by data types.
 #'
 #' @param paras list fromJSON(paras_file)
-#' Default core, pkg, ref_path,phast.path,chr.prefix, ae.para,
+#' Default core, pkg, ref_path,phast.path, ae.para,
 #' rbp, kevent, alpha_event,decay_event from paras
 #' @param rds_path path to processed rds data
 #' @param output_path path to event similarity
@@ -423,7 +423,7 @@ getEventSimilarity <- function(
     print(paste0("kevent=", paste(kevent, collapse = ";"), "  checked"))
     decay_event <- check.int.or.null(x = decay_event, default = 0.05)
     print(paste0("decay_event=", paste(decay_event, collapse = ";"), "  checked"))
-
+    
     # validate input----
     rds_files = list.files(path = rds_path, pattern = "*rds")
     msg <- paste("Checking data...")
@@ -523,6 +523,8 @@ getEventSimilarity <- function(
             msg = paste0("[", Sys.time(), "] ", "Extracting conservation features.")
             print(msg)
             bwf = BigWigFile(phast.path)
+            print("Checking chromosome prefix...")
+            chr.prefix <- check.valid(x = chr.prefix, select = c("", "chr"))
             splice.region = phastScore.extraction(splice.region, bwf = bwf, chr.prefix = chr.prefix, core = core)
             exon.region = phastScore.extraction(exon.region, bwf = bwf, chr.prefix = chr.prefix, core = core)
 

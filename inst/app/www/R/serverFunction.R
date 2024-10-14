@@ -163,15 +163,34 @@ validation=function(input,session)
   flag=T
   msg=""
   
-  checklist=data.frame(id=c('dataset','cellinfofile','bampath','SCESCsrc','Rscriptpath','JAVApath','Samtoolspath','featurecountspath',
-                            'MCRpath','rmatspath','MAJIQpath','IRFinderpath','workpath','ref_name','fapath','GTFpath','GFFpath',
-                            'RBPpath','finetunerawpath','ref.pkg','phastpath'),
-                       name=c('Dataset Name','Cell Info File','Bam Path','SCESC Source Directory','Rscript Path','JAVA Path','Samtools Path',
-                              'FeatureCounts Path','MCR Path','rMats Path','MAJIQ Path','IRFinder Path','Work Path','Reference Name',
-                              'Reference Genome','GTF File','GFF File','RBP File','Fine-tune Raw File','Reference Package','PhastCons Path'),
-                       type=c('text','text','text','text','text','text','text','text','text','text','text','text',
-                              'text','text','text','text','text','text','text','text','text'))
+  # checklist=data.frame(id=c('dataset','cellinfofile','bampath','SCESCsrc','Rscriptpath','JAVApath','Samtoolspath','featurecountspath',
+  #                           'MCRpath','rmatspath','MAJIQpath','IRFinderpath','workpath','ref_name','fapath','GTFpath','GFFpath',
+  #                           'RBPpath','finetunerawpath','ref.pkg','phastpath'),
+  #                      name=c('Dataset Name','Cell Info File','Bam Path','SCESC Source Directory','Rscript Path','JAVA Path','Samtools Path',
+  #                             'FeatureCounts Path','MCR Path','rMats Path','MAJIQ Path','IRFinder Path','Work Path','Reference Name',
+  #                             'Reference Genome','GTF File','GFF File','RBP File','Fine-tune Raw File','Reference Package','PhastCons Path'),
+  #                      type=c('text','text','text','text','text','text','text','text','text','text','text','text',
+  #                             'text','text','text','text','text','text','text','text','text'))
   
+  checklist = data.frame(
+    id = c(
+      "dataset", "bampath", "Pythonpath", "JAVApath", "Samtoolspath", "featurecountspath",
+      "MCRpath", "rmatspath", "MAJIQpath", "VOILApath", "MAJIQlicensefile", "IRFinderpath",
+      "STARpath", "workpath", "ref_name", "fapath", "GTFpath", "GFFpath",
+      "RBPpath", "phastpath"
+    ),
+    name = c(
+      "Dataset Name", "Bam Path", "Python Path", "JAVA Path", "Samtools Path",
+      "FeatureCounts Path", "MCR Path", "rMats Path", "MAJIQ Path", "VOILA Path",
+      "MAJIQ license file", "IRFinder Path", "STAR Path", "Work Path", "Reference Name",
+      "Reference Genome", "GTF File", "GFF File", "RBP File", "PhastCons Path"
+    ),
+    type = c(
+      "text", "text", "text", "text", "text", "text", "text", "text", "text", "text",
+      "text", "text", "text", "text", "text", "text", "text", "text", "text", "text"
+    )
+  )
+
   for(i in seq(1,nrow(checklist)))
   {
     check.result=checkMsg(id = checklist$id[i],name = checklist$name[i],type=checklist$type[i],msg=msg)

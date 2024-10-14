@@ -319,8 +319,23 @@ getRIevent <- function(
     msg <- paste0("[", Sys.time(), "] ", "Run IRFinder Error.")
     stop(msg)
   } else {
-    msg <- paste0("[", Sys.time(), "] ", "Run IRFinder Finish.")
-    print(msg)
+    res.file <- list.files(work_path,
+      pattern = "IRFinder-IR-nondir.txt",
+      recursive = TRUE, full.names = TRUE
+    )
+    if(length(res.file)>0){
+      msg <- paste0("[", Sys.time(), "] ", "Run IRFinder Finish.")
+      print(msg)
+    } else{
+      irfinder.stderr <- list.files(work_path,
+        pattern = "irfinder.stderr",
+        recursive = TRUE, full.names = TRUE
+      )
+      file_content <- readLines(irfinder.stderr)
+      cat(file_content, sep = "\n")
+      msg <- paste0("[", Sys.time(), "] ", paste("Run IRFinder Error. See", irfinder.stderr, "."))
+      stop(msg)
+    }
     return(work_path)
   }
 }

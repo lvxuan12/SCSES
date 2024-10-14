@@ -27,20 +27,12 @@ featurecounts.path = getGeneExpression(paras)
 rds.path = getEXPmatrix(paras)
 ```
 
-##### Normalized UMI count matrix (for UMI dataset)
-
-You can use `getUMIEXPmatrix` to generate Normalized UMI count matrix, which will save normalized UMI count to `work_path/rds/`.
-
-``` r
-rds.path = getUMIEXPmatrix(paras)
-```
-
 #### Step3. Detect splicing events
 
 To define a global set of all splicing events, SCSES firstly merges all bam files from every single cell to construct a pseudo-bulk bam file, and identifies all types of splicing events by conventional algorithms.
 
 ``` {r}
-pseudobulk.path = createPseudobulk(paras)
+#pseudobulk.path = createPseudobulk(paras)
 event.path = detectEvents(paras)
 ```
 

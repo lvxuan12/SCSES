@@ -5,7 +5,7 @@ library(shinyFiles)
 library(parallel)
 source("www/R/uiFunction.R")
 
-header <- dashboardHeader(title = "SCESC")
+header <- dashboardHeader(title = "SCSES")
 sidebar <- dashboardSidebar(
        sidebarMenu(
               menuItem(text = "Configuration", selected = T, tabName = "configuration"),
@@ -48,7 +48,8 @@ body <- dashboardBody(
                                    ),
                                    tabPanel(
                                           "Tools Info",
-                                          h3("SCESC Program Essential"),
+                                          h3("SCSES Program Essential"),
+                                          textInput(inputId = "conda_envname", label = "conda environment", placeholder = "Input the name of conda env for SCSES"),
                                           fluidRow(
                                                  createTextFile(id = "python_path", label = "Python Path", type = "shinyFilesButton"),
                                                  createTextFile(id = "JAVA_path", label = "JAVA Path", type = "shinyFilesButton"),
@@ -65,7 +66,8 @@ body <- dashboardBody(
                                           ),
                                           fluidRow(
                                                  createTextFile(id = "MAJIQ_path", label = "MAJIQ Path", type = "shinyFilesButton"),
-                                                 createTextFile(id = "MAJIQ_license_path", label = "MAJIQ License Path", type = "shinyFilesButton")
+                                                 createTextFile(id = "MAJIQ_license_path", label = "MAJIQ License Path", type = "shinyFilesButton"),
+                                                 createTextFile(id = "VOILA_path", label = "VOILA path", type = "shinyFilesButton")
                                           ),
                                           fluidRow(
                                                  createTextFile(id = "IRFinder_path", label = "IRFinder Path", type = "shinyFilesButton"),
@@ -191,6 +193,13 @@ body <- dashboardBody(
                                           fluidRow(
                                                  createTextFile(id = "phast_path", label = "PhastCons Path", type = "shinyFilesButton")
                                           ),
+                                          fluidRow(
+                                                 column(
+                                                        width = 5,
+                                                        switchInput(inputId = "remove_chr", label = "<b>Remove chromosome prefix</b>", value = T, onLabel = "FALSE", offLabel = "TRUE", labelWidth = "180px")
+                                                 )
+                                          ),
+                                          textInput(inputId = "chr_prefix", label = "Add chromosome prefix", placeholder = paste("Add chr prefix when extracting conservation scores")),
                                           h4("Autoencoder Parameters"),
                                           fluidRow(
                                                  column(
@@ -345,5 +354,5 @@ ui <- dashboardPage(
        header = header,
        sidebar = sidebar,
        body = body,
-       title = "SCESC"
+       title = "SCSES"
 )

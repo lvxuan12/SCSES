@@ -51,7 +51,7 @@ do
     if [ -d "$workpath/$name" ]
     then
         rm -r $workpath/$name
-        echo "$workpath/$name should not yet exist! Remove $workpath/REF"
+        echo "$workpath/$name should not yet exist! Remove $workpath/$name"
     fi
     mkdir $workpath/$name
     ${samtools_path} sort -m 2G -n -@ $core -o $workpath/$name/${name}.bam $bam
