@@ -15,7 +15,7 @@ getCellSimilarity(
   alpha_cell = paras$Task$impute$KNN$cell$alpha,
   decay_cell = paras$Task$impute$KNN$cell$decay,
   kcell_max = paras$Task$impute$KNN$cell$kmax,
-  kcell_min = paras$KNN$cell$kmin,
+  kcell_min = paras$Task$impute$KNN$cell$kmin,
   cell.select = NULL
 )
 }

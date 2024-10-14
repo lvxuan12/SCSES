@@ -6,38 +6,36 @@ library(jsonlite)
 
 server=function(input,output,session){
   source('www/R/serverFunction.R',local = T)
-  
+
   # file.field=c('cellinfo_file','bam_path','SCESC_src','Rscript_path','JAVA_path','Samtools_path','featurecounts_path',
   #              'Matlab_path','MCR_path','rmats_path','MAJIQ_path','IRFinder_path','BRIE_path','outrigger_path','work_path',
   #              'fa_path','GTF_path','GFF_path','RBP_path','finetune_raw_path','phast_path','brie_ref','brie_feature','outrigger_size')
   volumns=c(Home=path_home(),getVolumes())
   env=environment()
-  
+
   raw.values=isolate(reactiveValuesToList(input))
-  
+
   for(ff in file.attr$id)
   {
     if(file.attr[ff,'type']=='shinyFilesButton')
     {
-      shinyFileChoose(input = input, id = ff, roots=volumns,session = session,defaultRoot = 'Home')  
+      shinyFileChoose(input = input, id = ff, roots=volumns,session = session,defaultRoot = 'Home')
     }
     else
     {
-      shinyDirChoose(input = input, id = ff, roots=volumns,session = session,defaultRoot = 'Home')  
-    } 
+      shinyDirChoose(input = input, id = ff, roots=volumns,session = session,defaultRoot = 'Home')
+    }
   }
-  
+
   updateTextInput(session = session, inputId = gsub(pattern = "_", replacement = "", x = "python_path"), value = getDefaultPath(cmd = "python"))
   updateTextInput(session = session,inputId = gsub(pattern = "_",replacement = "",x = 'JAVA_path'),value = getDefaultPath(cmd = 'java'))
   updateTextInput(session = session,inputId = gsub(pattern = "_",replacement = "",x = 'Samtools_path'),value = getDefaultPath(cmd = 'samtools'))
   updateTextInput(session = session,inputId = gsub(pattern = "_",replacement = "",x = 'featurecounts_path'),value = getDefaultPath(cmd = 'featureCounts'))
   updateTextInput(session = session, inputId = gsub(pattern = "_", replacement = "", x = "IRFinder_path"), value = getDefaultPath(cmd = "IRFinder"))
   updateTextInput(session = session, inputId = gsub(pattern = "_", replacement = "", x = "STAR_path"), value = getDefaultPath(cmd = "STAR"))
-  updateTextInput(session = session, inputId = gsub(pattern = "_", replacement = "", x = "MAJIQ_path"), value = getDefaultPath(cmd = "majiq"))
-  updateTextInput(session = session, inputId = gsub(pattern = "_", replacement = "", x = "VOILA_path"), value = getDefaultPath(cmd = "voila"))
   updateTextInput(session = session, inputId = gsub(pattern = "_", replacement = "", x = "rmats_path"), value = getDefaultPath(cmd = "rmats.py"))
 # updateTextInput(session = session,inputId = gsub(pattern = "_",replacement = "",x = 'Matlab_path'),value = getDefaultPath(cmd = 'Matlab_path'))
-  
+
   # textinput action----
   # observeEvent(c(input$cellinfo_file,input$cellinfofile),{
   #     if(showSelect('cellinfo_file'))
@@ -63,13 +61,13 @@ server=function(input,output,session){
   #             data=read.table(cellinfofile,header = T,sep = sep,check.names = F)
   #             columns=colnames(data)
   #             names(columns)=columns
-  #             updateRadioGroupButtons(session = session,inputId = 'cellinfo.column',choices = columns,selected = columns[1])  
+  #             updateRadioGroupButtons(session = session,inputId = 'cellinfo.column',choices = columns,selected = columns[1])
   #           },error=function(e){
   #             print(e)
-  #             updateRadioGroupButtons(session = session,inputId = 'cellinfo.column',choices = 'NA',selected = 'NA')  
+  #             updateRadioGroupButtons(session = session,inputId = 'cellinfo.column',choices = 'NA',selected = 'NA')
   #           })
-  #           
-  #         }  
+  #
+  #         }
   #       }
   #     }
   # })
@@ -77,14 +75,14 @@ server=function(input,output,session){
     showSelect('bam_path')
     updateValue("bam_path")
     updateValue("bampath")
-    
+
   })
   observeEvent(c(input$python_path,input$pythonpath),{
     showSelect('python_path')
     updateValue("python_path")
     updateValue("pythonpath")
   })
-  
+
   observeEvent(c(input$JAVA_path,input$JAVApath),{
     showSelect('JAVA_path')
     updateValue("JAVA_path")
@@ -115,21 +113,21 @@ server=function(input,output,session){
     updateValue("rmats_path")
     updateValue("rmatspath")
   })
-  observeEvent(c(input$MAJIQ_path,input$MAJIQpath),{
-    showSelect('MAJIQ_path')
-    updateValue("MAJIQ_path")
-    updateValue("MAJIQpath")
-  })
+  # observeEvent(c(input$MAJIQ_path,input$MAJIQpath),{
+  #   showSelect('MAJIQ_path')
+  #   updateValue("MAJIQ_path")
+  #   updateValue("MAJIQpath")
+  # })
   observeEvent(c(input$MAJIQ_license_path,input$MAJIQlicensepath),{
     showSelect('MAJIQ_license_path')
     updateValue("MAJIQ_license_path")
     updateValue("MAJIQlicensepath")
   })
-  observeEvent(c(input$VOILA_path,input$VOILApath),{
-    showSelect('VOILA_path')
-    updateValue("VOILA_path")
-    updateValue("VOILApath")
-  })
+  # observeEvent(c(input$VOILA_path,input$VOILApath),{
+  #   showSelect('VOILA_path')
+  #   updateValue("VOILA_path")
+  #   updateValue("VOILApath")
+  # })
   observeEvent(c(input$IRFinder_path,input$IRFinderpath),{
     showSelect('IRFinder_path')
     updateValue("IRFinder_path")
@@ -200,7 +198,7 @@ server=function(input,output,session){
   #   updateValue("outrigger_size")
   #   updateValue("outriggersize")
   # })
-  
+
   # create configuration action----
   observeEvent(input$create_configure,{
     config=list()
@@ -227,14 +225,14 @@ server=function(input,output,session){
     config[["Basic"]][["refgenome"]][["gff_path"]] = normalizePath(input$GFFpath)
     config[["Basic"]][["refgenome"]][["ref_path"]] = normalizePath(input$fapath)
     config[["Basic"]][["refgenome"]][["genome_name"]] = normalizePath(input$ref_name)
-    
+
     config[['Basic']][['filter_merged_bam']]=list(ExonToIntronReads=input$exon.intron.read,junctionReads=input$junction.read)
     config[["Basic"]][["filter_events_sc"]] = list(
       minCell = input$minCell, minRC = input$minRC,
-      min.percentCells.gene = input$exp.dropout.ratio, 
-      min.percentCells.event = input$psi.dropout.ratio, 
-      min.nFeatures = input$cell.gene.exp, min.nCount = input$cell.read, 
-      max.percentMT = input$cell.mt.pct, 
+      min.percentCells.gene = input$exp.dropout.ratio,
+      min.percentCells.event = input$psi.dropout.ratio,
+      min.nFeatures = input$cell.gene.exp, min.nCount = input$cell.read,
+      max.percentMT = input$cell.mt.pct,
       filter.mt = input$filter.mt, filter.rp = input$filter.rp
     )
 
@@ -245,10 +243,10 @@ server=function(input,output,session){
     config[["Task"]][["impute"]][["rbp"]] = normalizePath(input$RBPpath)
     config[["Task"]][["impute"]][["cell_similarity"]] = paste(input$cell.similar, collapse = ";")
     config[["Task"]][["impute"]][["feature_num"]] = normalizePath(input$feature_num)
-    
+
     config[['Task']][['impute']][['event_features']]=list(phast_path=normalizePath(input$phastpath),
                                                           chr_prefix=input$chr.prefix)
-    
+
     for(type in input$event.types)
     {
       config[['Task']][['impute']][['event_features']][['AE_para']][[type]]=list(epoch=input[[paste0(type,'.epoch')]],
@@ -269,8 +267,8 @@ server=function(input,output,session){
       decay = input$event.decay
     )
     config[["Task"]][["impute"]][["decay_impute"]] = input$all.decay
-    
-    dir.create(config$Basic$work_path,recursive = T)    
+
+    dir.create(config$Basic$work_path,recursive = T)
     write(x = toJSON(x = config,pretty = T,auto_unbox = T),
           file = normalizePath(paste0(config$Basic$work_path,'/',config$DataSet,'.json')))
   })

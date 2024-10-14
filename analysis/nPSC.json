@@ -15,8 +15,7 @@
     "featureCounts_path": "/disk/software/subread-2.0.6-source/bin/featureCounts",
     "rMATS_path": "/disk/lvxuan/software/SCSES_test3/rmats_turbo_v4_3_0/rmats.py",
     "IRFinder_path": "/disk/lvxuan/software/IRFinder-2.0.1/bin/IRFinder",
-    "MAJIQ_path": "/disk/lvxuan/software/miniconda/envs/SCSES_test3/bin/majiq",
-    "VOILA_path": "/disk/lvxuan/software/miniconda/envs/SCSES_test3/bin/voila",
+    "MAJIQ_env": "MAJIQ",
     "refgenome": {
       "gtf_path": "/disk/lvxuan/Single-Splicing/refgenome/gencode.v19.annotation.gtf",
       "gff_path": "/disk/lvxuan/Single-Splicing/refgenome/gencode.v19.annotation.gff3",

@@ -13,8 +13,7 @@ getA35SSALevent(
   genome_name,
   junctionReads,
   log_file,
-  majiq_path,
-  voila_path,
+  majiq_env,
   license_file
 )
 }

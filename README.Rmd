@@ -46,12 +46,13 @@ conda install -c conda-forge r-base=4.3.1
 
 ``` bash
 pip install pandas numpy scipy scikit-learn
-conda install tensorflow keras
+pip install tensorflow
+pip install keras
 ```
 
 #### 2. Softwares
 
-To detect splicing events You will need to install rMATS, MAJIQ, IRFinder. MAJIQ and rMATS should be built in the same environment with SCSES (same python).
+To detect splicing events You will need to install rMATS, MAJIQ, IRFinder. rMATS should be built in the same environment with SCSES (same python). MAJIQ should be built in a new environment.
 
 ##### 2.1 [rMATS](https://github.com/Xinglab/rmats-turbo)
 
@@ -66,6 +67,8 @@ export PATH=/path/to/rmats_turbo_v4_3_0/:$PATH
 ##### 2.2 [MAJIQ](https://biociphers.bitbucket.io/majiq-docs/index.html)
 
 ``` bash
+conda create -n MAJIQ python=3.11
+conda activate MAJIQ
 pip install git+https://bitbucket.org/biociphers/majiq_academic.git
 export MAJIQ_LICENSE_FILE=/path/to/majiq_license_academic_official.lic
 ```
@@ -205,6 +208,7 @@ The definition of PSI of different AS events: ![The definition of PSI of differe
 ``` r
 rawrc.path = getRawRC(paras)
 rawpsi.path = getRawPSI(paras)
+rawrds.path = mergeSplicingValue(paras)
 processed.data.path = preprocessEvent(paras)
 ```
 
@@ -285,6 +289,7 @@ To improve the fitness of models for the new dataset, we also provide a procedur
 ``` r
 ftrc.path = getFtRawRC(paras)
 ftpsi.path = getFtRawPSI(paras)
+ftrds.path = mergeFtSplicingValue(paras)
 ftmodel.path = FtClassifier(paras)
 #rds_imputed_file: path to the list of three imputation strategies results generated in the previous step
 Imputed.data.path = Estimation(paras,rds_imputed_file)

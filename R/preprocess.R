@@ -67,10 +67,10 @@ filterMXE <- function(event, rc, min.Cell) {
 preprocessEvent <- function(
     paras,
     min.percentCells.gene=paras$Basic$filter_sc$min.percentCells.gene,
-    min.percentCells.event=paras$Basic$filter_sc$min.percentCells.event, 
-    min.Cell=paras$Basic$filter_sc$min.Cell, 
-    min.RC=paras$Basic$filter_sc$min.RC, 
-    min.nCount=paras$Basic$filter_sc$min.nCount, 
+    min.percentCells.event=paras$Basic$filter_sc$min.percentCells.event,
+    min.Cell=paras$Basic$filter_sc$minCell,
+    min.RC=paras$Basic$filter_sc$minRC,
+    min.nCount=paras$Basic$filter_sc$min.nCount,
     min.nFeatures=paras$Basic$filter_sc$min.nFeatures,
     max.percentMT=paras$Basic$filter_sc$max.percentMT, cell.select = NULL) {
     msg <- paste0("[", Sys.time(), "] ", "Processing raw data...")

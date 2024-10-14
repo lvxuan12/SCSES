@@ -151,7 +151,7 @@ createBSgenome <- function(ref_path,out_path,pkg) {
 #' @export
 #' @import parallel
 #' @import Matrix
-#' @importFrom reticulate source_python py_module_available
+#' @importFrom reticulate source_python py_module_available use_python
 #' @importFrom stats var
 #'
 #'
@@ -162,13 +162,13 @@ getCellSimilarity <- function(
     alpha_cell = paras$Task$impute$KNN$cell$alpha,
     decay_cell = paras$Task$impute$KNN$cell$decay,
     kcell_max = paras$Task$impute$KNN$cell$kmax,
-    kcell_min = paras$KNN$cell$kmin,cell.select = NULL) {
+    kcell_min = paras$Task$impute$KNN$cell$kmin,cell.select = NULL) {
     msg <- paste0("[", Sys.time(), "] ", "Calculate cell similarity...")
     print(msg)
     #script
     srcpath = system.file("python", package = "SCSES")
     py_path <- paras$Basic$python_path
-    use_python(py_path)
+    Sys.setenv(RETICULATE_PYTHON=py_path)
     # Input
     if (is.null(rds_path)) {
         rds_path <- paste0(paras$Basic$work_path, "/rds_processed/")
@@ -192,13 +192,13 @@ getCellSimilarity <- function(
     print(paste0("cell_similarity_data=", paste(cell_similarity_data, collapse = ";"), "  checked"))
     distance_method <- check.valid(x = distance_method, select = c("euclidean", "cosine"))
     print(paste0("distance_method=", paste(distance_method, collapse = ";"), "  checked"))
-    alpha_cell <- check.int.or.null(x = alpha_cell, default = 0.8)
+    alpha_cell <- check.double.or.null(x = alpha_cell, default = 0.8)
     print(paste0("alpha_cell=", paste(alpha_cell, collapse = ";"), "  checked"))
     kcell_max <- check.int.or.null(x = kcell_max, default = 30)
     print(paste0("kcell_max=", paste(kcell_max, collapse = ";"), "  checked"))
     kcell_min <- check.int.or.null(x = kcell_min, default = 5)
     print(paste0("kcell_min=", paste(kcell_min, collapse = ";"), "  checked"))
-    decay_cell <- check.int.or.null(x = decay_cell, default = 0.05)
+    decay_cell <- check.double.or.null(x = decay_cell, default = 0.05)
     print(paste0("decay_cell=", paste(decay_cell, collapse = ";"), "  checked"))
     # validate input
     rds_files = list.files(path = rds_path, pattern = "*rds")
@@ -215,7 +215,7 @@ getCellSimilarity <- function(
                 stop("It is unreliable to calculate cell similarity based on less than 3 events.")
             }else{
                 print(paste(
-                    nrow(psi), "events", "are used to calculate cell similarity",
+                    nrow(psi), "events", "are used to calculate cell similarity"
                 ))
             }
         } else if (type == "RC") {
@@ -228,7 +228,7 @@ getCellSimilarity <- function(
                 stop("It is unreliable to calculate cell similarity based on less than 6 events associated reads.")
             } else {
                 print(paste(
-                    nrow(rc), "reads", "are used to calculate cell similarity",
+                    nrow(rc), "reads", "are used to calculate cell similarity"
                 ))
             }
 
@@ -251,13 +251,11 @@ getCellSimilarity <- function(
                 stop("It is unreliable to calculate cell similarity based on less than 3 rbps.")
             }else{
                 print(paste(
-                    length(rbp), "rbps", "are used to calculate cell similarity",
+                    length(rbp), "rbps", "are used to calculate cell similarity"
                 ))
             }
         }
     }
-    msg = paste("Checking events annotation:", type)
-    print(msg)
     # calculate cell similarity
     if (is(expr,"Matrix")){
         fun_pca = get("PCA_D_reduct_sparse")
@@ -296,7 +294,7 @@ getCellSimilarity <- function(
         v <- apply(data, 1, var)
         id_select <- row.names(data)[order(v, decreasing = T)[1:feature_num]]
         D_reduct_res <- fun_pca(data = data, id_select = id_select)
-        if (!py_module_available(module = "scikit-learn")) {
+        if (!py_module_available(module = "sklearn")) {
             stop(
                 "Cannot find sklearn, please install through pip (e.g. pip install scikit-learn)."
             )
@@ -370,7 +368,7 @@ getCellSimilarity <- function(
 #' @export
 #' @importFrom reshape2 melt
 #' @import parallel
-#' @importFrom reticulate source_python py_module_available
+#' @importFrom reticulate source_python py_module_available use_python
 #' @import rtracklayer
 #' @importFrom stats rbinom
 #' @import BSgenome
@@ -381,6 +379,8 @@ getCellSimilarity <- function(
 #' @import hdf5r
 #' @importFrom GenomicRanges GRanges
 #' @importFrom IRanges IRanges
+#' @importFrom Biostrings readDNAStringSet writeXStringSet
+#' @importFrom BSgenome forgeBSgenomeDataPkg
 #'
 #'
 getEventSimilarity <- function(
@@ -415,15 +415,16 @@ getEventSimilarity <- function(
     mat_combineDistance = paste0(matlab_path, "/combineDistance/run_combineDistance.sh")
     mat_knn_similarity = paste0(matlab_path, "/knn_similarity_from_path/run_knn_similarity_from_path.sh")
     py_path <- system.file("python", package = "SCSES")
-    source_python(paste0(py_path, "AE.py"))
+    Sys.setenv(RETICULATE_PYTHON=py_path)
+    source_python(paste0(py_path, "/AE.py"))
     # validate parameters----
-    alpha_event <- check.int.or.null(x = alpha_event, default = 0.8)
+    alpha_event <- check.double.or.null(x = alpha_event, default = 0.8)
     print(paste0("alpha_event=", paste(alpha_event, collapse = ";"), "  checked"))
     kevent <- check.int.or.null(x = kevent, default = 10)
     print(paste0("kevent=", paste(kevent, collapse = ";"), "  checked"))
-    decay_event <- check.int.or.null(x = decay_event, default = 0.05)
+    decay_event <- check.double.or.null(x = decay_event, default = 0.05)
     print(paste0("decay_event=", paste(decay_event, collapse = ";"), "  checked"))
-    
+
     # validate input----
     rds_files = list.files(path = rds_path, pattern = "*rds")
     msg <- paste("Checking data...")
@@ -450,7 +451,7 @@ getEventSimilarity <- function(
     # get events feature----
     msg <- paste0("[", Sys.time(), "] ", "Calculate events feature...")
     print(msg)
-    msg = paste0("[", Sys.time(), "] ", "step1 Creating BSgenome for", pkg, "...", "")
+    msg = paste0("[", Sys.time(), "] ", "step1 Creating BSgenome for ", pkg, "...", "")
     print(msg)
     createBSgenome(ref_path = ref_path,
         out_path = output_path, pkg = pkg

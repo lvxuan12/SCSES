@@ -20,6 +20,25 @@ check.int.or.null <- function(x, default) {
     return(x)
 }
 
+check.double.or.null <- function(x, default) {
+  if (is.double(x = x)) {
+    x <- as.numeric(x = x)
+  } else if (is.double(default)){
+    if (is.null(x = x)) {
+      x <- default
+    } else if (x == "") {
+      x <- default
+    } else if (is.na(x = x)) {
+      x <- default
+    } else {
+      stop(paste("Parameter must be a double"))
+    }
+  } else {
+    stop(paste("Parameter must be a double"))
+  }
+  return(x)
+}
+
 check.path.or.matrix <- function(x) {
     if (is.matrix(x) | is.data.frame(x) | inherits(x, "sparseMatrix")) {
         return("variable")
@@ -202,7 +221,7 @@ saveHdf5File <- function(con, dataset, con.type = "F") {
 #' @param rc matrix, reads associated with splicing events
 
 #' @return matrix of the mean of exclusion read counts
-#' 
+#'
 #' @keywords internal
 #' @export
 
@@ -226,7 +245,7 @@ calcu_ex_rc <- function(rc, event) {
 #' @param rc matrix, reads associated with splicing events
 
 #' @return matrix of the mean of inclusion read counts
-#' 
+#'
 #' @keywords internal
 #' @export
 
@@ -250,7 +269,7 @@ calcu_in_rc <- function(rc, event) {
 #' @param rc matrix, reads associated with splicing events
 
 #' @return matrix of the mean of read counts
-#' 
+#'
 #' @keywords internal
 #' @export
 
@@ -269,7 +288,7 @@ calcu_rc <- function(rc, event) {
 #' @description associated reads name recorded in event
 #' @param psi  matrix, psi associated with splicing events
 #' @param cs matrix, cell similarity
-#' 
+#'
 #' @return matrix
 #'
 #' @keywords internal
@@ -297,7 +316,7 @@ knn_cv <- function(psi, cs) {
 #'
 #' @keywords internal
 #' @export
-#' 
+#'
 rc_to_psi <- function(event, rc) {
     event_type <- unique(event$type)
     psi_all <- data.frame()

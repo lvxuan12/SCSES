@@ -1,6 +1,6 @@
 #' @include utilities.R
-#' 
-#' 
+#'
+#'
 #' @title Quantify raw reads for different types of splicing events
 #' @description  Quantify raw reads for events in work_path/events
 #' save to work_path/splicing_value/*_rc.rds
@@ -59,7 +59,7 @@ getRawRC <- function(
         msg <- paste("There is no", type, "events in", event_path, "!")
         stop(msg)
       }
-      msg <- paste0("[", Sys.time(), "] ", "Counting reads of", type, "events...")
+      msg <- paste0("[", Sys.time(), "] ", "Counting reads of ", type, " events...")
       print(msg)
       outpath_per_cell <- paste0(rc_path, "/", type, "_rjm")
       dir.create(outpath_per_cell)
@@ -226,7 +226,7 @@ getRawRC <- function(
           )
         }
       }
-      msg <- paste0("[", Sys.time(), "] ", "Counting reads of", type, "events Finish.")
+      msg <- paste0("[", Sys.time(), "] ", "Counting reads of ", type, " events Finish.")
       print(msg)
     }
   } else {
@@ -246,7 +246,7 @@ getRawRC <- function(
 #' @return raw PSI path
 #'
 #' @export
-#' 
+#'
 getRawPSI <- function(paras,event_types=NULL) {
   print("Checking raw reads...")
   rc_path <- paste0(paras$Basic$work_path, "/splicing_value/")
@@ -263,11 +263,10 @@ getRawPSI <- function(paras,event_types=NULL) {
   print(paste0("event_type=", paste(event_types, collapse = ";"), "  checked"))
   if(length(event_types)>0){
     for (type in event_types) {
-      msg = paste0("[", Sys.time(), "] ", "Calculating PSI value of", type, "events...")
+      msg = paste0("[", Sys.time(), "] ", "Calculating PSI value of ", type, " events...")
       print(msg)
       data = readRDS(file = paste0(rc_path, "/", type, "_rc.rds"))
       events = data$events
-      load(paste0(rc_path, "/", type, "_rc.rds"))
       if (type == "RI" | type == "SE") {
         rc_exclusion = data$rc_exclusion
         rc_retention1 = data$rc_retention1
@@ -309,7 +308,7 @@ getRawPSI <- function(paras,event_types=NULL) {
         colnames(psi) <- colnames(rc_exclusion)
       }
       saveRDS(psi, paste0(rc_path, "/", type, "_psi.rds"))
-      msg = paste0("[", Sys.time(), "] ", "Calculating PSI value of", type, "events Finish.")
+      msg = paste0("[", Sys.time(), "] ", "Calculating PSI value of ", type, " events Finish.")
       print(msg)
     }
   }else{

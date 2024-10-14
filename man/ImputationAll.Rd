@@ -33,11 +33,11 @@ default: rds_processed/psi.rds}
 default: rds_processed/event.info.list.rds}
 
 \item{cell_similarity}{a list of different types of cell similarity named by the data
-type (EXP_RBP, RC, and PSI) or path to a rds file, 
+type (EXP_RBP, RC, and PSI) or path to a rds file,
 default: imputation/cell_similarity/cell.similars.rds}
 
 \item{event_similarity}{a list of event similarity named by different types of
-splicing events or path to a rds file, 
+splicing events or path to a rds file,
 default: imputation/event_similarity/event.similars.rds}
 }
 \value{
@@ -46,10 +46,10 @@ save a list of three imputation strategies result to
 work_path/imputation/Imputed_seperated_*.rds.
 The result contains two lists, each of which contains multiple imputation results.
 Different event types are combined.
-The first list is the result of strategy1 and strategy2, where the name of each matrix 
-is divided by _, the first half represents different cell similarities, and the second 
-half represents PSI for strategy1 and RC for strategy2; 
-The second list is the result of strategy3, again where the names of each matrix are 
+The first list is the result of strategy1 and strategy2, where the name of each matrix
+is divided by _, the first half represents different cell similarities, and the second
+half represents PSI for strategy1 and RC for strategy2;
+The second list is the result of strategy3, again where the names of each matrix are
 divided by _, with the first half representing different cell similarities
 }
 \description{

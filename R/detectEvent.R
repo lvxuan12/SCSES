@@ -62,12 +62,11 @@ detectEvents <- function(paras) {
     # script
     filename <- "run_majiq.sh"
     script_majiq <- file.path(dir_shell, filename)
-    majiq_path <- paras$Basic$MAJIQ_path
-    voila_path <- paras$Basic$VOILA_path
+    majiq_env <- paras$Basic$MAJIQ_env
     res <- getA35SSALevent(
       majiq.work.path, bam_path, gff, script_majiq,
       core, genome_name, junctionReads, log_file,
-      majiq_path,voila_path,license_file
+      majiq_env,license_file
     )
   }
   res.file <- list.files(paste0(work_path,'/IRFinder/'),
@@ -199,12 +198,11 @@ getEvent <- function(paras, event_type) {
       # script
       filename <- "run_majiq.sh"
       script_majiq <- file.path(dir_shell, filename)
-      majiq_path <- paras$Basic$MAJIQ_path
-      voila_path <- paras$Basic$VOILA_path
+      majiq_env <- paras$Basic$MAJIQ_env
       res <- getA35SSALevent(
         majiq.work.path, bam_path, gff, script_majiq,
         core, genome_name, junctionReads, log_file,
-        majiq_path,voila_path,license_file
+        majiq_env,license_file
       )
     }
     if (RI) {
@@ -365,7 +363,7 @@ getRIevent <- function(
 
 getA35SSALevent <- function(work_path, bam_path, gff, script_majiq,
                             core, genome_name, junctionReads, log_file,
-                            majiq_path,voila_path,license_file) {
+                            majiq_env,license_file) {
   cmd <- paste(
     "bash", script_majiq,
     work_path,
@@ -374,8 +372,7 @@ getA35SSALevent <- function(work_path, bam_path, gff, script_majiq,
     core,
     genome_name,
     junctionReads,
-    majiq_path,
-    voila_path,
+    majiq_env,
     license_file, ">>", log_file, "2>&1"
   )
   msg <- paste0("[", Sys.time(), "] ", "Run MAJIQ: ", cmd)
@@ -676,7 +673,7 @@ getA5SSid <- function(file, outfile, remove.chr = F, junctionReads) {
 #'
 
 getMXEid <- function(file, outfile, remove.chr = F, junctionReads) {
-  file2 <- system(paste0("find ", file, " -name MXE.MATS.JCEC.txt"), show.output.on.console = F, intern = T)
+  file2 <- system(paste0("find ", file, " -name MXE.MATS.JCEC.txt"), intern = T)
   data <- read.table(file2, header = T, sep = "\t")
   if (remove.chr) {
     data$chr <- sub(pattern = "chr", replacement = "", x = data$chr)

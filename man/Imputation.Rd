@@ -48,7 +48,7 @@ path to the result of three imputation strategies
 save a list of result of three imputation strategies to
 work_path/imputation/Imputed_seperated_event_${cell_similarity_type}_*.rds
 The result contains two lists, each of which contains multiple imputation results.
-The first list is the result of strategy1 and strategy2, 
+The first list is the result of strategy1 and strategy2,
 The second list is the result of strategy3
 }
 \description{

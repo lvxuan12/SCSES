@@ -65,9 +65,8 @@ body <- dashboardBody(
                                                  createTextFile(id = "rmats_path", label = "rMats Path", type = "shinyFilesButton")
                                           ),
                                           fluidRow(
-                                                 createTextFile(id = "MAJIQ_path", label = "MAJIQ Path", type = "shinyFilesButton"),
-                                                 createTextFile(id = "MAJIQ_license_path", label = "MAJIQ License Path", type = "shinyFilesButton"),
-                                                 createTextFile(id = "VOILA_path", label = "VOILA path", type = "shinyFilesButton")
+                                                 textInput(inputId = "MAJIQ_env", label = "MAJIQ conda environment", placeholder = "Input the name of conda env for MAJIQ"),
+                                                 createTextFile(id = "MAJIQ_license_path", label = "MAJIQ License Path", type = "shinyFilesButton")
                                           ),
                                           fluidRow(
                                                  createTextFile(id = "IRFinder_path", label = "IRFinder Path", type = "shinyFilesButton"),

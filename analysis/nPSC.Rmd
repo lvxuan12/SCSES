@@ -29,8 +29,6 @@ rds.path = getEXPmatrix(paras)
 
 #### Step3. Detect splicing events
 
-To define a global set of all splicing events, SCSES firstly merges all bam files from every single cell to construct a pseudo-bulk bam file, and identifies all types of splicing events by conventional algorithms.
-
 ``` {r}
 pseudobulk.path = createPseudobulk(paras)
 #if you meet:
@@ -40,74 +38,24 @@ Sys.setenv(LD_LIBRARY_PATH = paste0("/disk/lvxuan/lib:", old.ld))
 event.path = detectEvents(paras)
 ```
 
-Different types of splicing events will be saved to `work_path/events/`, separately.
 
 #### Step4. Quantify splicing events
 
-According to splicing events detected in the previous step, SCSES then quantify raw reads associated with these splicing events in each cell, and construct the raw read count matrix and calculate the raw PSI matrix.
-
-The definition of PSI of different AS events: ![The definition of PSI of different AS events:](png/PSI.png)
-
-``` r
+``` {r}
 rawrc.path = getRawRC(paras)
 rawpsi.path = getRawPSI(paras)
+rawrds.path = mergeSplicingValue(paras)
 processed.data.path = preprocessEvent(paras)
 ```
 
-Raw read count matrix and PSI matrix for different types of splicing events will be saved to `work_path/splicing_value/`, separately.
-
 #### Step5. Constructs similarity networks
 
-To overcome the high dropout rate and limited read coverage of scRNA-seq techniques, SCSES constructs cell similarity and event similarity networks by K-nearest neighbor algorithm (KNN) to learn information from similar cells/events.
-
-``` r
+``` {r}
 cellnet.path = getCellSimilarity(paras)
 eventnet.path = getEventSimilarity(paras)
 ```
 
-A list of event similarity for different types of splicing events will be saved to `work_path/imputation/event_similarity/event.similars.rds`;
-
-A list of different types of cell similarity and a list of the number of neighbors will be saved to rds file to`work_path/imputation/cell_similarity/cell.similars.rds` and `work_path/imputation/cell_similarity/dyk.cell.rds`
-
-In this step, some parameters can be adjusted in configure file or the function parameters directly:
-
-##### For cell similarity networks:
-
-SCSES can use RBP expressions, Raw read count or Raw PSI to measure cell similarities.
-
-`feature_num`: the number of high variable features for PCA before calculate cell distance.
-
-`rbp`: expression of those RBPs will be used to calculate cell similarity.
-
-`cell_similarity_data`: data used to calculate cell similarity. Choose at least on from EXP_RBP, RC, and PSI.
-
-`distance_method`: method used to calculate distance.
-
-`alpha_cell`: restart probability for random walk.
-
-`decay_cell`: threshold of change in the similarity matrix.
-
-`kcell_max`: Maximum number of neighbors.
-
-`kcell_min`: Minimum number of neighbors.
-
-##### For event similarity networks:
-
-Event similarities are defined by the RBP regulatory correlations and an embedding representation by integrating event sequence similarities.
-
-`ae.para`: parameters of encoding sequence features
-
-`rbp`: expression of those RBPs will be used to calculate RBP regulatory correlations.
-
-`kevent`: the number of neighbors
-
-`alpha_event`: restart probability for random walk
-
-`decay_event`: threshold of change in the similarity matrix
-
 #### Step6. Imputation
-
-Based on these weighted similarity networks, SCSES next aggregates the information across similar cells or events to impute read count or PSI value.
 
 ``` r
 Imputed.data.path = ImputationAll(paras)
@@ -117,8 +65,6 @@ A list of three imputation strategies result will be saved to `work_path/imputat
 
 #### Step7. Estimation
 
-We recommend different imputation strategies for four scenarios defined by the abundance of reads counts in the target cell and neighbor cells (ND, BD, TD+Info, and TD-Info). SCSES pre-trains models to predict the probability of specific scenario for each cell-event pair. Finally, SCSES calculates the PSI value using a linear combination of predictions from the four strategies, weighted by these probabilities.
-
 ``` r
 #rds_imputed_file: path to the list of three imputation strategies results generated in the previous step
 Imputed.data.path = Estimation(paras,rds_imputed_file)
@@ -126,11 +72,10 @@ Imputed.data.path = Estimation(paras,rds_imputed_file)
 
 ##### Fine-tune the model
 
-To improve the fitness of models for the new dataset, we also provide a procedure to fine-tune the model. We collect a set of splicing events with conserved splicing levels in different human tissue. For a new dataset, we compare the splicing level in new data with the reference records, and give the scenarios definition to each event-cell pair, which is used to fine-tune the pre-trained model.
-
 ``` r
 ftrc.path = getFtRawRC(paras)
 ftpsi.path = getFtRawPSI(paras)
+ftrds.path = mergeFtSplicingValue(paras)
 ftmodel.path = FtClassifier(paras)
 #rds_imputed_file: path to the list of three imputation strategies results generated in the previous step
 Imputed.data.path = Estimation(paras,rds_imputed_file)

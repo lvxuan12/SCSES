@@ -21,21 +21,21 @@
 #' @param event.info list of events information or path to a rds file,
 #' default: rds_processed/event.info.list.rds
 #' @param cell_similarity a list of different types of cell similarity named by the data
-#' type (EXP_RBP, RC, and PSI) or path to a rds file, 
+#' type (EXP_RBP, RC, and PSI) or path to a rds file,
 #' default: imputation/cell_similarity/cell.similars.rds
 #' @param event_similarity a list of event similarity named by different types of
-#' splicing events or path to a rds file, 
+#' splicing events or path to a rds file,
 #' default: imputation/event_similarity/event.similars.rds
-#' 
+#'
 #' @return path to the result of three imputation strategies
 #' save a list of three imputation strategies result to
 #' work_path/imputation/Imputed_seperated_*.rds.
 #' The result contains two lists, each of which contains multiple imputation results.
 #' Different event types are combined.
-#' The first list is the result of strategy1 and strategy2, where the name of each matrix 
-#' is divided by _, the first half represents different cell similarities, and the second 
-#' half represents PSI for strategy1 and RC for strategy2; 
-#' The second list is the result of strategy3, again where the names of each matrix are 
+#' The first list is the result of strategy1 and strategy2, where the name of each matrix
+#' is divided by _, the first half represents different cell similarities, and the second
+#' half represents PSI for strategy1 and RC for strategy2;
+#' The second list is the result of strategy3, again where the names of each matrix are
 #' divided by _, with the first half representing different cell similarities
 #'
 #' @export
@@ -44,7 +44,7 @@
 #' @import rhdf5
 #' @import hdf5r
 #' @importFrom stats rbinom
-#' 
+#'
 ImputationAll <- function(
     paras, output_path = NULL,
     decay_impute = paras$Task$impute$decay_impute,
@@ -68,7 +68,7 @@ ImputationAll <- function(
     print("cell similarity checked")
     event_similarity <- check.readRDS2(event_similarity, default = paste0(paras$Basic$work_path, "/imputation/event_similarity/event.similars.rds"))
     print("event similarity checked")
-    decay_impute <- check.int.or.null(x = decay_impute, default = 0.05)
+    decay_impute <- check.double.or.null(x = decay_impute, default = 0.05)
     print(paste0("decay=", paste(decay_impute, collapse = ";"), "  checked"))
     # validate event type----
     print(paste("Checking event type"))
@@ -211,13 +211,13 @@ ImputationAll <- function(
 #' splicing events or path to a rds file,
 #' default: imputation/event_similarity/event.similars.rds
 #' @param cell_similarity_type one data type used to calculate cell similarity (EXP_RBP, RC, PSI)
-#' 
-#' 
+#'
+#'
 #' @return path to the result of three imputation strategies
 #' save a list of result of three imputation strategies to
 #' work_path/imputation/Imputed_seperated_event_${cell_similarity_type}_*.rds
 #' The result contains two lists, each of which contains multiple imputation results.
-#' The first list is the result of strategy1 and strategy2, 
+#' The first list is the result of strategy1 and strategy2,
 #' The second list is the result of strategy3
 #' @export
 #' @import R.matlab
@@ -225,7 +225,7 @@ ImputationAll <- function(
 #' @import rhdf5
 #' @import hdf5r
 #' @importFrom stats rbinom
-#' 
+#'
 Imputation <- function(
     paras, output_path = NULL,
     decay_impute = paras$Task$impute$decay_impute,
@@ -250,7 +250,7 @@ Imputation <- function(
     print("cell similarity checked")
     event_similarity <- check.readRDS2(event_similarity, default = paste0(paras$Basic$work_path, "/imputation/event_similarity/event.similars.rds"))
     print("event similarity checked")
-    decay_impute <- check.int.or.null(x = decay_impute, default = 0.05)
+    decay_impute <- check.double.or.null(x = decay_impute, default = 0.05)
     print(paste0("decay=", paste(decay_impute, collapse = ";"), "  checked"))
     # validate event type----
     print(paste("Checking event type"))
