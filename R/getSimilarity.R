@@ -116,6 +116,7 @@ createBSgenome <- function(ref_path,out_path,pkg) {
 
     cmd <- paste("R CMD INSTALL", paste0(pkg, "_1.0.0.tar.gz"))
     system(command = cmd, wait = T)
+    file.remove(paste0(pkg, "_1.0.0.tar.gz"))
     return(out_path)
 }
 

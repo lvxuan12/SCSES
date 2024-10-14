@@ -117,6 +117,7 @@ AL.info.seperation <- function(event) {
 #'
 #' @keywords internal
 #' @export
+#' @importFrom GenomicRanges GRanges
 #'
 A5SS.info.seperation <- function(event) {
   infos <- unlist(strsplit(x = event, split = "\\|"))
