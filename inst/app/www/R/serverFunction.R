@@ -4,7 +4,7 @@ showSelect=function(ff)
   {
     return(F)
   }
-  
+
   if(.GlobalEnv$file.attr[ff,'type']=='shinyFilesButton')
   {
     path=parseFilePaths(volumns,input[[ff]])
@@ -13,7 +13,7 @@ showSelect=function(ff)
   else
   {
     path=parseDirPath(volumns,input[[ff]])
-    path=normalizePath(path) 
+    path=normalizePath(path)
   }
   updateTextInput(session = session,inputId = gsub(pattern = "_",replacement = "",x = ff),value = path)
   # updateValue(gsub(pattern = "_",replacement = "",x = ff),env)
@@ -31,7 +31,7 @@ getDefaultPath=function(cmd)
   {
     msg=system(paste('which',cmd),intern = T,wait = T)
   }
-  
+
   if(!is.null(attr(msg,"status"))&&attr(msg,'status')==1)
   {
     return("")
@@ -39,7 +39,7 @@ getDefaultPath=function(cmd)
   return(normalizePath(msg))
 }
 
-getVolumes=function(exclude=NULL) 
+getVolumes=function(exclude=NULL)
 {
   osSystem <- Sys.info()["sysname"]
   if (osSystem == "Darwin") {
@@ -57,10 +57,10 @@ getVolumes=function(exclude=NULL)
   else if (osSystem == "Windows") {
     wmic <- paste0(Sys.getenv("SystemRoot"), "\\System32\\Wbem\\WMIC.exe")
     if (!file.exists(wmic)) {
-      volumes_info <- system2("powershell", "$dvr=[System.IO.DriveInfo]::GetDrives();Write-Output $dvr.length $dvr.name $dvr.VolumeLabel;", 
+      volumes_info <- system2("powershell", "$dvr=[System.IO.DriveInfo]::GetDrives();Write-Output $dvr.length $dvr.name $dvr.VolumeLabel;",
                               stdout = TRUE)
       num = as.integer(volumes_info[1])
-      if (num == 0) 
+      if (num == 0)
         return(NULL)
       mat <- matrix(volumes_info[-1], nrow = num, ncol = 2)
       mat[, 1] <- gsub(":\\\\$", ":/", mat[, 1])
@@ -68,21 +68,21 @@ getVolumes=function(exclude=NULL)
       mat[sel, 2] <- mat[sel, 1]
       volumes <- mat[, 1]
       volNames <- mat[, 2]
-      volNames <- paste0(volNames, " (", gsub(":/$", ":", 
+      volNames <- paste0(volNames, " (", gsub(":/$", ":",
                                               volumes), ")")
     }
     else {
-      volumes <- system(paste(wmic, "logicaldisk get Caption"), 
+      volumes <- system(paste(wmic, "logicaldisk get Caption"),
                         intern = TRUE, ignore.stderr = TRUE)
       volumes <- sub(" *\\r$", "", volumes)
       keep <- !tolower(volumes) %in% c("caption", "")
       volumes <- volumes[keep]
-      volNames <- system(paste(paste('cmd /c chcp 936 &&'),wmic, "/FAILFAST:1000 logicaldisk get VolumeName"), 
+      volNames <- system(paste(paste('cmd /c chcp 936 &&'),wmic, "/FAILFAST:1000 logicaldisk get VolumeName"),
                          intern = TRUE, ignore.stderr = TRUE)[-1]
       volNames = iconv(volNames,from = 'GBK',to = 'UTF8')
       volNames <- sub(" *\\r$", "", volNames)
       volNames <- volNames[keep]
-      volNames <- paste0(volNames, ifelse(volNames == "", 
+      volNames <- paste0(volNames, ifelse(volNames == "",
                                           "", " "))
       volNames <- paste0(volNames, "(", volumes, ")")
     }
@@ -117,7 +117,7 @@ updateValue=function(id)
   {
     flag=identical(new.value,raw.values[[id]])
   }
-  
+
   if(!flag)
   {
     raw.values[[id]]<<-new.value
@@ -162,7 +162,7 @@ validation=function(input,session)
   # error.list=data.frame()
   flag=T
   msg=""
-  
+
   # checklist=data.frame(id=c('dataset','cellinfofile','bampath','SCESCsrc','Rscriptpath','JAVApath','Samtoolspath','featurecountspath',
   #                           'MCRpath','rmatspath','MAJIQpath','IRFinderpath','workpath','ref_name','fapath','GTFpath','GFFpath',
   #                           'RBPpath','finetunerawpath','ref.pkg','phastpath'),
@@ -171,17 +171,17 @@ validation=function(input,session)
   #                             'Reference Genome','GTF File','GFF File','RBP File','Fine-tune Raw File','Reference Package','PhastCons Path'),
   #                      type=c('text','text','text','text','text','text','text','text','text','text','text','text',
   #                             'text','text','text','text','text','text','text','text','text'))
-  
+
   checklist = data.frame(
     id = c(
       "dataset", "bampath", "Pythonpath", "JAVApath", "Samtoolspath", "featurecountspath",
-      "MCRpath", "rmatspath", "MAJIQpath", "VOILApath", "MAJIQlicensefile", "IRFinderpath",
+      "MCRpath", "rmatspath", "MAJIQenv", "MAJIQlicensefile", "IRFinderpath",
       "STARpath", "workpath", "ref_name", "fapath", "GTFpath", "GFFpath",
       "RBPpath", "phastpath"
     ),
     name = c(
       "Dataset Name", "Bam Path", "Python Path", "JAVA Path", "Samtools Path",
-      "FeatureCounts Path", "MCR Path", "rMats Path", "MAJIQ Path", "VOILA Path",
+      "FeatureCounts Path", "MCR Path", "rMats Path", "MAJIQ env",
       "MAJIQ license file", "IRFinder Path", "STAR Path", "Work Path", "Reference Name",
       "Reference Genome", "GTF File", "GFF File", "RBP File", "PhastCons Path"
     ),

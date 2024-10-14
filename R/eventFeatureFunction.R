@@ -1,10 +1,10 @@
 #' @title Split SE event information
 #' @param event a event id
 #' @return data.frame
-#' 
+#'
 #' @keywords internal
 #' @export
-#' 
+#'
 SE.info.seperation <- function(event) {
   infos <- unlist(strsplit(x = event, split = "\\|"))
   gene <- infos[[3]]
@@ -20,7 +20,7 @@ SE.info.seperation <- function(event) {
 #' @title Split RI event information
 #' @param event a event id
 #' @return data.frame
-#' 
+#'
 #' @keywords internal
 #' @export
 #'
@@ -38,9 +38,10 @@ RI.info.seperation <- function(event) {
 #' @title Split A3SS event information
 #' @param event a event id
 #' @return data.frame
-#' 
+#'
 #' @keywords internal
 #' @export
+#' @importFrom GenomicRanges GRanges
 #'
 A3SS.info.seperation <- function(event) {
   infos <- unlist(strsplit(x = event, split = "\\|"))
@@ -80,7 +81,7 @@ A3SS.info.seperation <- function(event) {
 #' @title Split AL event information
 #' @param event a event id
 #' @return data.frame
-#' 
+#'
 #' @keywords internal
 #' @export
 #'
@@ -113,7 +114,7 @@ AL.info.seperation <- function(event) {
 #' @title Split A5SS event information
 #' @param event a event id
 #' @return data.frame
-#' 
+#'
 #' @keywords internal
 #' @export
 #'
@@ -152,7 +153,7 @@ A5SS.info.seperation <- function(event) {
 #' @title Split MXE event information
 #' @param event a event id
 #' @return data.frame
-#' 
+#'
 #' @keywords internal
 #' @export
 #'
@@ -183,7 +184,7 @@ MXE.info.seperation <- function(event) {
 #' @param bs.genome \code{get(pkg)}, see \code{createBSgenome} function
 #' @param core the number of threads
 #' @return list
-#' 
+#'
 #' @keywords internal
 #' @export
 #' @import parallel
@@ -325,7 +326,7 @@ SE.splice.seq.extraction <- function(events.info, bs.genome,core) {
 #' @param bs.genome \code{get(pkg)}, see \code{createBSgenome} function
 #' @param core the number of threads
 #' @return list
-#' 
+#'
 #' @keywords internal
 #' @export
 #' @import parallel
@@ -480,7 +481,7 @@ SE.length.feature <- function(event) {
 #'
 #' @keywords internal
 #' @export
-#' 
+#'
 #' @import Biostrings
 SE.kmer.extraction <- function(splice.region, exon.region) {
   kmer <- list()
@@ -2157,12 +2158,12 @@ MXE.kmer.extraction <- function(splice.region, exon.region) {
 
 #' @title extract conservation scores of genome region
 #' @param regionlist list of genome region
-#' @param bwf \code{BigWigFile(phast.path)}, 
-#' phast.path can be downloaded from ucsc database, 
+#' @param bwf \code{BigWigFile(phast.path)},
+#' phast.path can be downloaded from ucsc database,
 #' e.g. https://hgdownload.cse.ucsc.edu/goldenpath/hg19/phastCons100way/
 #' @param chr.prefix prefix added to chromosome id, "chr" or ""
 #' @param core the number of threads
-#' 
+#'
 #' @return list
 #'
 #' @keywords internal
@@ -2171,7 +2172,7 @@ MXE.kmer.extraction <- function(splice.region, exon.region) {
 #' @import rtracklayer
 #' @importFrom GenomicRanges GRanges
 #' @importFrom IRanges IRanges
-#' 
+#'
 phastScore.extraction <- function(regionlist, bwf, chr.prefix, core) {
   regionlist <- lapply(X = regionlist, function(region) {
     range <- GRanges(
@@ -2188,7 +2189,7 @@ phastScore.extraction <- function(regionlist, bwf, chr.prefix, core) {
 }
 
 #' @title Calculate alternative branch point selection
-#' Specifically, for an alternative region in an event, we divide the region 
+#' Specifically, for an alternative region in an event, we divide the region
 #' into \bold{seperate} bins with equal length, and calculate the cumulative adenine ratio
 #' for each bin as the adenine ratio features.
 #' @param region data.frame containing column event id and sequence
