@@ -51,7 +51,10 @@ detectEvents <- function(paras) {
   }
   # script
   dir_shell <- system.file("shell", package = "SCSES")
-  if (SS) {
+  res.file <- list.files(paste0(work_path,'/majiq/'),
+                         pattern = "alt3prime.tsv",
+                         recursive = TRUE, full.names = TRUE)
+  if (SS & length(res.file)==0) {
     majiq.work.path <- paste0(work_path, "/majiq/")
     msg <- paste0("[", Sys.time(), "] ", "MAJIQ...")
     print(msg)
@@ -67,7 +70,10 @@ detectEvents <- function(paras) {
       majiq_path,voila_path,license_file
     )
   }
-  if (RI) {
+  res.file <- list.files(paste0(work_path,'/IRFinder/'),
+                         pattern = "IRFinder-IR-nondir.txt",
+                         recursive = TRUE, full.names = TRUE)
+  if (RI & length(res.file)==0) {
     irfinder.work.path <- paste0(work_path, "/IRFinder/")
     msg <- paste0("[", Sys.time(), "] ", "IRFinder...")
     print(msg)
@@ -84,7 +90,10 @@ detectEvents <- function(paras) {
       star_path, log_file
     )
   }
-  if (SEMX) {
+  res.file <- list.files(paste0(work_path,'/rMats/'),
+                         pattern = "SE.MATS.JCEC.txt",
+                         recursive = TRUE, full.names = TRUE)
+  if (SEMX & length(res.file)==0) {
     rmats.work.path <- paste0(work_path, "/rMats/")
     msg <- paste0("[", Sys.time(), "] ", "rMats...")
     print(msg)
@@ -223,8 +232,8 @@ getEvent <- function(paras, event_type) {
       # script
       filename <- "run_rmats.sh"
       script_rmats <- file.path(dir_shell, filename)
-      rmats_path <- paras$Basic$rMATs
-      py_path <- paras$Basic$rMATs_py
+      rmats_path <- paras$Basic$rMATS_path
+      py_path <- paras$Basic$python_path
       res <- getSEevent(
         rmats.work.path, bam_path, gtf, paired, readlength,
         rmats_path, py_path, script_rmats, core, log_file

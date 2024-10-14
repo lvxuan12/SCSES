@@ -109,7 +109,7 @@ getEXPmatrix <- function(
 
 #' @title Get gene expression matrix from Cell Ranger
 #' @description Read count matrix from 10X CellRanger hdf5 file
-#' save raw and normalized UMI counts matrix to work_path/rds/
+#' save raw and normalized UMI counts sparse matrix to work_path/rds/
 #'
 #'
 #' @param paras list fromJSON(paras_file)
@@ -119,6 +119,9 @@ getEXPmatrix <- function(
 #' @param filter.mt filter out mitochondrial genes
 #' @param filter.rp filter out ribosomal genes
 #' @param sample_name the name of samples in the dataset
+#' If the dataset contains multiple samples, the Cell Ranger outputs for
+#' different samples need to be placed in different folders under the
+#' expr_path directory, named after the sample_name.
 
 #' @return gene expression matrix path
 #' @export
@@ -136,8 +139,11 @@ get10XEXPmatrix <- function(
     # input
     scelist = lapply(sample_name, function(x) {
         print(x)
-        file_name = paste0(expr_path, "/", x, "/outs/filtered_feature_bc_matrix.h5")
-        if (!file.exists(file_name)) {
+        file_name = list.files(paste0(expr_path,'/',x,'/'),
+            pattern = "filtered_feature_bc_matrix.h5",
+            recursive = TRUE, full.names = TRUE
+        )
+        if (length(file_name)==0) {
             stop("File not found")
         }
         sce = Seurat::Read10X_h5(file_name)
