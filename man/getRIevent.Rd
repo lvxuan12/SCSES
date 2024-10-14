@@ -10,9 +10,11 @@ getRIevent(
   gtf,
   ref,
   core,
+  readlength,
   script_irfinder,
   irfinder_path,
   samtools_path,
+  star_path,
   log_file
 )
 }
@@ -27,11 +29,15 @@ getRIevent(
 
 \item{core}{the number of threads}
 
+\item{readlength}{the length of each read}
+
 \item{script_irfinder}{directory to script for running IRFinder}
 
 \item{irfinder_path}{directory to executable file of IRFinder}
 
 \item{samtools_path}{directory to samtools}
+
+\item{star_path}{directory to STAR}
 
 \item{log_file}{file saving stdout and stderr information}
 }

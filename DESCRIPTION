@@ -58,3 +58,4 @@ Collate:
     'getRawSplicingValue.R'
     'getSimilarity.R'
     'preprocess.R'
+    'split10XBAM.R'

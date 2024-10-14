@@ -11,7 +11,7 @@ createConfigshiny(host = "127.0.0.1", port = 9999, launch.browser = F, ...)
 
 \item{port}{The TCP port that the application should listen on, default: 9999}
 
-\item{browser}{The HTML browser to be used by shiny}
+\item{launch.browser}{If true, the system's default web browser will be launched automatically after the app is started.}
 }
 \description{
 Create configure file
