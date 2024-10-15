@@ -9,8 +9,8 @@ phastScore.extraction(regionlist, bwf, chr.prefix, core)
 \arguments{
 \item{regionlist}{list of genome region}
 
-\item{bwf}{\code{BigWigFile(phast.path)}, 
-phast.path can be downloaded from ucsc database, 
+\item{bwf}{\code{BigWigFile(phast.path)},
+phast.path can be downloaded from ucsc database,
 e.g. https://hgdownload.cse.ucsc.edu/goldenpath/hg19/phastCons100way/}
 
 \item{chr.prefix}{prefix added to chromosome id, "chr" or ""}

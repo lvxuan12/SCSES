@@ -3,7 +3,7 @@
 \name{aPercentage}
 \alias{aPercentage}
 \title{Calculate alternative branch point selection
-Specifically, for an alternative region in an event, we divide the region 
+Specifically, for an alternative region in an event, we divide the region
 into \bold{seperate} bins with equal length, and calculate the cumulative adenine ratio
 for each bin as the adenine ratio features.}
 \usage{
@@ -21,7 +21,7 @@ list
 }
 \description{
 Calculate alternative branch point selection
-Specifically, for an alternative region in an event, we divide the region 
+Specifically, for an alternative region in an event, we divide the region
 into \bold{seperate} bins with equal length, and calculate the cumulative adenine ratio
 for each bin as the adenine ratio features.
 }

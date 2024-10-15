@@ -103,6 +103,9 @@ createBSgenome <- function(ref_path,out_path,pkg) {
     write(x = content, file = paste0(out_path, "/seed.txt"))
 
     # 2. Build and Install package----
+    msg = paste0("[", Sys.time(), "] ", "Build ", pkg, " package...", "")
+    print(msg)
+
     forgeBSgenomeDataPkg(paste0(out_path, "/seed.txt"), destdir = out_path)
 
     log_file <- paste0(out_path, "/buildpkg.log")
@@ -117,11 +120,15 @@ createBSgenome <- function(ref_path,out_path,pkg) {
     cmd <- paste("R CMD REMOVE", pkg, ">>", log_file, "2>&1")
     system(command = cmd, wait = T)
 
+    msg = paste0("[", Sys.time(), "] ", "Install ", pkg, " package...", "")
+    print(msg)
+
     log_file <- paste0(out_path, "/installpkg.log")
     cmd <- paste("R CMD INSTALL", paste0(pkg, "_1.0.0.tar.gz"),
                  ">>", log_file, "2>&1")
     system(command = cmd, wait = T)
     file.remove(paste0(pkg, "_1.0.0.tar.gz"))
+    unlink(paste0(pkg, ".Rcheck"))
     return(out_path)
 }
 
