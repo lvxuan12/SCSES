@@ -15,4 +15,3 @@ data.frame
 \description{
 Split A5SS event information
 }
-\keyword{internal}

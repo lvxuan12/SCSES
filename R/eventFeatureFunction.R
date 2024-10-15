@@ -2,7 +2,6 @@
 #' @param event a event id
 #' @return data.frame
 #'
-#' @keywords internal
 #' @export
 #'
 SE.info.seperation <- function(event) {
@@ -21,7 +20,6 @@ SE.info.seperation <- function(event) {
 #' @param event a event id
 #' @return data.frame
 #'
-#' @keywords internal
 #' @export
 #'
 RI.info.seperation <- function(event) {
@@ -39,7 +37,6 @@ RI.info.seperation <- function(event) {
 #' @param event a event id
 #' @return data.frame
 #'
-#' @keywords internal
 #' @export
 #' @importFrom GenomicRanges GRanges
 #'
@@ -82,7 +79,6 @@ A3SS.info.seperation <- function(event) {
 #' @param event a event id
 #' @return data.frame
 #'
-#' @keywords internal
 #' @export
 #'
 AL.info.seperation <- function(event) {
@@ -115,7 +111,6 @@ AL.info.seperation <- function(event) {
 #' @param event a event id
 #' @return data.frame
 #'
-#' @keywords internal
 #' @export
 #' @importFrom GenomicRanges GRanges
 #'
@@ -155,7 +150,6 @@ A5SS.info.seperation <- function(event) {
 #' @param event a event id
 #' @return data.frame
 #'
-#' @keywords internal
 #' @export
 #'
 MXE.info.seperation <- function(event) {

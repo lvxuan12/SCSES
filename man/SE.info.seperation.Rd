@@ -15,4 +15,3 @@ data.frame
 \description{
 Split SE event information
 }
-\keyword{internal}

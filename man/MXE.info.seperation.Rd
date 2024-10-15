@@ -15,4 +15,3 @@ data.frame
 \description{
 Split MXE event information
 }
-\keyword{internal}
