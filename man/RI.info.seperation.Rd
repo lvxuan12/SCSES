@@ -15,3 +15,4 @@ data.frame
 \description{
 Split RI event information
 }
+\keyword{internal}

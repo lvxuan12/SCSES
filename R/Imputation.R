@@ -131,7 +131,7 @@ ImputationAll <- function(
             msg <- paste0("[", Sys.time(), "] ", "Save data")
             print(msg)
             saveHdf5File(datapath, list(
-                similarity = similarity_type, data = all_data,
+                similar = similarity_type, data = all_data,
                 parameter = list(decay = decay_impute)
             ))
             msg <- paste0("[", Sys.time(), "] ", "Save data Finished")
@@ -309,7 +309,7 @@ Imputation <- function(
         msg <- paste0("[", Sys.time(), "] ", "Save data")
         print(msg)
         saveHdf5File(datapath, list(
-            similarity = similarity_type, data = all_data,
+            similar = similarity_type, data = all_data,
             parameter = list(decay = decay_impute)
         ))
         msg <- paste0("[", Sys.time(), "] ", "Save data Finished")
