@@ -128,7 +128,7 @@ createBSgenome <- function(ref_path,out_path,pkg) {
                  ">>", log_file, "2>&1")
     system(command = cmd, wait = T)
     file.remove(paste0(pkg, "_1.0.0.tar.gz"))
-    unlink(paste0(pkg, ".Rcheck"))
+    unlink(paste0(pkg, ".Rcheck"),recursive=TRUE)
     return(out_path)
 }
 
