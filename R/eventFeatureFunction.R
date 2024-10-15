@@ -20,6 +20,7 @@ SE.info.seperation <- function(event) {
 #' @param event a event id
 #' @return data.frame
 #'
+#' @keywords internal
 #' @export
 #'
 RI.info.seperation <- function(event) {
@@ -37,6 +38,7 @@ RI.info.seperation <- function(event) {
 #' @param event a event id
 #' @return data.frame
 #'
+#' @keywords internal
 #' @export
 #' @importFrom GenomicRanges GRanges
 #'
@@ -79,6 +81,7 @@ A3SS.info.seperation <- function(event) {
 #' @param event a event id
 #' @return data.frame
 #'
+#' @keywords internal
 #' @export
 #'
 AL.info.seperation <- function(event) {
@@ -111,6 +114,7 @@ AL.info.seperation <- function(event) {
 #' @param event a event id
 #' @return data.frame
 #'
+#' @keywords internal
 #' @export
 #' @importFrom GenomicRanges GRanges
 #'
@@ -150,6 +154,7 @@ A5SS.info.seperation <- function(event) {
 #' @param event a event id
 #' @return data.frame
 #'
+#' @keywords internal
 #' @export
 #'
 MXE.info.seperation <- function(event) {
@@ -188,6 +193,7 @@ MXE.info.seperation <- function(event) {
 
 SE.splice.seq.extraction <- function(events.info, bs.genome,core) {
   cluster <- makeCluster(spec = core)
+  clusterExport(cl = cluster, varlist = c("events.info"), envir = environment())
   # 1. I1-5----
   I1.5.region <- parLapply(cl = cluster, X = as.list(seq(1, nrow(events.info))), function(index) {
     if (events.info$strand[index] == "+") {
@@ -329,6 +335,7 @@ SE.splice.seq.extraction <- function(events.info, bs.genome,core) {
 #' @import Biostrings
 SE.exon.seq.extraction <- function(events.info, bs.genome, core) {
   cluster <- makeCluster(core)
+  clusterExport(cl = cluster, varlist = c("events.info"), envir = environment())
   # 1. exon1----
   exon1.region <- parLapply(cl = cluster, X = as.list(seq(1, nrow(events.info))), function(index) {
     if (events.info$strand[index] == "+") {
@@ -532,6 +539,7 @@ SE.kmer.extraction <- function(splice.region, exon.region) {
 #' @import Biostrings
 RI.splice.seq.extraction <- function(events.info, bs.genome, core) {
   cluster <- makeCluster(core)
+  clusterExport(cl = cluster, varlist = c("events.info"), envir = environment())
   # 1. I1-5----
   A.5.region <- parLapply(cl = cluster, X = as.list(seq(1, nrow(events.info))), function(index) {
     if (events.info$strand[index] == "+") {
@@ -610,6 +618,7 @@ RI.splice.seq.extraction <- function(events.info, bs.genome, core) {
 #' @import Biostrings
 RI.exon.seq.extraction <- function(events.info, bs.genome, core) {
   cluster <- makeCluster(core)
+  clusterExport(cl = cluster, varlist = c("events.info"), envir = environment())
   # 1. exon1----
   exon1.region <- parLapply(cl = cluster, X = as.list(seq(1, nrow(events.info))), function(index) {
     if (events.info$strand[index] == "+") {
@@ -789,6 +798,7 @@ RI.kmer.extraction <- function(splice.region, exon.region) {
 #' @import Biostrings
 A3SS.splice.seq.extraction <- function(events.info, bs.genome, core) {
   cluster <- makeCluster(spec = core)
+  clusterExport(cl = cluster, varlist = c("events.info"), envir = environment())
   # 1. I-5----
   I.5.region <- parLapply(cl = cluster, X = as.list(seq(1, nrow(events.info))), function(index) {
     if (events.info$strand[index] == "+") {
@@ -900,6 +910,7 @@ A3SS.splice.seq.extraction <- function(events.info, bs.genome, core) {
 #' @import Biostrings
 A3SS.exon.seq.extraction <- function(events.info, bs.genome, core) {
   cluster <- makeCluster(core)
+  clusterExport(cl = cluster, varlist = c("events.info"), envir = environment())
   # 1. exon1----
   exon1.region <- parLapply(cl = cluster, X = as.list(seq(1, nrow(events.info))), function(index) {
     if (events.info$strand[index] == "+") {
@@ -1094,6 +1105,7 @@ A3SS.kmer.extraction <- function(splice.region, exon.region) {
 #' @import Biostrings
 AL.splice.seq.extraction <- function(events.info, bs.genome, core) {
   cluster <- makeCluster(core)
+  clusterExport(cl = cluster, varlist = c("events.info"), envir = environment())
   # 1. I-5----
   I.5.region <- parLapply(cl = cluster, X = as.list(seq(1, nrow(events.info))), function(index) {
     if (events.info$strand[index] == "+") {
@@ -1206,6 +1218,7 @@ AL.splice.seq.extraction <- function(events.info, bs.genome, core) {
 #' @import Biostrings
 AL.exon.seq.extraction <- function(events.info, bs.genome, core) {
   cluster <- makeCluster(core)
+  clusterExport(cl = cluster, varlist = c("events.info"), envir = environment())
   # 1. exon1----
   exon1.region <- parLapply(cl = cluster, X = as.list(seq(1, nrow(events.info))), function(index) {
     if (events.info$strand[index] == "+") {
@@ -1398,6 +1411,7 @@ AL.kmer.extraction <- function(splice.region, exon.region) {
 #' @import Biostrings
 A5SS.splice.seq.extraction <- function(events.info, bs.genome, core) {
   cluster <- makeCluster(core)
+  clusterExport(cl = cluster, varlist = c("events.info"), envir = environment())
   # 1. I-5----
   I.5.region <- parLapply(cl = cluster, X = as.list(seq(1, nrow(events.info))), function(index) {
     if (events.info$strand[index] == "+") {
@@ -1510,6 +1524,7 @@ A5SS.splice.seq.extraction <- function(events.info, bs.genome, core) {
 #' @import Biostrings
 A5SS.exon.seq.extraction <- function(events.info, bs.genome, core) {
   cluster <- makeCluster(core)
+  clusterExport(cl = cluster, varlist = c("events.info"), envir = environment())
   # 1. exon1----
   exon1.region <- parLapply(cl = cluster, X = as.list(seq(1, nrow(events.info))), function(index) {
     if (events.info$strand[index] == "+") {
@@ -1704,6 +1719,7 @@ A5SS.kmer.extraction <- function(splice.region, exon.region) {
 #' @import Biostrings
 MXE.splice.seq.extraction <- function(events.info, bs.genome, core) {
   cluster <- makeCluster(core)
+  clusterExport(cl = cluster, varlist = c("events.info"), envir = environment())
   # 1. I1-5----
   I1.5.region <- parLapply(cl = cluster, X = as.list(seq(1, nrow(events.info))), function(index) {
     if (events.info$strand[index] == "+") {
@@ -1908,6 +1924,7 @@ MXE.splice.seq.extraction <- function(events.info, bs.genome, core) {
 #' @import Biostrings
 MXE.exon.seq.extraction <- function(events.info, bs.genome, core) {
   cluster <- makeCluster(core)
+  clusterExport(cl = cluster, varlist = c("events.info"), envir = environment())
   # 1. exon1----
   exon1.region <- parLapply(cl = cluster, X = as.list(seq(1, nrow(events.info))), function(index) {
     if (events.info$strand[index] == "+") {
@@ -2200,6 +2217,7 @@ phastScore.extraction <- function(regionlist, bwf, chr.prefix, core) {
 #'
 aPercentage <- function(region, seperate = 100, core) {
   cluster <- makeCluster(core)
+  clusterExport(cl = cluster, varlist = c("events.info"), envir = environment())
   ratio <- parLapply(cl = cluster, X = as.list(region$seq), function(seq) {
     seq <- unlist(strsplit(seq, split = ""))
     index <- ceiling(seq(0, length(seq), length.out = seperate + 1))[-1]

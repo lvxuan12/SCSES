@@ -486,6 +486,11 @@ getEventSimilarity <- function(
             print(msg)
             cluster = makeCluster(core)
             fun = get(paste0(type, ".info.seperation"))
+            rr = clusterEvalQ(cl = cluster, {
+              library(rtracklayer)
+              NULL
+            })
+            clusterExport(cl = cluster, varlist = c("GRanges"), envir = environment())
             events.info = parLapply(cluster, X = as.list(events), fun = fun)
             events.info = do.call(what = rbind, args = events.info)
             stopCluster(cluster)
@@ -493,7 +498,8 @@ getEventSimilarity <- function(
             msg = paste0("[", Sys.time(), "] ", "Parsing events region...", "")
             print(msg)
             splice.region.fun = get(paste0(type, ".splice.seq.extraction"))
-            splice.region = splice.region.fun(events.info, bs.genome = bs.genome, core = core)
+            splice.region = splice.region.fun(events.info, bs.genome = bs.genome,
+                                              core = core)
             exon.region.fun = get(paste0(type, ".exon.seq.extraction"))
             exon.region = exon.region.fun(events.info, bs.genome = bs.genome, core = core)
             # 1. length feature----
