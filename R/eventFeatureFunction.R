@@ -2217,7 +2217,6 @@ phastScore.extraction <- function(regionlist, bwf, chr.prefix, core) {
 #'
 aPercentage <- function(region, seperate = 100, core) {
   cluster <- makeCluster(core)
-  clusterExport(cl = cluster, varlist = c("events.info"), envir = environment())
   ratio <- parLapply(cl = cluster, X = as.list(region$seq), function(seq) {
     seq <- unlist(strsplit(seq, split = ""))
     index <- ceiling(seq(0, length(seq), length.out = seperate + 1))[-1]
