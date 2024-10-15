@@ -63,6 +63,10 @@ getRawRC <- function(
       print(msg)
       outpath_per_cell <- paste0(rc_path, "/", type, "_rjm")
       dir.create(outpath_per_cell)
+      log_file <- paste0(work_path, "/java_getRC_", type, ".log")
+      if (file.exists(log_file)) {
+        file.remove(log_file)
+      }
       if (type == "RI") {
         cluster <- makeCluster(spec = core)
         clusterExport(cl = cluster, varlist = c("java_path", "event_file", "outpath_per_cell", "bam_path", "sequence"), envir = environment())
@@ -78,7 +82,7 @@ getRawRC <- function(
             cell,
             event_file,
             outpath_per_cell,
-            "0,16,99,147,83,163"
+            "0,16,99,147,83,163", ">>", log_file, "2>&1"
           )
           print(cmd)
           system(cmd, wait = T, show.output.on.console = T)

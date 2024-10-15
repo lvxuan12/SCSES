@@ -5,12 +5,14 @@ import pandas as pd
 import numpy as np
 from scipy import stats
 import sys,math
+
 def model_training_parameter(data,encoding_dim,layer_dim,max_epoch):
   Standard_data=stats.zscore(data,axis=0)
   Standard_data[np.where(np.isnan(Standard_data))]=0
+  
   x_train=Standard_data
   x_test=Standard_data
-
+  
   input_img = keras.Input(shape=(x_train.shape[1],))
   encoded=input_img
   for i in range(len(layer_dim)):
@@ -28,13 +30,13 @@ def model_training_parameter(data,encoding_dim,layer_dim,max_epoch):
   encoder = keras.Model(input_img,encoded)
   
   autoencoder.compile(optimizer='adam', loss='MSE')
-
+  
   autoencoder.fit(x_train, x_train,
                   epochs=int(max_epoch),
                   batch_size=min(10000,x_train.shape[0]),
                   shuffle=True,
                   validation_data=(x_test, x_test))
-  
+                  
   encoded_imgs = encoder.predict(Standard_data)
   encoded_imgs=pd.DataFrame(encoded_imgs)
 

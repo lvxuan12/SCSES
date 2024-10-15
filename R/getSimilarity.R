@@ -662,6 +662,7 @@ getEventSimilarity <- function(
             layers = gsub(pattern = "\\[|\\]", replacement = "", ae.para[[type]]$layer)
             layers = as.numeric(unlist(strsplit(x = layers, split = ",")))
             flag = T
+            sink(paste0(output_path, "/", type, "_AE.log"))
             while (flag) {
                 auto.feature = model_training_parameter(
                     feature,
@@ -674,7 +675,7 @@ getEventSimilarity <- function(
                 auto.feature <- auto.feature[, valid]
                 flag <- length(valid) <= 1
             }
-
+            sink()
             rownames(auto.feature) = rownames(feature)
             event.features[[type]] = as.matrix(auto.feature)
             print(paste(paste0("[", Sys.time(), "]"), type, "event encoding Finish."))
@@ -767,7 +768,7 @@ getEventSimilarity <- function(
         }
         msg <- paste(paste0("[", Sys.time(), "]"), "Computing", type, "event Similarity Finished")
         print(msg)
-        event.similars[[type]] = event_similar
+        event.similars[[type]] = similar
     }
     msg = paste0("[", Sys.time(), "] ", "Calculate event similarity Finish.")
     print(msg)
