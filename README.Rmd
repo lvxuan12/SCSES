@@ -115,7 +115,6 @@ conda install conda-forge::libxml2
 ln -s /usr/lib/x86_64-linux-gnu/libsz.so /path/to/miniconda/envs/SCSES_test/lib/libsz.so
 ```
 
-
 ## SCSES input
 
 SCSES requires four inputs from the user
@@ -181,6 +180,7 @@ To define a global set of all splicing events, SCSES firstly merges all bam file
 pseudobulk.path = createPseudobulk(paras)
 event.path = detectEvents(paras)
 ```
+
 Different types of splicing events will be saved to `work_path/events/`, separately.
 
 ###### for UMI dataset

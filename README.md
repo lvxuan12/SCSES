@@ -7,7 +7,8 @@ Menu
       - [1. python module](#1-python-module)
       - [2. Softwares](#2-softwares)
     - [Installation from GitHub](#installation-from-github)
-      - [tips](#tips)
+      - [Tips for some Installation
+        error](#tips-for-some-installation-error)
   - [SCSES input](#scses-input)
   - [Getting started](#getting-started)
     - [Run SCSES step by step (smart-seq2
@@ -28,7 +29,6 @@ Menu
 # SCSES
 
 <!-- badges: start -->
-
 <!-- badges: end -->
 
 Single-cell Splicing Estimation based on Network Diffusion
@@ -54,14 +54,15 @@ conda install -c conda-forge r-base=4.3.1
 
 ``` bash
 pip install pandas numpy scipy scikit-learn
-conda install tensorflow keras
+pip install --upgrade keras
+pip install --upgrade tensorflow
 ```
 
 #### 2. Softwares
 
 To detect splicing events You will need to install rMATS, MAJIQ,
-IRFinder. MAJIQ and rMATS should be built in the same environment with
-SCSES (same python).
+IRFinder. rMATS should be built in the same environment with SCSES (same
+python). MAJIQ should be built in a new environment.
 
 ##### 2.1 [rMATS](https://github.com/Xinglab/rmats-turbo)
 
@@ -76,6 +77,8 @@ export PATH=/path/to/rmats_turbo_v4_3_0/:$PATH
 ##### 2.2 [MAJIQ](https://biociphers.bitbucket.io/majiq-docs/index.html)
 
 ``` bash
+conda create -n MAJIQ python=3.11
+conda activate MAJIQ
 pip install git+https://bitbucket.org/biociphers/majiq_academic.git
 export MAJIQ_LICENSE_FILE=/path/to/majiq_license_academic_official.lic
 ```
@@ -103,9 +106,25 @@ SCSES is installed directly from github using the following command:
 remotes::install_github("lvxuan12/SCSES")
 ```
 
-#### tips
+#### Tips for some Installation error
 
-if you have
+##### 1. cannot find fftw.h
+
+``` bash
+conda install conda-forge::fftw
+```
+
+##### 2. cannot find -lxml2
+
+``` bash
+conda install conda-forge::libxml2
+```
+
+##### 3. cannot find -lsz
+
+``` bash
+ln -s /usr/lib/x86_64-linux-gnu/libsz.so /path/to/miniconda/envs/SCSES_test/lib/libsz.so
+```
 
 ## SCSES input
 
@@ -166,11 +185,12 @@ rds.path = getEXPmatrix(paras)
 
 ##### Normalized UMI count matrix (for UMI dataset)
 
-You can use `getUMIEXPmatrix` to generate Normalized UMI count matrix,
-which will save normalized UMI count to `work_path/rds/`.
+You can use `get10XEXPmatrix` to generate Normalized UMI count matrix
+from 10X CellRanger hdf5 file, which will save normalized UMI count to
+`work_path/rds/`.
 
 ``` r
-rds.path = getUMIEXPmatrix(paras)
+rds.path = get10XEXPmatrix(paras,expr_path,sample_name)
 ```
 
 #### Step3. Detect splicing events
@@ -179,6 +199,8 @@ To define a global set of all splicing events, SCSES firstly merges all
 bam files from every single cell to construct a pseudo-bulk bam file,
 and identifies all types of splicing events by conventional algorithms.
 
+###### for smart-seq2 dataset
+
 ``` r
 pseudobulk.path = createPseudobulk(paras)
 event.path = detectEvents(paras)
@@ -186,6 +208,24 @@ event.path = detectEvents(paras)
 
 Different types of splicing events will be saved to `work_path/events/`,
 separately.
+
+###### for UMI dataset
+
+SCSES requires single cell bam files being saved in a directory. For
+UMI-based dataset, and using CellRanger for data process, the function
+`split10XBAM` can be used to get single cell bam files.
+
+``` r
+# CellRanger_path: directory to CellRanger output
+# out_path: directory to save single cell bam
+# core: the number of threads
+splitbam.path = split10XBAM(CellRanger_path,out_path,core)
+# path to single cell bam files should be added to bam_path in configure file
+
+# pseudobulk.path = createPseudobulk(paras)
+# It is not necessary to execute `createPseudobulk`, and the `possorted_genome_bam.bam`,`possorted_genome_bam.bam.bai` from `CellRanger_path` can be moved to `work_path/data/all.bam`.
+event.path = detectEvents(paras)
+```
 
 #### Step4. Quantify splicing events
 
@@ -200,6 +240,7 @@ different AS events:](png/PSI.png)
 ``` r
 rawrc.path = getRawRC(paras)
 rawpsi.path = getRawPSI(paras)
+rawrds.path = mergeSplicingValue(paras)
 processed.data.path = preprocessEvent(paras)
 ```
 
@@ -308,6 +349,7 @@ which is used to fine-tune the pre-trained model.
 ``` r
 ftrc.path = getFtRawRC(paras)
 ftpsi.path = getFtRawPSI(paras)
+ftrds.path = mergeFtSplicingValue(paras)
 ftmodel.path = FtClassifier(paras)
 #rds_imputed_file: path to the list of three imputation strategies results generated in the previous step
 Imputed.data.path = Estimation(paras,rds_imputed_file)

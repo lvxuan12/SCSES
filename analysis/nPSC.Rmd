@@ -12,7 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 #### Step1. Read configure file
 
-``` {r}
+```{r}
 library(SCSES)
 #paras_file: path to configure file generated in the previous step
 paras_file = "/disk/lvxuan/Single-Splicing/src/package/SCSES/analysis/nPSC.json"
@@ -21,15 +21,16 @@ paras = readSCSESconfig(paras_file)
 
 #### Step2. Get gene expression
 
-##### TPM matrix (for smart-seq2 dataset)
-``` {r}
+##### TPM matrix
+
+```{r}
 featurecounts.path = getGeneExpression(paras) 
 rds.path = getEXPmatrix(paras)
 ```
 
 #### Step3. Detect splicing events
 
-``` {r}
+```{r}
 pseudobulk.path = createPseudobulk(paras)
 #if you meet:
 #irfinder: error while loading shared libraries: libboost_iostreams.so.1.71.0: cannot open shared object file: No such file or directory
@@ -38,10 +39,9 @@ Sys.setenv(LD_LIBRARY_PATH = paste0("/disk/lvxuan/lib:", old.ld))
 event.path = detectEvents(paras)
 ```
 
-
 #### Step4. Quantify splicing events
 
-``` {r}
+```{r}
 rawrc.path = getRawRC(paras)
 rawpsi.path = getRawPSI(paras)
 rawrds.path = mergeSplicingValue(paras)
@@ -50,7 +50,7 @@ processed.data.path = preprocessEvent(paras)
 
 #### Step5. Constructs similarity networks
 
-``` {r}
+```{r}
 cellnet.path = getCellSimilarity(paras)
 eventnet.path = getEventSimilarity(paras)
 ```
