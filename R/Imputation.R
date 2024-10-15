@@ -148,8 +148,8 @@ ImputationAll <- function(
                 if (is.vector(x)) {
                     x <- t(as.matrix(x))
                 }
-                row.names(x) <- rownames(psi)
-                colnames(x) <- colnames(psi)
+                row.names(x) <- rownames(psi_type)
+                colnames(x) <- colnames(psi_type)
                 return(x)
             })
             file.remove(datapath, resultpath)
@@ -326,8 +326,8 @@ Imputation <- function(
             if (is.vector(x)) {
                 x <- t(as.matrix(x))
             }
-            row.names(x) <- rownames(psi)
-            colnames(x) <- colnames(psi)
+            row.names(x) <- rownames(psi_type)
+            colnames(x) <- colnames(psi_type)
             return(x)
         })
         file.remove(datapath, resultpath)
