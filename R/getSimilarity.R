@@ -401,7 +401,7 @@ getEventSimilarity <- function(
     pkg = paras$Basic$refgenome$genome_name,ref_path = paras$Basic$refgenome$ref_path,
     phast.path = paras$Task$impute$event_features$phast_path,
     chr.prefix = paras$Task$impute$event_features$chr_prefix,
-    ae.para = paras$Task$impute$AE_para,
+    ae.para = paras$Task$impute$event_features$AE,
     rbp = paras$Task$impute$rbp,
     kevent = paras$Task$impute$KNN$event$k,
     alpha_event = paras$Task$impute$KNN$event$alpha,
