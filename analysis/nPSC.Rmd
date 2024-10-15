@@ -57,7 +57,7 @@ eventnet.path = getEventSimilarity(paras)
 
 #### Step6. Imputation
 
-``` r
+``` {r}
 Imputed.data.path = ImputationAll(paras)
 ```
 

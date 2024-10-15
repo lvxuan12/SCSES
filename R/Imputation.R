@@ -108,7 +108,8 @@ ImputationAll <- function(
             # similarity data
             cell_similarity_type <- cell_similarity[[data_type]]
             event_similarity_type <- event_similarity[[type]]
-            similarity_type <- list(cell = cell_similarity_type, event = event_similarity_type)
+            similarity_type <- list(cell = as.matrix(cell_similarity_type),
+                                    event = as.matrix(event_similarity_type))
 
             token <- paste(Sys.getpid(), rbinom(1, size = 1000000000, prob = 0.5), sep = "-")
             datapath <- paste0(output_path, "/imputation_data_", token, ".h5")

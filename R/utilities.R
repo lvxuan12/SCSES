@@ -166,7 +166,12 @@ check.path.or.character <- function(x) {
 #'
 #' @keywords internal
 #' @export
+#' @import R.matlab
+#' @import raveio
+#' @import rhdf5
+#' @import hdf5r
 #'
+
 saveHdf5File <- function(con, dataset, con.type = "F") {
     if (class(con) == "character") {
         con <- H5Fcreate(con)

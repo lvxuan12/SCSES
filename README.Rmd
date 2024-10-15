@@ -46,8 +46,8 @@ conda install -c conda-forge r-base=4.3.1
 
 ``` bash
 pip install pandas numpy scipy scikit-learn
-pip install --upgrade keras
-pip install --upgrade tensorflow
+pip install keras==2.15.0
+pip install tensorflow==2.15.0.post1
 ```
 
 #### 2. Softwares
