@@ -1,5 +1,0 @@
-isoform1=junction:chr5:140691516-140691794:+@junction:chr5:140691938-140693590:+|isoform2=junction:chr5:140691516-140691606:+@junction:chr5:140691757-140693590:+|ZMAT2|MXE
-isoform1=junction:chr5:140691516-140691794:+@junction:chr5:140692018-140693590:+|isoform2=junction:chr5:140691516-140691606:+@junction:chr5:140691757-140693590:+|ZMAT2|MXE
-isoform1=junction:chr7:26174783-26190992:-@junction:chr7:26192339-26192494:-|isoform2=junction:chr7:26174783-26185198:-@junction:chr7:26185280-26192494:-|HNRNPA2B1|MXE
-isoform1=junction:chr7:26193374-26193598:-@junction:chr7:26193695-26195846:-|isoform2=junction:chr7:26193374-26193574:-@junction:chr7:26193599-26195846:-|HNRNPA2B1|MXE
-isoform1=junction:chr7:99435269-99460085:-@junction:chr7:99460194-99466128:-|isoform2=junction:chr7:99435269-99447951:-@junction:chr7:99448189-99466128:-|ATP5MF|MXE

@@ -9,6 +9,7 @@ FtClassifier(
   rds_path = NULL,
   rds_ft_path = NULL,
   rds_cell_similarity_path = NULL,
+  output_path = NULL,
   decay_impute = paras$Task$impute$decay_impute,
   genome_name = paras$Basic$refgenome$genome_name
 )

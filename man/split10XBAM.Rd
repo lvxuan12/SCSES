@@ -3,7 +3,7 @@
 \name{split10XBAM}
 \alias{split10XBAM}
 \title{get single cell bam file from 10X CellRanger output
-this function will split possorted_genome_bam.bam from 10X CellRanger output 
+this function will split possorted_genome_bam.bam from 10X CellRanger output
 to single cell bam based bam tag "CB:"}
 \usage{
 split10XBAM(CellRanger_path, out_path, core, times = 50)
@@ -22,6 +22,6 @@ single cell bam directory
 }
 \description{
 get single cell bam file from 10X CellRanger output
-this function will split possorted_genome_bam.bam from 10X CellRanger output 
+this function will split possorted_genome_bam.bam from 10X CellRanger output
 to single cell bam based bam tag "CB:"
 }
