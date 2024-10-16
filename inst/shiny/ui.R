@@ -8,8 +8,7 @@ source("www/R/uiFunction.R")
 header <- dashboardHeader(title = "SCSES")
 sidebar <- dashboardSidebar(
        sidebarMenu(
-              menuItem(text = "Configuration", selected = T, tabName = "configuration"),
-              menuItem(text = "Excutaton", selected = F, tabName = "excute")
+              menuItem(text = "Configuration", selected = T, tabName = "configuration")
        )
 )
 body <- dashboardBody(

@@ -141,9 +141,6 @@ For human and mouse, you could download it directly from UCSC browser: [mm10.60w
 
 ## Getting started
 
-### Run SCSES using one command:
-
-
 ### Run SCSES step by step (smart-seq2 data)
 
 #### Step1. Read configure file
