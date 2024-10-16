@@ -6,7 +6,7 @@
 #' Default bam_path, java_path, core, and sequence from paras
 #' @param bam_path The path to save single cell bam file
 #' @param core the number of threads
-#' @param full_length Is this dataset using full-length or UMI-based protocal?
+#' @param sequence full-length or UMI
 #' @param genome_name Genome name, hg19 or hg38
 
 #' @return raw read path
@@ -16,7 +16,7 @@
 
 getFtRawRC <- function(
     paras, bam_path = paras$Basic$bam_path,
-    core = paras$Basic$core, full_length = paras$Basic$full_length,
+    core = paras$Basic$core, sequence = paras$Basic$sequence,
     genome_name = paras$Basic$refgenome$genome_name) {
     options("scipen" = 100)
     # script
@@ -57,9 +57,9 @@ getFtRawRC <- function(
         }
         if (type == "RI") {
             cluster <- makeCluster(spec = core)
-            clusterExport(cl = cluster, varlist = c("jar_path", "event_file", "outpath_per_cell", "bam_path", "full_length"), envir = environment())
+            clusterExport(cl = cluster, varlist = c("jar_path", "event_file", "outpath_per_cell", "bam_path", "sequence"), envir = environment())
             l <- parLapply(cl = cluster, X = as.list(cells), fun = function(cell) {
-                if (!full_length) {
+                if (sequence=="UMI") {
                     jar.file <- paste0(jar_path, "/ujm3.RI.jar")
                 } else {
                     jar.file <- paste0(jar_path, "/rjm3.RI.jar")
@@ -119,9 +119,9 @@ getFtRawRC <- function(
             )
         } else {
             cluster <- makeCluster(spec = core)
-            clusterExport(cl = cluster, varlist = c("jar_path", "event_file", "outpath_per_cell", "bam_path", "full_length"), envir = environment())
+            clusterExport(cl = cluster, varlist = c("jar_path", "event_file", "outpath_per_cell", "bam_path", "sequence"), envir = environment())
             l <- parLapply(cl = cluster, X = as.list(cells), fun = function(cell) {
-                if (!full_length) {
+                if (sequence=="UMI") {
                     jar.file <- paste0(jar_path, "/ujm3.jar")
                 } else {
                     jar.file <- paste0(jar_path, "/rjm3.jar")

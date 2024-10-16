@@ -268,13 +268,11 @@ For **event similarity networks**, Event similarities are defined by the RBP reg
 
 Based on these weighted similarity networks, SCSES next will use three imputation strategies to aggregate the information across similar cells or events to impute read count or PSI value
 
-
 ``` r
 Imputed.data.path = ImputationAll(paras)
 ```
 
 Results of each imputation strategy will be saved into`work_path/imputation`.
-
 
 #### Step7. Estimation
 
@@ -287,7 +285,9 @@ Imputed.data.path = Estimation(paras,rds_imputed_file)
 
 ##### Fine-tune the model
 
-To improve the fitness of models for the new dataset, we also provide a procedure to fine-tune the model. We collect a set of splicing events with conserved splicing levels in different human tissue. For a new dataset, we compare the splicing level in new data with the reference records, and give the scenarios definition to each event-cell pair, which is used to fine-tune the pre-trained model.
+To improve the fitness of models for a new dataset, we also provide a procedure to fine-tune the model. For this analysis, we first build a reference using a set of splicing events with conserved splicing levels in different human tissues (<https://zenodo.org/records/6408906>). Then we compare the splicing level in a new dataset with the reference records, and give the scenarios definition to each event-cell pair, which is used to fine-tune the pre-trained model.
+
+The commands to perform these analyses: 
 
 ``` r
 ftrc.path = getFtRawRC(paras)

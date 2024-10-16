@@ -208,9 +208,9 @@ server=function(input,output,session){
       return()
     }
     config[['DataSet']]=input$dataset
-    config[['Basic']][['full_length']]=input$read.umi
+    config[['Basic']][['sequence']]=ifelse(input$read.umi.paired,"full-length","UMI")
     config[['Basic']][['readlength']]=input$readlength
-    config[['Basic']][['paired']]=input$read.paired
+    config[['Basic']][['paired']]=ifelse(input$read.paired,"paired","single")
     config[['Basic']][['bam_path']]=normalizePath(input$bampath)
     config[['Basic']][['work_path']]=normalizePath(input$workpath)
     config[['Basic']][['core']]=input$max.core
@@ -241,15 +241,15 @@ server=function(input,output,session){
 
     config[["Task"]][["event"]][["remove_chr"]] = input$remove_chr
     config[["Task"]][["event"]][["event_type"]] = paste(input$event.types, collapse = ";")
-    config[["Task"]][["event"]][["majiq_license_file"]] = input$MAJIQ_license_path
+    config[["Task"]][["event"]][["majiq_license_file"]] = normalizePath(input$MAJIQlicensepath)
 
     config[["Task"]][["impute"]][["rbp"]] = normalizePath(input$RBPpath)
     config[["Task"]][["impute"]][["cell_similarity_data"]] = paste(input$cell.similar, collapse = ";")
     config[["Task"]][["impute"]][["feature_num"]] = input$feature_num
 
     config[['Task']][['impute']][['event_features']]=list(phast_path=normalizePath(input$phastpath),
-                                                          chr_prefix=ifelse(length(input$chr.prefix)>0,
-                                                                            input$chr.prefix,""))
+                                                          chr_prefix=ifelse(input$chr.prefix,
+                                                                            "chr",""))
 
     for(type in input$event.types)
     {
@@ -260,7 +260,7 @@ server=function(input,output,session){
     }
     config[["Task"]][["impute"]][["KNN"]][["cell"]] = list(
       distance_method = input$similar.method,
-      kmax = input$cell.kman,
+      kmax = input$cell.kmax,
       kmin = input$cell.kmin,
       alpha = input$cell.alpha,
       decay = input$cell.decay

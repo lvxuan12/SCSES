@@ -194,10 +194,14 @@ body <- dashboardBody(
                                           fluidRow(
                                                  column(
                                                         width = 5,
-                                                        switchInput(inputId = "remove_chr", label = "<b>Remove chromosome prefix</b>", value = T, onLabel = "FALSE", offLabel = "TRUE", labelWidth = "180px")
+                                                        switchInput(inputId = "remove_chr", label = "<b>Remove chromosome prefix</b>", value = T, onLabel = "TRUE", offLabel = "FALSE", labelWidth = "180px")
+                                                 ),
+                                                 column(
+                                                   width = 5,
+                                                   switchInput(inputId = "chr_prefix", label = "<b>Add chr prefix when extracting conservation scores</b>", value = T, onLabel = "TRUE", offLabel = "FALSE", labelWidth = "180px")
                                                  )
                                           ),
-                                          textInput(inputId = "chr_prefix", label = "Add chromosome prefix", placeholder = paste("Add chr prefix when extracting conservation scores")),
+                                          #textInput(inputId = "chr_prefix", label = "Add chromosome prefix", placeholder = paste("Add chr prefix when extracting conservation scores")),
                                           h4("Autoencoder Parameters"),
                                           fluidRow(
                                                  column(
@@ -253,17 +257,17 @@ body <- dashboardBody(
                                                         )
                                                  ),
                                                  column(
-                                                        width = 2,
-                                                        tags$fieldset(
-                                                               style = "border: 1px solid;border-color:#C0C0C0",
-                                                               tags$legend("MXE", style = "border: 1px #C0C0C0 solid;background-color:#fff;color:#000;width:50px;text-align='center';", align = "center"),
-                                                               div(
-                                                                      style = "margin-left:1rem;margin-right:1rem",
-                                                                      numericInput(inputId = "MXE.epoch", label = "Epoch", value = 100, min = 50),
-                                                                      numericInput(inputId = "MEX.embedding", label = "Embedding Dim", value = 32, min = 50),
-                                                                      textInput(inputId = "MEX.layer", label = "Layers", value = "256,128")
-                                                               )
-                                                        )
+                                                   width = 2,
+                                                   tags$fieldset(
+                                                     style = "border: 1px solid;border-color:#C0C0C0",
+                                                     tags$legend("MXE", style = "border: 1px #C0C0C0 solid;background-color:#fff;color:#000;width:50px;text-align='center';", align = "center"),
+                                                     div(
+                                                       style = "margin-left:1rem;margin-right:1rem",
+                                                       numericInput(inputId = "MXE.epoch", label = "Epoch", value = 100, min = 50),
+                                                       numericInput(inputId = "MXE.embedding", label = "Embedding Dim", value = 32, min = 50),
+                                                       textInput(inputId = "MXE.layer", label = "Layers", value = "256,128")
+                                                     )
+                                                   )
                                                  ),
                                                  column(
                                                         width = 2,
