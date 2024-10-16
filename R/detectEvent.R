@@ -34,6 +34,11 @@ detectEvents <- function(paras) {
   genome_name <- paras$Basic$refgenome$genome_name
   readlength <- paras$Basic$readlength
   paired <- paras$Basic$paired
+  if(paired){
+    paired="paired"
+  }else{
+    paired="single"
+  }
   remove.chr <- paras$Task$event$remove_chr
   core <- paras$Basic$core
   ExonToIntronReads <- paras$Basic$filter_merged_bam$ExonToIntronReads
@@ -177,6 +182,11 @@ getEvent <- function(paras, event_type) {
   genome_name <- paras$Basic$refgenome$genome_name
   readlength <- paras$Basic$readlength
   paired <- paras$Basic$paired
+  if(paired){
+    paired="paired"
+  }else{
+    paired="single"
+  }
   core <- paras$Basic$core
   junctionReads <- paras$Basic$filter_merged_bam$junctionReads
   license_file <-paras$Task$event$majiq_license_file

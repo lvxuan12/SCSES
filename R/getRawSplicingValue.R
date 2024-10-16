@@ -9,7 +9,7 @@
 #' Default bam_path, java_path, core, and sequence from paras
 #' @param bam_path The path to save single cell bam file
 #' @param core the number of threads
-#' @param sequence full_length or UMI
+#' @param full_length Is this dataset using full-length or UMI-based protocal?
 #' @param event_types splicing event types seperated by ";",default=NULL
 
 #' @return raw read path
@@ -19,7 +19,7 @@
 
 getRawRC <- function(
     paras,bam_path = paras$Basic$bam_path,
-    core = paras$Basic$core, sequence = paras$Basic$sequence,
+    core = paras$Basic$core, full_length = paras$Basic$full_length,
     event_types = NULL) {
   options("scipen" = 100)
   # script
@@ -70,9 +70,9 @@ getRawRC <- function(
       }
       if (type == "RI") {
         cluster <- makeCluster(spec = core)
-        clusterExport(cl = cluster, varlist = c("jar_path", "event_file", "outpath_per_cell", "bam_path", "sequence"), envir = environment())
+        clusterExport(cl = cluster, varlist = c("jar_path", "event_file", "outpath_per_cell", "bam_path", "full_length"), envir = environment())
         l <- parLapply(cl = cluster, X = as.list(cells), fun = function(cell) {
-          if (sequence == "UMI") {
+          if (!full_length) {
             jar.file <- paste0(jar_path, "/ujm3.RI.jar")
           } else {
             jar.file <- paste0(jar_path, "/rjm3.RI.jar")
@@ -132,9 +132,9 @@ getRawRC <- function(
         )
       } else {
         cluster <- makeCluster(spec = core)
-        clusterExport(cl = cluster, varlist = c("jar_path", "event_file", "outpath_per_cell", "bam_path", "sequence"), envir = environment())
+        clusterExport(cl = cluster, varlist = c("jar_path", "event_file", "outpath_per_cell", "bam_path", "full_length"), envir = environment())
         l <- parLapply(cl = cluster, X = as.list(cells), fun = function(cell) {
-          if (sequence == "UMI") {
+          if (!full_length) {
             jar.file <- paste0(jar_path, "/ujm3.jar")
           } else {
             jar.file <- paste0(jar_path, "/rjm3.jar")

@@ -41,7 +41,7 @@ body <- dashboardBody(
                                                  ),
                                                  column(
                                                         width = 3,
-                                                        switchInput(inputId = "read.umi", label = "<b>UMI based</b>", value = T, onLabel = "full_length", offLabel = "UMI", labelWidth = "100px")
+                                                        switchInput(inputId = "read.umi", label = "<b>Full-length</b>", value = T, onLabel = "full_length", offLabel = "UMI", labelWidth = "100px")
                                                  )
                                           )
                                    ),

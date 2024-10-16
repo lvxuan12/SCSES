@@ -27,9 +27,9 @@ Single-cell Splicing Estimation based on Network Diffusion
 
 ## Installation
 
-### Dependencies and requirements
+### Installation of dependencies and requirements
 
-We recommend a new conda environment to install SCSES:
+We recommend a new **conda** environment to install SCSES:
 
 ``` bash
 conda create -n SCSES_test python=3.11
@@ -52,7 +52,7 @@ pip install tensorflow==2.15.0.post1
 
 #### 2. Softwares
 
-To detect splicing events You will need to install rMATS, MAJIQ, IRFinder. rMATS should be built in the same environment with SCSES (same python). MAJIQ should be built in a new environment.
+To detect splicing events You will need to install rMATS, MAJIQ, IRFinder. rMATS should be built in the same environment with SCSES (same python). MAJIQ should be built in a new environment due to conflict of python package version，
 
 ##### 2.1 [rMATS](https://github.com/Xinglab/rmats-turbo)
 
@@ -73,7 +73,7 @@ pip install git+https://bitbucket.org/biociphers/majiq_academic.git
 export MAJIQ_LICENSE_FILE=/path/to/majiq_license_academic_official.lic
 ```
 
-MAJIQ will not function without providing the license file.
+**NOTE:** MAJIQ will not function without providing the license file.
 
 ##### 2.3 [IRFinder](https://github.com/dgaolab/IRFinder)
 
@@ -83,19 +83,19 @@ tar -zxvf v1.3.0.tar.gz
 export PATH=/path/to/IRFinder-2.0.1/bin/:$PATH
 ```
 
-[STAR](https://github.com/alexdobin/STAR) will be needed to build IRFinder reference
+**NOTE:** [STAR](https://github.com/alexdobin/STAR) is required to build IRFinder reference! To run IRFinder correctly, you also need to install STAR.
 
 ##### 2.4 [samtools](https://github.com/samtools/samtools)
 
-### Installation from GitHub
+### Installation of SCSES
 
-SCSES is installed directly from github using the following command:
+Currently SCSES can only be installed from GitHub. To install SCSES, type the following command in **R**:
 
 ``` r
 remotes::install_github("lvxuan12/SCSES")
 ```
 
-#### Tips for some Installation error
+#### Tips for some Installation errors
 
 ##### 1. cannot find fftw.h
 
@@ -127,13 +127,16 @@ Test bam files can be downloaded from ...
 
 ##### 3. configure file
 
-You can use `createConfigshiny` to generate configure file for your dataset.
+A configure file is required to run SCSES. You can use `createConfigshiny` command to generate a configure file:
 
 ``` r
+library(SCSES)
 createConfigshiny(host, port) 
 ```
 
-A json file will be generated in the work_path you provided.
+After running this command, a interactive window will popup which allow you to fill some parameters, such as Bam File Path, and Work Path.
+
+Finally, you can click "Create Config" button and a json file will be generated in the `work_path` you provided if successful.
 
 ##### 4. phast conservation file in bigWig format
 
@@ -227,11 +230,11 @@ A list of event similarity for different types of splicing events will be saved 
 
 A list of different types of cell similarity and a list of the number of neighbors will be saved to rds file to`work_path/imputation/cell_similarity/cell.similars.rds` and `work_path/imputation/cell_similarity/dyk.cell.rds`
 
+##### Parameters used in this step
+
 In this step, some parameters can be adjusted in configure file or the function parameters directly:
 
-##### For cell similarity networks:
-
-SCSES can use RBP expressions, Raw read count or Raw PSI to measure cell similarities.
+For **cell similarity networks**, SCSES can use RBP expressions, Raw read count or Raw PSI to measure cell similarities.
 
 `feature_num`: the number of high variable features for PCA before calculate cell distance.
 
@@ -249,9 +252,7 @@ SCSES can use RBP expressions, Raw read count or Raw PSI to measure cell similar
 
 `kcell_min`: Minimum number of neighbors.
 
-##### For event similarity networks:
-
-Event similarities are defined by the RBP regulatory correlations and an embedding representation by integrating event sequence similarities.
+For **event similarity networks**, Event similarities are defined by the RBP regulatory correlations and an embedding representation by integrating event sequence similarities.
 
 `ae.para`: parameters of encoding sequence features
 
@@ -265,13 +266,15 @@ Event similarities are defined by the RBP regulatory correlations and an embeddi
 
 #### Step6. Imputation
 
-Based on these weighted similarity networks, SCSES next aggregates the information across similar cells or events to impute read count or PSI value.
+Based on these weighted similarity networks, SCSES next will use three imputation strategies to aggregate the information across similar cells or events to impute read count or PSI value
+
 
 ``` r
 Imputed.data.path = ImputationAll(paras)
 ```
 
-A list of three imputation strategies result will be saved to `work_path/imputation/`.
+Results of each imputation strategy will be saved into`work_path/imputation`.
+
 
 #### Step7. Estimation
 
@@ -297,7 +300,6 @@ Imputed.data.path = Estimation(paras,rds_imputed_file)
 
 A list of final imputation of PSI values will be saved to `work_path/imputation/`.
 
-
 ## Tutorials
 
-For nPSC example, see the Rmarkdown tutorials in `analysis/nPSC.Rmd`
+For iPSC example, see the Rmarkdown tutorials in `analysis/iPSC.Rmd`

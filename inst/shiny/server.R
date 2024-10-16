@@ -208,7 +208,7 @@ server=function(input,output,session){
       return()
     }
     config[['DataSet']]=input$dataset
-    config[['Basic']][['sequence']]=input$read.umi
+    config[['Basic']][['full_length']]=input$read.umi
     config[['Basic']][['readlength']]=input$readlength
     config[['Basic']][['paired']]=input$read.paired
     config[['Basic']][['bam_path']]=normalizePath(input$bampath)
@@ -240,7 +240,7 @@ server=function(input,output,session){
     )
 
     config[["Task"]][["event"]][["remove_chr"]] = input$remove_chr
-    config[["Task"]][["event"]][["event_type"]] = input$event.types
+    config[["Task"]][["event"]][["event_type"]] = paste(input$event.types, collapse = ";")
     config[["Task"]][["event"]][["majiq_license_file"]] = input$MAJIQ_license_path
 
     config[["Task"]][["impute"]][["rbp"]] = normalizePath(input$RBPpath)
@@ -248,7 +248,8 @@ server=function(input,output,session){
     config[["Task"]][["impute"]][["feature_num"]] = input$feature_num
 
     config[['Task']][['impute']][['event_features']]=list(phast_path=normalizePath(input$phastpath),
-                                                          chr_prefix=input$chr.prefix)
+                                                          chr_prefix=ifelse(length(input$chr.prefix)>0,
+                                                                            input$chr.prefix,""))
 
     for(type in input$event.types)
     {

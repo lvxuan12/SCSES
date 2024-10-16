@@ -3,15 +3,15 @@ Menu
 
 - [SCSES](#scses)
   - [Installation](#installation)
-    - [Dependencies and requirements](#dependencies-and-requirements)
+    - [Installation of dependencies and
+      requirements](#installation-of-dependencies-and-requirements)
       - [1. python module](#1-python-module)
       - [2. Softwares](#2-softwares)
-    - [Installation from GitHub](#installation-from-github)
+    - [Installation of SCSES](#installation-of-scses)
       - [Tips for some Installation
         error](#tips-for-some-installation-error)
   - [SCSES input](#scses-input)
   - [Getting started](#getting-started)
-    - [Run SCSES using one command:](#run-scses-using-one-command)
     - [Run SCSES step by step (smart-seq2
       data)](#run-scses-step-by-step-smart-seq2-data)
       - [Step1. Read configure file](#step1-read-configure-file)
@@ -37,9 +37,9 @@ Single-cell Splicing Estimation based on Network Diffusion
 
 ## Installation
 
-### Dependencies and requirements
+### Installation of dependencies and requirements
 
-We recommend a new conda environment to install SCSES:
+We recommend a new **conda** environment to install SCSES:
 
 ``` bash
 conda create -n SCSES_test python=3.11
@@ -64,7 +64,8 @@ pip install tensorflow==2.15.0.post1
 
 To detect splicing events You will need to install rMATS, MAJIQ,
 IRFinder. rMATS should be built in the same environment with SCSES (same
-python). MAJIQ should be built in a new environment.
+python). MAJIQ should be built in a new environment due to conflict of
+python package version，
 
 ##### 2.1 [rMATS](https://github.com/Xinglab/rmats-turbo)
 
@@ -85,7 +86,7 @@ pip install git+https://bitbucket.org/biociphers/majiq_academic.git
 export MAJIQ_LICENSE_FILE=/path/to/majiq_license_academic_official.lic
 ```
 
-MAJIQ will not function without providing the license file.
+**NOTE:** MAJIQ will not function without providing the license file.
 
 ##### 2.3 [IRFinder](https://github.com/dgaolab/IRFinder)
 
@@ -95,14 +96,16 @@ tar -zxvf v1.3.0.tar.gz
 export PATH=/path/to/IRFinder-2.0.1/bin/:$PATH
 ```
 
-[STAR](https://github.com/alexdobin/STAR) will be needed to build
-IRFinder reference
+**NOTE:** [STAR](https://github.com/alexdobin/STAR) is required to build
+IRFinder reference! To run IRFinder correctly, you also need to install
+STAR.
 
 ##### 2.4 [samtools](https://github.com/samtools/samtools)
 
-### Installation from GitHub
+### Installation of SCSES
 
-SCSES is installed directly from github using the following command:
+Currently SCSES can only be installed from GitHub. To install SCSES,
+type the following command in **R**:
 
 ``` r
 remotes::install_github("lvxuan12/SCSES")
@@ -136,7 +139,7 @@ SCSES requires four inputs from the user
 
 Test bam files can be downloaded from …
 
-##### 2. genome FASTA file and annotation GTF file
+##### 2. genome FASTA file and annotation GTF and GFF3 file
 
 ##### 3. configure file
 
@@ -158,8 +161,6 @@ and
 [hg19.100way.phastCons.bw](http://hgdownload.cse.ucsc.edu/goldenPath/hg19/phastCons100way/).
 
 ## Getting started
-
-### Run SCSES using one command:
 
 ### Run SCSES step by step (smart-seq2 data)
 
