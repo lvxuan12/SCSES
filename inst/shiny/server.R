@@ -208,7 +208,7 @@ server=function(input,output,session){
       return()
     }
     config[['DataSet']]=input$dataset
-    config[['Basic']][['sequence']]=ifelse(input$read.umi.paired,"full-length","UMI")
+    config[['Basic']][['sequence']]=ifelse(input$read.umi,"full-length","UMI")
     config[['Basic']][['readlength']]=input$readlength
     config[['Basic']][['paired']]=ifelse(input$read.paired,"paired","single")
     config[['Basic']][['bam_path']]=normalizePath(input$bampath)
@@ -248,7 +248,7 @@ server=function(input,output,session){
     config[["Task"]][["impute"]][["feature_num"]] = input$feature_num
 
     config[['Task']][['impute']][['event_features']]=list(phast_path=normalizePath(input$phastpath),
-                                                          chr_prefix=ifelse(input$chr.prefix,
+                                                          chr_prefix=ifelse(input$chr_prefix,
                                                                             "chr",""))
 
     for(type in input$event.types)
@@ -275,6 +275,10 @@ server=function(input,output,session){
     dir.create(config$Basic$work_path,recursive = T)
     write(x = toJSON(x = config,pretty = T,auto_unbox = T),
           file = normalizePath(paste0(config$Basic$work_path,'/',config$DataSet,'.json')))
+    # paras_new=toJSON(x = config,pretty = T,auto_unbox = T)
+    # cat(paras_new,
+    #     file = normalizePath(paste0(config$Basic$work_path,'/',config$DataSet,'.json')),
+    #     fill = FALSE, labels = NULL, append = FALSE)
   })
 }
 
