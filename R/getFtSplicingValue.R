@@ -40,14 +40,13 @@ getFtRawRC <- function(
     if (!dir.exists(rc_path)) {
         dir.create(rc_path)
     }
-    print(msg)
     for (type in event_types) {
         event_file <- paste0(event_path, "/", type, ".txt")
         if (!file.exists(event_file)) {
             msg <- paste("There is no", type, "events in", event_path, "!")
             stop(msg)
         }
-        msg <- paste0("[", Sys.time(), "] ", "Counting reads of", type, "events...")
+        msg <- paste0("[", Sys.time(), "] ", "Counting reads of ", type, " events...")
         print(msg)
         outpath_per_cell <- paste0(rc_path, "/", type, "_rjm")
         dir.create(outpath_per_cell)
@@ -214,7 +213,7 @@ getFtRawRC <- function(
                 )
             }
         }
-        msg <- paste0("[", Sys.time(), "] ", "Counting reads of", type, "events Finish.")
+        msg <- paste0("[", Sys.time(), "] ", "Counting reads of ", type, " events Finish.")
         print(msg)
     }
     return(rc_path)

@@ -65,14 +65,14 @@ A list of three imputation strategies result will be saved to `work_path/imputat
 
 #### Step7. Estimation
 
-``` r
+``` {r}
 #rds_imputed_file: path to the list of three imputation strategies results generated in the previous step
-Imputed.data.path = Estimation(paras,rds_imputed_file)
+Imputed.data.path = Estimation(paras,rds_imputed_file="/disk/lvxuan/Single-Splicing/result/GSE85908/scses_test/imputation/Imputed_seperated_500007276.rds")
 ```
 
 ##### Fine-tune the model
 
-``` r
+``` {r}
 ftrc.path = getFtRawRC(paras)
 ftpsi.path = getFtRawPSI(paras)
 ftrds.path = mergeFtSplicingValue(paras)

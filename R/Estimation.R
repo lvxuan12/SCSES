@@ -587,13 +587,10 @@ Estimation <- function(
         dir.create(output_path)
     }
     print(paste0("Output: ", output_path))
-    if (is.null(rds_cell_similarity_path)) {
-        rds_cell_similarity_path <- paste0(paras$Basic$work_path, "/imputation/cell_similarity/")
-    }
 
     # validate cell similarity type----
     print(paste("Checking cell similarity type"))
-    cell_similarity_data1 <- cell_similarity_data
+    cell_similarity_data1 <- names(cell_similarity)
     cell_similarity_data1 <- check.valid(x = cell_similarity_data1, select = c("EXP_RBP", "RC", "PSI"))
     cell_similarity_data2 <- names(dyk_cell)
     cell_similarity_data2 <- check.valid(x = cell_similarity_data2, select = c("EXP_RBP", "RC", "PSI"))
@@ -614,8 +611,8 @@ Estimation <- function(
         feature_df <- as.data.frame(feature_df)
         save(feature_df, file = paste0(output_path, "/", type, "_feature_df", ".rdata"))
         prob_m <- getPredictProb(feature_df,
-            model1 = model_ft[[type]][["model1"]],
-            model2 = model_ft[[type]][["model2"]],
+            model1 = model[[type]][["model1"]],
+            model2 = model[[type]][["model2"]],
             psi = psi
         )
         impute_rc <- psi_imputed_seperated[["cell"]][[paste0(type, "_RC")]]
