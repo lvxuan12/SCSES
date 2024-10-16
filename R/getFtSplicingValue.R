@@ -247,7 +247,6 @@ getFtRawPSI <- function(paras) {
         print(msg)
         data <- readRDS(file = paste0(rc_path, "/", type, "_rc.rds"))
         events <- data$events
-        load(paste0(rc_path, "/", type, "_rc.rds"))
         if (type == "RI" | type == "SE") {
             rc_exclusion <- data$rc_exclusion
             rc_retention1 <- data$rc_retention1
