@@ -243,7 +243,7 @@ getFtRawPSI <- function(paras) {
     event_path <- paste0(extdata_path, "/ftevents/", genome_name, "/")
     event_types <- gsub(".txt", "", list.files(event_path, "*.txt"))
     for (type in event_types) {
-        msg <- paste0("[", Sys.time(), "] ", "Calculating PSI value of", type, "events...")
+        msg <- paste0("[", Sys.time(), "] ", "Calculating PSI value of ", type, " events...")
         print(msg)
         data <- readRDS(file = paste0(rc_path, "/", type, "_rc.rds"))
         events <- data$events
@@ -289,7 +289,7 @@ getFtRawPSI <- function(paras) {
             colnames(psi) <- colnames(rc_exclusion)
         }
         saveRDS(psi, paste0(rc_path, "/", type, "_psi.rds"))
-        msg <- paste0("[", Sys.time(), "] ", "Calculating PSI value of", type, "events Finish.")
+        msg <- paste0("[", Sys.time(), "] ", "Calculating PSI value of ", type, " events Finish.")
         print(msg)
     }
     return(rc_path)
