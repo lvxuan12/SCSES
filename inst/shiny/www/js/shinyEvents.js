@@ -10,7 +10,7 @@ Shiny.addCustomMessageHandler("checkStatus",function(msg) {
     {
       if(msg.type=='text')
       {
-        $("#"+msg.id).css('border-color','#d9534f')
+        $("#"+msg.id).css('border-color','#FF410D').css('border-width','5px')
       }
     }
 });
