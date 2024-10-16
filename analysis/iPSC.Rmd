@@ -1,5 +1,5 @@
 ---
-title: "human naïve pluripotent stem cells"
+title: "SCSES iPSC Tutorial"
 output: html_document
 date: "2024-10-12"
 ---
@@ -8,7 +8,33 @@ date: "2024-10-12"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-### Run SCSES step by step (smart-seq2 data)
+# SCSES iPSC Tutorial
+
+## Installation
+
+If you haven’t yet installed SCSES, you can find installation instructions in our [GitHub README](https://github.com/lvxuan12/SCSES?tab=readme-ov-file#installation).
+
+## Loading packages
+
+```{r}
+library(SCSES)
+```
+
+## Loading data
+
+In this tutorial, we will analyse induced human pluripotent stem cells (iPSC), as described in Song et al., 2017. You can run this tutorial by downloading bam files at .
+
+## Prepare data
+
+``` bash
+# download phast conservation file
+wget http://hgdownload.cse.ucsc.edu/goldenPath/hg19/phastCons100way/hg19.100way.phastCons.bw
+```
+
+```{r}
+# generate configure file
+createConfigshiny(host="127.0.0.1",port = 9999,launch.browser=T) 
+```
 
 #### Step1. Read configure file
 
@@ -57,7 +83,7 @@ eventnet.path = getEventSimilarity(paras)
 
 #### Step6. Imputation
 
-``` {r}
+```{r}
 Imputed.data.path = ImputationAll(paras)
 ```
 
@@ -65,14 +91,14 @@ A list of three imputation strategies result will be saved to `work_path/imputat
 
 #### Step7. Estimation
 
-``` {r}
+```{r}
 #rds_imputed_file: path to the list of three imputation strategies results generated in the previous step
 Imputed.data.path = Estimation(paras,rds_imputed_file="/disk/lvxuan/Single-Splicing/result/GSE85908/scses_test/imputation/Imputed_seperated_500007276.rds")
 ```
 
 ##### Fine-tune the model
 
-``` {r}
+```{r}
 ftrc.path = getFtRawRC(paras)
 ftpsi.path = getFtRawPSI(paras)
 ftrds.path = mergeFtSplicingValue(paras)

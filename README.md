@@ -11,6 +11,7 @@ Menu
         error](#tips-for-some-installation-error)
   - [SCSES input](#scses-input)
   - [Getting started](#getting-started)
+    - [Run SCSES using one command:](#run-scses-using-one-command)
     - [Run SCSES step by step (smart-seq2
       data)](#run-scses-step-by-step-smart-seq2-data)
       - [Step1. Read configure file](#step1-read-configure-file)
@@ -22,13 +23,14 @@ Menu
         networks](#step5-constructs-similarity-networks)
       - [Step6. Imputation](#step6-imputation)
       - [Step7. Estimation](#step7-estimation)
-    - [Run SCSES using one command:](#run-scses-using-one-command)
+  - [Tutorials](#tutorials)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 # SCSES
 
 <!-- badges: start -->
+
 <!-- badges: end -->
 
 Single-cell Splicing Estimation based on Network Diffusion
@@ -54,8 +56,8 @@ conda install -c conda-forge r-base=4.3.1
 
 ``` bash
 pip install pandas numpy scipy scikit-learn
-pip install --upgrade keras
-pip install --upgrade tensorflow
+pip install keras==2.15.0
+pip install tensorflow==2.15.0.post1
 ```
 
 #### 2. Softwares
@@ -156,6 +158,8 @@ and
 [hg19.100way.phastCons.bw](http://hgdownload.cse.ucsc.edu/goldenPath/hg19/phastCons100way/).
 
 ## Getting started
+
+### Run SCSES using one command:
 
 ### Run SCSES step by step (smart-seq2 data)
 
@@ -358,4 +362,6 @@ Imputed.data.path = Estimation(paras,rds_imputed_file)
 A list of final imputation of PSI values will be saved to
 `work_path/imputation/`.
 
-### Run SCSES using one command:
+## Tutorials
+
+For nPSC example, see the Rmarkdown tutorials in `analysis/nPSC.Rmd`
