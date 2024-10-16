@@ -1,0 +1,61 @@
+Package: SCSES
+Type: Package
+Title: Single-cell Splicing Estimation based on Network Diffusion
+Version: 0.1.0
+Author: Who wrote it
+Maintainer: The package maintainer <yourself@somewhere.net>
+Description: More about what it does (maybe more than one line)
+    Use four spaces when indenting paragraphs within the Description.
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.3.2
+Depends:
+  R (>= 4.2.1),
+  BiocManager
+biocViews: 
+Imports: 
+    shiny,
+    shinydashboard,
+    shinyFiles,
+    fs,
+    shinyWidgets,
+    jsonlite,
+    rtracklayer,
+    parallel,
+    stats,
+    Matrix,
+    reticulate,
+    irlba,
+    reshape2,
+    BSgenome,
+    Biostrings,
+    GenomicRanges,
+    IRanges,
+    R.matlab,
+    ravetools,
+    multitaper,
+    rhdf5,
+    hdf5r,
+    glmnet,
+    caret
+Remotes:
+  url::https://github.com/dipterix/threeBrain/archive/refs/tags/1.0.1.tar.gz,
+  url::https://github.com/jonclayden/RNifti/archive/refs/tags/v1.7.0.tar.gz,
+  url::https://github.com/beauchamplab/raveio/archive/refs/tags/v0.9.0.tar.gz
+Collate: 
+    'utilities.R'
+    'Estimation.R'
+    'Imputation.R'
+    'MergeFtSplicingValue.R'
+    'MergeSplicingValue.R'
+    'createConfig.R'
+    'createPseudobulk.R'
+    'detectEvent.R'
+    'eventFeatureFunction.R'
+    'getFtSplicingValue.R'
+    'getGeneExpression.R'
+    'getRawSplicingValue.R'
+    'getSimilarity.R'
+    'preprocess.R'
+    'split10XBAM.R'
