@@ -156,10 +156,11 @@ checkMsg=function(id,name,type,msg)
 
 validation=function(input,session)
 {
-  sendSweetAlert(session = session,title = 'Checking Configuration',
-                 text = textAreaInput(inputId = 'check_configure',label = '',value = "",width = '100%',height = '100%',resize = 'both',rows = 20),
+  show_alert(title = 'Checking Configuration',
+                 text = tags$span(id="check",
+                                 textAreaInput(inputId = 'check_configure',label = '',value = "",width = '100%',height = '100%',resize = 'both',rows = 20),
+                                 tags$h4(id='check_msg','')),
                  closeOnClickOutside = F,html = T,showCloseButton = F)
-  # error.list=data.frame()
   flag=T
   msg=""
 
@@ -191,6 +192,7 @@ validation=function(input,session)
     )
   )
 
+  error_list=data.frame()
   for(i in seq(1,nrow(checklist)))
   {
     check.result=checkMsg(id = checklist$id[i],name = checklist$name[i],type=checklist$type[i],msg=msg)
@@ -198,6 +200,12 @@ validation=function(input,session)
     msg=check.result$msg
     error=check.result$error
     session$sendCustomMessage('checkStatus', as.list(error))
+    error_list=rbind(error_list,error)
+  }
+  if("Error" %in% error_list$status){
+    session$sendCustomMessage('checkResponse', list(status="fail"))
+  }else{
+    session$sendCustomMessage('checkResponse', list(status="success"))
   }
   # closeSweetAlert(session)
   return(flag)

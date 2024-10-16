@@ -123,7 +123,7 @@ SCSES requires four inputs from the user
 
 Test bam files can be downloaded from ...
 
-##### 2. genome FASTA file and annotation GTF file
+##### 2. genome FASTA file and annotation GTF and GFF3 file
 
 ##### 3. configure file
 

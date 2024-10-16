@@ -344,8 +344,7 @@ body <- dashboardBody(
                                    )
                             )
                      )
-              ),
-              tabItem(tabName = "excute")
+              )
        )
 )
 

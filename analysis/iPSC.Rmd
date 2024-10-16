@@ -29,6 +29,13 @@ In this tutorial, we will analyse induced human pluripotent stem cells (iPSC), a
 ``` bash
 # download phast conservation file
 wget http://hgdownload.cse.ucsc.edu/goldenPath/hg19/phastCons100way/hg19.100way.phastCons.bw
+
+# download annotation GTF file
+wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_19/gencode.v19.annotation.gtf.gz
+
+# download annotation GFF3 file
+
+
 ```
 
 ```{r}
