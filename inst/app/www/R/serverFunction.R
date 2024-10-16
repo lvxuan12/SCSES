@@ -186,7 +186,7 @@ validation=function(input,session)
       "Reference Genome", "GTF File", "GFF File", "RBP File", "PhastCons Path"
     ),
     type = c(
-      "text", "text", "text", "text", "text", "text", "text", "text", "text", "text",
+      "text", "text", "text", "text", "text", "text", "text", "text", "text",
       "text", "text", "text", "text", "text", "text", "text", "text", "text", "text"
     )
   )

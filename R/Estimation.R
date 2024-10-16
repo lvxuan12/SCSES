@@ -145,11 +145,17 @@ getClassifierFeature <- function(
 #' @importFrom stats rbinom coef predict quantile
 #' @importFrom caret downSample
 #' @importFrom glmnet cv.glmnet
+#' @import R.matlab
+#' @import raveio
+#' @import rhdf5
+#' @import hdf5r
+#'
 #' @param genome_name Genome name, hg19 or hg38
 #'
 FtClassifier <- function(
     paras, rds_path = NULL, rds_ft_path = NULL,
     rds_cell_similarity_path = NULL,
+    output_path = NULL,
     decay_impute = paras$Task$impute$decay_impute,
     genome_name = paras$Basic$refgenome$genome_name) {
     # script----
@@ -174,7 +180,6 @@ FtClassifier <- function(
     # input rds----
     if (is.null(rds_ft_path)) {
         rds_ft_path <- paste0(paras$Basic$work_path, "/rds_ft/")
-        rds_path <- paste0(paras$Basic$work_path, "/rds/")
     }
     if (is.null(rds_path)) {
         rds_path <- paste0(paras$Basic$work_path, "/rds/")
@@ -188,7 +193,7 @@ FtClassifier <- function(
         stop(paste("Preprocessed psi, reads count, and events annotation must be saved in", rds_ft_path))
     }
     rds_files = list.files(path = rds_path, pattern = "*rds")
-    if (!all(c("expr.rds") %in% rds_files)) {
+    if (!all(c("TPM.rds") %in% rds_files)) {
         stop(paste("Gene expression must be saved in", rds_path))
     }
     # output----
@@ -204,7 +209,7 @@ FtClassifier <- function(
     rc <- readRDS(file = paste0(rds_ft_path, "/rc.rds"))
     event <- readRDS(file = paste0(rds_ft_path, "/event.rds"))
     # expr input
-    expr <- readRDS(file = paste0(rds_path, "/expr.rds"))
+    expr <- readRDS(file = paste0(rds_path, "/TPM.rds"))
     cell_id <- Reduce(intersect, list(colnames(expr), colnames(psi), colnames(rc)))
     psi <- psi[, cell_id, drop = F]
     rc <- rc[, cell_id, drop = F]
@@ -221,7 +226,7 @@ FtClassifier <- function(
     cell_similarity_data <- intersect(cell_similarity_data1, cell_similarity_data2)
     print(paste0("cell_similarity_data=", paste(cell_similarity_data, collapse = ";"), "  checked"))
     # validate parameters----
-    decay_impute <- check.int.or.null(x = decay_impute, default = 0.05)
+    decay_impute <- check.double.or.null(x = decay_impute, default = 0.05)
 
     psi <- psi[intersect(names(psi_gtex), row.names(psi)), ]
     event <- event[match(row.names(psi), event$event), ]
@@ -240,6 +245,10 @@ FtClassifier <- function(
     names(event.info) <- event_types
 
     print("Calculating Classifier Features...")
+    log_file <- paste0(output_path, "/mat_calculateFtFeature.log")
+    if (file.exists(log_file)) {
+      file.remove(log_file)
+    }
     rc.imputation.cell <- list()
     rc.psi.imputation.cell <- list()
     psi.imputation.cell <- list()
@@ -262,25 +271,31 @@ FtClassifier <- function(
             data = rc[do.call(what = c, args = events[, -1]), ]
             data <- as.matrix(data)
             all_data <- list()
-            for (position in colnames(event[, -1]))
+            for (position in colnames(events[, -1]))
             {
-                tmp <- list(data[event[[position]], , drop = F])
+                tmp <- list(data[events[[position]], , drop = F])
                 all_data <- c(all_data, tmp)
             }
-            names(all_data) <- colnames(event[, -1])
+            names(all_data) <- colnames(events[, -1])
+            msg <- paste0("[", Sys.time(), "] ", "Save data")
+            print(msg)
             saveHdf5File(datapath, list(
-                similarity = cell_similarity_type, data = all_data,
+                similar = cell_similarity_type, data = all_data,
                 parameter = list(decay = decay_impute), data_type = "RC",
-                similarity_type = "cell"
+                similar_type = "cell"
             ))
-            cmd <- paste("bash", mat_impute_v1, mcr_path, datapath, resultpath)
+            msg <- paste0("[", Sys.time(), "] ", "Save data Finished")
+            print(msg)
+            cmd <- paste("bash", mat_impute_v1, mcr_path, datapath,
+                         resultpath, ">>", log_file, "2>&1")
+            print(cmd)
             system(cmd, wait = T)
             rc_imputed_res_cell <- read_mat(resultpath)
             rc_imputed_res_cell[[1]] <- NULL
             names(rc_imputed_res_cell) <- names(all_data)
             for (position in names(rc_imputed_res_cell))
             {
-                tmp <- data[event[[position]], , drop = F]
+                tmp <- data[events[[position]], , drop = F]
                 if (!is.matrix(rc_imputed_res_cell[[position]])) {
                     rc_imputed_res_cell[[position]] <- matrix(rc_imputed_res_cell[[position]],
                         ncol = length(rc_imputed_res_cell[[position]]), nrow = 1
@@ -303,11 +318,13 @@ FtClassifier <- function(
             all_data <- list(data)
             names(all_data) <- "all"
             saveHdf5File(datapath, list(
-                similarity = cell_similarity_type,
+                similar = cell_similarity_type,
                 data = all_data, parameter = list(decay = decay_impute),
-                data_type = "PSI", similarity_type = "cell"
+                data_type = "PSI", similar_type = "cell"
             ))
-            cmd <- paste("bash", mat_impute_v1, mcr_path, datapath, resultpath)
+
+            cmd <- paste("bash", mat_impute_v1, mcr_path, datapath,
+                         resultpath, ">>", log_file, "2>&1")
             system(cmd, wait = T)
             psi_imputed_res_cell <- read_mat(resultpath)
             psi_imputed_res_cell[[1]] <- NULL
@@ -347,9 +364,9 @@ FtClassifier <- function(
         if (unlist(strsplit(name, "_"))[length(unlist(strsplit(name, "_")))] == "RC") {
             data_imputated <- res_list[[name]]$psi
             rc_list <- res_list[[name]]$rc
-            event_types <- unique(event$type)
+            event_types <- unique(events$type)
             rc.mean <- lapply(X = as.list(event_types), FUN = function(type) {
-                cur.event <- event[event$type == type, ]
+                cur.event <- events[events$type == type, ]
                 cur_rc_list <- rc_list[[type]]
                 tmp.array <- array(0, dim = c(nrow(cur_rc_list[[1]]), ncol(cur_rc_list[[1]]), length(cur_rc_list)))
                 for (i in 1:length(cur_rc_list)) {
@@ -360,7 +377,7 @@ FtClassifier <- function(
                 return(tmp.array.mean)
             })
             rc.mean <- do.call(what = rbind, args = rc.mean)
-            rc.mean <- rc.mean[event[, 1], ]
+            rc.mean <- rc.mean[events[, 1], ]
             rc_v <- unlist(as.vector(rc.mean))
             min_reads <- quantile(rc_v[which(rc_v != 0)], probs = seq(0, 1, 0.1))[3]
             rm(rc_v)

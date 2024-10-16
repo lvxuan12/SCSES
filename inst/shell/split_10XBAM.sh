@@ -2,9 +2,10 @@ bam_file=$1
 out_dir=$2
 jar_path=$3
 lib_path=$4
-core=$5
-cell_info=$6
-times=$7
+java_path=$5
+core=$6
+cell_info=$7
+times=$8
 
 bam_sc=$out_dir/bam/
 
@@ -19,7 +20,7 @@ do
         row_to=$n_row
     fi
     sed -n "${row_from},${row_to}p" $cell_info > ${cell_info}.${i}
-    java -Xmx100g -cp $lib_path/* -jar $jar_path $bam_file ${cell_info}.${i} $bam_sc $core
+    $java_path -Xmx100g -cp $lib_path/* -jar $jar_path $bam_file ${cell_info}.${i} $bam_sc $core
     echo "cell split ${row_from}-${row_to} done"
 done
 

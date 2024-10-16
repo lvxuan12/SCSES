@@ -1,5 +1,5 @@
 #' @title get single cell bam file from 10X CellRanger output
-#' this function will split possorted_genome_bam.bam from 10X CellRanger output 
+#' this function will split possorted_genome_bam.bam from 10X CellRanger output
 #' to single cell bam based bam tag "CB:"
 #'
 #' @param CellRanger_path directory to CellRanger output
@@ -14,7 +14,8 @@
 split10XBAM <- function(CellRanger_path,out_path,core,times=50) {
     options("scipen" = 100)
     # script
-    java_path <- system.file("java", package = "SCSES")
+    jar_path <- system.file("java", package = "SCSES")
+    java_path <- paras$Basic$java_path
     dir_shell <- system.file("shell", package = "SCSES")
     script_split <- paste0(dir_shell, "/split_10XBAM.sh")
     # input
@@ -52,8 +53,8 @@ split10XBAM <- function(CellRanger_path,out_path,core,times=50) {
     msg <- paste0("[", Sys.time(), "] ", "Running split...")
     print(msg)
     bc_file_new <- paste0(out_path, "/barcodes.tsv")
-    jar_file <- paste0(java_path, "/splitCellBam3.jar")
-    lib_path <- paste0(java_path, "/lib")
+    jar_file <- paste0(jar_path, "/splitCellBam3.jar")
+    lib_path <- paste0(jar_path, "/lib")
     log_file <- paste0(out_path, "/splitcell_", rbinom(1, size = 1000000000, prob = 0.5), ".log")
     if (file.exists(log_file)) {
         file.remove(log_file)
@@ -64,6 +65,7 @@ split10XBAM <- function(CellRanger_path,out_path,core,times=50) {
         out_path,
         jar_file,
         lib_path,
+        java_path,
         core,
         bc_file_new,times, ">>", log_file, "2>&1"
     )

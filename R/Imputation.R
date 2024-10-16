@@ -91,6 +91,12 @@ ImputationAll <- function(
     dir.create(output_path)
     print(paste0("Output: ", output_path))
 
+    # log
+    log_file <- paste0(output_path, "/mat_Imputation.log")
+    if (file.exists(log_file)) {
+      file.remove(log_file)
+    }
+
     psi.psi.imputation.cell <- list()
     rc.psi.imputation.cell <- list()
     psi.imputation.event <- list()
@@ -137,7 +143,8 @@ ImputationAll <- function(
             msg <- paste0("[", Sys.time(), "] ", "Save data Finished")
             print(msg)
             # run scses
-            cmd <- paste("bash", mat_scses, mcr_path, datapath, resultpath)
+            cmd <- paste("bash", mat_scses, mcr_path, datapath,
+                         resultpath, ">>", log_file, "2>&1")
             print(cmd)
             system(cmd, wait = T)
             # Output formatting
@@ -275,6 +282,12 @@ Imputation <- function(
     dir.create(output_path)
     print(paste0("Output: ", output_path))
 
+    # log
+    log_file <- paste0(output_path, "/mat_Imputation_",cell_similarity_type,".log")
+    if (file.exists(log_file)) {
+      file.remove(log_file)
+    }
+
     psi.psi.imputation.cell <- list()
     rc.psi.imputation.cell <- list()
     psi.imputation.event <- list()
@@ -315,7 +328,8 @@ Imputation <- function(
         msg <- paste0("[", Sys.time(), "] ", "Save data Finished")
         print(msg)
         # run scses
-        cmd <- paste("bash", mat_scses, mcr_path, datapath, resultpath)
+        cmd <- paste("bash", mat_scses, mcr_path, datapath,
+                     resultpath, ">>", log_file, "2>&1")
         print(cmd)
         system(cmd, wait = T)
         # Output formatting

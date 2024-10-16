@@ -8,6 +8,7 @@
     "work_path": "/disk/lvxuan/Single-Splicing/result/GSE85908/scses_test/",
     "core": 20,
     "conda_envname":"SCSES_test3",
+    "java_path":"/usr/bin/java",
     "python_path": "/disk/lvxuan/software/miniconda/envs/SCSES_test3/bin/python",
     "mcr_path": "/disk/software/matlab2022/",
     "STAR_path": "/usr/local/bin/STAR",

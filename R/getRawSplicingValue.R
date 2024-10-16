@@ -23,7 +23,8 @@ getRawRC <- function(
     event_types = NULL) {
   options("scipen" = 100)
   # script
-  java_path <- system.file("java", package = "SCSES")
+  jar_path <- system.file("java", package = "SCSES")
+  java_path <- paras$Basic$java_path
   # input
   print("Checking events...")
   event_path <- paste0(paras$Basic$work_path, "/events/")
@@ -69,15 +70,15 @@ getRawRC <- function(
       }
       if (type == "RI") {
         cluster <- makeCluster(spec = core)
-        clusterExport(cl = cluster, varlist = c("java_path", "event_file", "outpath_per_cell", "bam_path", "sequence"), envir = environment())
+        clusterExport(cl = cluster, varlist = c("jar_path", "event_file", "outpath_per_cell", "bam_path", "sequence"), envir = environment())
         l <- parLapply(cl = cluster, X = as.list(cells), fun = function(cell) {
           if (sequence == "UMI") {
-            jar.file <- paste0(java_path, "/ujm3.RI.jar")
+            jar.file <- paste0(jar_path, "/ujm3.RI.jar")
           } else {
-            jar.file <- paste0(java_path, "/rjm3.RI.jar")
+            jar.file <- paste0(jar_path, "/rjm3.RI.jar")
           }
           cmd <- paste(
-            "java -Xmx5120m -jar", jar.file,
+            java_path, "-Xmx5120m -cp", paste0(jar_path, "/lib"), "-jar", jar.file,
             bam_path,
             cell,
             event_file,
@@ -131,20 +132,20 @@ getRawRC <- function(
         )
       } else {
         cluster <- makeCluster(spec = core)
-        clusterExport(cl = cluster, varlist = c("java_path", "event_file", "outpath_per_cell", "bam_path", "sequence"), envir = environment())
+        clusterExport(cl = cluster, varlist = c("jar_path", "event_file", "outpath_per_cell", "bam_path", "sequence"), envir = environment())
         l <- parLapply(cl = cluster, X = as.list(cells), fun = function(cell) {
           if (sequence == "UMI") {
-            jar.file <- paste0(java_path, "/ujm3.jar")
+            jar.file <- paste0(jar_path, "/ujm3.jar")
           } else {
-            jar.file <- paste0(java_path, "/rjm3.jar")
+            jar.file <- paste0(jar_path, "/rjm3.jar")
           }
           cmd <- paste(
-            "java -Xmx5120m -cp", paste0(java_path, "/lib"), "-jar", jar.file,
+            java_path,"-Xmx5120m -cp", paste0(jar_path, "/lib"), "-jar", jar.file,
             bam_path,
             cell,
             event_file,
             outpath_per_cell,
-            "0,16,99,147,83,163"
+            "0,16,99,147,83,163", ">>", log_file, "2>&1"
           )
           print(cmd)
           system(cmd, wait = T)

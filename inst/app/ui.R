@@ -38,11 +38,11 @@ body <- dashboardBody(
                                           fluidRow(
                                                  column(
                                                         width = 3,
-                                                        switchInput(inputId = "read.paired", label = "<b>Paired Read</b>", value = T, onLabel = "Paired", offLabel = "Single", labelWidth = "150px")
+                                                        switchInput(inputId = "read.paired", label = "<b>Paired Read</b>", value = T, onLabel = "paired", offLabel = "single", labelWidth = "150px")
                                                  ),
                                                  column(
                                                         width = 3,
-                                                        switchInput(inputId = "read.umi", label = "<b>UMI based</b>", value = T, onLabel = "NO", offLabel = "Yes", labelWidth = "100px")
+                                                        switchInput(inputId = "read.umi", label = "<b>UMI based</b>", value = T, onLabel = "full_length", offLabel = "UMI", labelWidth = "100px")
                                                  )
                                           )
                                    ),

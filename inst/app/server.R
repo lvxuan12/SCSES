@@ -208,16 +208,20 @@ server=function(input,output,session){
       return()
     }
     config[['DataSet']]=input$dataset
+    config[['Basic']][['sequence']]=input$read.umi
+    config[['Basic']][['readlength']]=input$readlength
+    config[['Basic']][['paired']]=input$read.paired
     config[['Basic']][['bam_path']]=normalizePath(input$bampath)
     config[['Basic']][['work_path']]=normalizePath(input$workpath)
     config[['Basic']][['core']]=input$max.core
     config[["Basic"]][["conda_envname"]] = input$conda_envname
+    config[["Basic"]][["java_path"]] = normalizePath(input$JAVA_path)
     config[["Basic"]][["python_path"]] = normalizePath(input$python_path)
     config[['Basic']][['mcr_path']]=normalizePath(input$MCRpath)
     config[["Basic"]][["STAR_path"]] = normalizePath(input$STAR_path)
     config[["Basic"]][["samtools_path"]] = normalizePath(input$Samtoolspath)
     config[["Basic"]][["featureCounts_path"]] = normalizePath(input$featurecountspath)
-    config[["Basic"]][["rMATs"]] = normalizePath(input$rmatspath)
+    config[["Basic"]][["rMATS_path"]] = normalizePath(input$rmatspath)
     config[["Basic"]][["IRFinder_path"]] = normalizePath(input$IRFinderpath)
     config[['Basic']][['MAJIQ_env']]=normalizePath(input$MAJIQ_env)
     config[["Basic"]][["refgenome"]][["gtf_path"]] = normalizePath(input$GTFpath)
@@ -240,7 +244,7 @@ server=function(input,output,session){
     config[["Task"]][["event"]][["majiq_license_file"]] = input$MAJIQ_license_path
 
     config[["Task"]][["impute"]][["rbp"]] = normalizePath(input$RBPpath)
-    config[["Task"]][["impute"]][["cell_similarity"]] = paste(input$cell.similar, collapse = ";")
+    config[["Task"]][["impute"]][["cell_similarity_data"]] = paste(input$cell.similar, collapse = ";")
     config[["Task"]][["impute"]][["feature_num"]] = normalizePath(input$feature_num)
 
     config[['Task']][['impute']][['event_features']]=list(phast_path=normalizePath(input$phastpath),
@@ -248,7 +252,7 @@ server=function(input,output,session){
 
     for(type in input$event.types)
     {
-      config[['Task']][['impute']][['event_features']][['AE_para']][[type]]=list(epoch=input[[paste0(type,'.epoch')]],
+      config[['Task']][['impute']][['event_features']][['AE']][[type]]=list(epoch=input[[paste0(type,'.epoch')]],
                                                  embedding=input[[paste0(type,'.embedding')]],
                                                  layer=paste0('[',input[[paste0(type,'.layer')]],']')
                                                 )

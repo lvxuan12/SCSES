@@ -20,7 +20,8 @@ getFtRawRC <- function(
     genome_name = paras$Basic$refgenome$genome_name) {
     options("scipen" = 100)
     # script
-    java_path <- system.file("java", package = "SCSES")
+    jar_path <- system.file("java", package = "SCSES")
+    java_path <- paras$Basic$java_path
     # input
     # Built-in data
     print("Loading splicing events for classifer fine tune...")
@@ -50,22 +51,26 @@ getFtRawRC <- function(
         print(msg)
         outpath_per_cell <- paste0(rc_path, "/", type, "_rjm")
         dir.create(outpath_per_cell)
+        log_file <- paste0(work_path, "/java_getFtRC_", type, ".log")
+        if (file.exists(log_file)) {
+          file.remove(log_file)
+        }
         if (type == "RI") {
             cluster <- makeCluster(spec = core)
-            clusterExport(cl = cluster, varlist = c("java_path", "event_file", "outpath_per_cell", "bam_path", "sequence"), envir = environment())
+            clusterExport(cl = cluster, varlist = c("jar_path", "event_file", "outpath_per_cell", "bam_path", "sequence"), envir = environment())
             l <- parLapply(cl = cluster, X = as.list(cells), fun = function(cell) {
                 if (sequence == "UMI") {
-                    jar.file <- paste0(java_path, "/ujm3.RI.jar")
+                    jar.file <- paste0(jar_path, "/ujm3.RI.jar")
                 } else {
-                    jar.file <- paste0(java_path, "/rjm3.RI.jar")
+                    jar.file <- paste0(jar_path, "/rjm3.RI.jar")
                 }
                 cmd <- paste(
-                    "java -Xmx5120m -jar", jar.file,
+                    java_path, "-Xmx5120m -cp", paste0(jar_path, "/lib"), "-jar", jar.file,
                     bam_path,
                     cell,
                     event_file,
                     outpath_per_cell,
-                    "0,16,99,147,83,163"
+                    "0,16,99,147,83,163", ">>", log_file, "2>&1"
                 )
                 print(cmd)
                 system(cmd, wait = T, show.output.on.console = T)
@@ -114,20 +119,20 @@ getFtRawRC <- function(
             )
         } else {
             cluster <- makeCluster(spec = core)
-            clusterExport(cl = cluster, varlist = c("java_path", "event_file", "outpath_per_cell", "bam_path", "sequence"), envir = environment())
+            clusterExport(cl = cluster, varlist = c("jar_path", "event_file", "outpath_per_cell", "bam_path", "sequence"), envir = environment())
             l <- parLapply(cl = cluster, X = as.list(cells), fun = function(cell) {
                 if (sequence == "UMI") {
-                    jar.file <- paste0(java_path, "/ujm3.jar")
+                    jar.file <- paste0(jar_path, "/ujm3.jar")
                 } else {
-                    jar.file <- paste0(java_path, "/rjm3.jar")
+                    jar.file <- paste0(jar_path, "/rjm3.jar")
                 }
                 cmd <- paste(
-                    "java -Xmx5120m -cp", paste0(java_path, "/lib"), "-jar", jar.file,
+                    java_path,"-Xmx5120m -cp", paste0(jar_path, "/lib"), "-jar", jar.file,
                     bam_path,
                     cell,
                     event_file,
                     outpath_per_cell,
-                    "0,16,99,147,83,163"
+                    "0,16,99,147,83,163", ">>", log_file, "2>&1"
                 )
                 print(cmd)
                 system(cmd, wait = T)

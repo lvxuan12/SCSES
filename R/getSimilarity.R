@@ -707,11 +707,20 @@ getEventSimilarity <- function(
     token = paste(Sys.getpid(), rbinom(1, size = 1000000000, prob = 0.5), sep = "-")
     datapath = paste0(output_path, "/combine_feature_data", token, ".h5")
     distance_path = paste0(output_path, "/feature_combine.h5")
+    msg <- paste0("[", Sys.time(), "] ", "Save data")
+    print(msg)
     saveHdf5File(datapath, list(
         psi = event.psi, rbp = as.matrix(expr[rbp, ]),
         feature = event.features, method = "seuclidean"
     ))
-    cmd = paste("bash", mat_combineDistance, mcr_path, datapath, distance_path)
+    msg <- paste0("[", Sys.time(), "] ", "Save data Finished")
+    print(msg)
+    log_file <- paste0(output_path, "/mat_combineEventFeatureDistance.log")
+    if (file.exists(log_file)) {
+      file.remove(log_file)
+    }
+    cmd = paste("bash", mat_combineDistance, mcr_path, datapath,
+                distance_path, ">>", log_file, "2>&1")
     system(cmd, wait = T)
     file.remove(datapath)
 
@@ -724,6 +733,10 @@ getEventSimilarity <- function(
 
     msg = paste0("[", Sys.time(), "] ", "Calculate event similarity...")
     print(msg)
+    log_file <- paste0(output_path, "/mat_calculateEventSimilarity.log")
+    if (file.exists(log_file)) {
+      file.remove(log_file)
+    }
     event.similars = list()
     for (type in event_types)
     {
@@ -753,7 +766,7 @@ getEventSimilarity <- function(
 
                 cmd <- paste(
                     "bash", mat_knn_similarity,
-                    mcr_path, inpath, outpath
+                    mcr_path, inpath, outpath, ">>", log_file, "2>&1"
                 )
                 system(command = cmd, wait = T)
 
