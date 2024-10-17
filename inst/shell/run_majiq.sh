@@ -6,6 +6,9 @@
 # $4:core
 # $5:MAJIQ ref name
 # $6:Threshold on the minimum total number of reads for any junction
+# $7:the conda environment name of MAJIQ
+# $8:directory to The bin directory in conda contains the executable binary files
+# $9:the license file of MAJIQ
 set -e
 workpath=$1
 bampath=$2
@@ -14,9 +17,11 @@ core=$4
 genome_name=$5
 junctionReads=$6
 majiq_env=$7
-license_file=$8
+conda_binpath=$8
+license_file=$9
 
-source activate $majiq_env
+source $conda_binpath/activate $majiq_env
+
 export MAJIQ_LICENSE_FILE=$license_file
 mkdir -p $workpath
 echo -e "[info]\nbamdirs=$bampath\ngenome=$genome_name\nstrandness=None\n\n[experiments]" > $workpath/majiq_build_config.ini

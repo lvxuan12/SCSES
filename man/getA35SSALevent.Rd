@@ -14,6 +14,7 @@ getA35SSALevent(
   junctionReads,
   log_file,
   majiq_env,
+  condabin_path,
   license_file
 )
 }
@@ -33,6 +34,12 @@ getA35SSALevent(
 \item{junctionReads}{the minimum total number of reads for any junction}
 
 \item{log_file}{file saving stdout and stderr information}
+
+\item{majiq_env}{the conda environment name of MAJIQ}
+
+\item{condabin_path}{directory to The bin directory in conda contains the executable binary files}
+
+\item{license_file}{the license file of MAJIQ}
 }
 \value{
 Splicing event directory

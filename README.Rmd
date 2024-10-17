@@ -117,11 +117,9 @@ ln -s /usr/lib/x86_64-linux-gnu/libsz.so /path/to/miniconda/envs/SCSES_test/lib/
 
 ## SCSES input
 
-SCSES requires four inputs from the user
+SCSES requires five inputs from the user
 
 ##### 1. bam files sorted by coordinate
-
-Test bam files can be downloaded from ...
 
 ##### 2. genome FASTA file and annotation GTF and GFF3 file
 
@@ -134,13 +132,27 @@ library(SCSES)
 createConfigshiny(host, port) 
 ```
 
-After running this command, a interactive window will popup which allow you to fill some parameters, such as Bam File Path, and Work Path.
+After running this command, a interactive window will popup which allow you to fill some parameters, such as Bam File Path, and Work Path. For a detailed explanation of the configuration file, please refer to the `config_anno.txt`.
 
 Finally, you can click "Create Config" button and a json file will be generated in the `work_path` you provided if successful.
 
 ##### 4. phast conservation file in bigWig format
 
 For human and mouse, you could download it directly from UCSC browser: [mm10.60way.phastCons.bw](http://hgdownload.cse.ucsc.edu/goldenPath/mm10/phastCons60way/), [hg38.phastCons100way.bw](http://hgdownload.cse.ucsc.edu/goldenPath/hg38/phastCons100way/) and [hg19.100way.phastCons.bw](http://hgdownload.cse.ucsc.edu/goldenPath/hg19/phastCons100way/).
+
+##### 5. RBP
+
+Genes annotated as RBP are required to constructs similarity networks. For human and mouse, you could read from `extdata/rbp`.
+
+``` r
+library(SCSES)
+# human
+rbp = system.file("extdata/rbp/human_rbp.txt",package = "SCSES")
+rbp <- readLines(rbp)
+rbp[1:10]
+#[1] "A1CF"       "AC004381.6" "ACIN1"      "ACO1"       "AKAP1"      "ALKBH8"    
+#[7] "ALYREF"     "ANKHD1"     "ANKRD17"    "APTX"   
+```
 
 ## Getting started
 
@@ -287,7 +299,7 @@ Imputed.data.path = Estimation(paras,rds_imputed_file)
 
 To improve the fitness of models for a new dataset, we also provide a procedure to fine-tune the model. For this analysis, we first build a reference using a set of splicing events with conserved splicing levels in different human tissues (<https://zenodo.org/records/6408906>). Then we compare the splicing level in a new dataset with the reference records, and give the scenarios definition to each event-cell pair, which is used to fine-tune the pre-trained model.
 
-The commands to perform these analyses: 
+The commands to perform these analyses:
 
 ``` r
 ftrc.path = getFtRawRC(paras)

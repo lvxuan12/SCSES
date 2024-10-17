@@ -175,19 +175,19 @@ validation=function(input,session)
 
   checklist = data.frame(
     id = c(
-      "dataset", "bampath", "conda_envname", "pythonpath", "JAVApath", "Samtoolspath", "featurecountspath",
+      "dataset", "bampath", "condabinpath", "conda_envname", "pythonpath", "JAVApath", "Samtoolspath", "featurecountspath",
       "MCRpath", "rmatspath", "MAJIQ_env", "MAJIQlicensepath", "IRFinderpath",
       "STARpath", "workpath", "ref_name", "fapath", "GTFpath", "GFFpath",
       "RBPpath", "phastpath"
     ),
     name = c(
-      "Dataset Name", "Bam Path", "SCSES env", "Python Path", "JAVA Path", "Samtools Path",
+      "Dataset Name", "Bam Path", "Conda bin Path", "SCSES conda env", "Python Path", "JAVA Path", "Samtools Path",
       "FeatureCounts Path", "MCR Path", "rMats Path", "MAJIQ env",
       "MAJIQ license file", "IRFinder Path", "STAR Path", "Work Path", "Reference Name",
       "Reference Genome", "GTF File", "GFF File", "RBP File", "PhastCons Path"
     ),
     type = c(
-      "text", "text", "text", "text", "text", "text", "text", "text", "text", "text",
+      "text","text", "text", "text", "text", "text", "text", "text", "text", "text", "text",
       "text", "text", "text", "text", "text", "text", "text", "text", "text", "text"
     )
   )

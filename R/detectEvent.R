@@ -38,7 +38,7 @@ detectEvents <- function(paras) {
   core <- paras$Basic$core
   ExonToIntronReads <- paras$Basic$filter_merged_bam$ExonToIntronReads
   junctionReads <- paras$Basic$filter_merged_bam$junctionReads
-  license_file <-paras$Task$event$majiq_license_file
+
   # output
   work_path <- paste0(paras$Basic$work_path, "/events/")
   print(paste0("Output: ", work_path))
@@ -62,11 +62,13 @@ detectEvents <- function(paras) {
     # script
     filename <- "run_majiq.sh"
     script_majiq <- file.path(dir_shell, filename)
+    license_file <-paras$Task$event$majiq_license_file
+    condabin_path <- paras$Basic$conda_binpath
     majiq_env <- paras$Basic$MAJIQ_env
     res <- getA35SSALevent(
       majiq.work.path, bam_path, gff, script_majiq,
       core, genome_name, junctionReads, log_file,
-      majiq_env,license_file
+      majiq_env,condabin_path,license_file
     )
   }
   res.file <- list.files(paste0(work_path,'/IRFinder/'),
@@ -198,11 +200,12 @@ getEvent <- function(paras, event_type) {
       # script
       filename <- "run_majiq.sh"
       script_majiq <- file.path(dir_shell, filename)
+      condabin_path <- paras$Basic$conda_binpath
       majiq_env <- paras$Basic$MAJIQ_env
       res <- getA35SSALevent(
         majiq.work.path, bam_path, gff, script_majiq,
         core, genome_name, junctionReads, log_file,
-        majiq_env,license_file
+        majiq_env,condabin_path,license_file
       )
     }
     if (RI) {
@@ -357,13 +360,16 @@ getRIevent <- function(
 #' @param junctionReads the minimum total number of reads for any junction
 #' @param script_majiq directory to script for running MAJIQ
 #' @param log_file file saving stdout and stderr information
-
+#' @param license_file the license file of MAJIQ
+#' @param majiq_env the conda environment name of MAJIQ
+#' @param condabin_path directory to The bin directory in conda contains the executable binary files
+#'
 #' @return Splicing event directory
 #' @export
 
 getA35SSALevent <- function(work_path, bam_path, gff, script_majiq,
                             core, genome_name, junctionReads, log_file,
-                            majiq_env,license_file) {
+                            majiq_env,condabin_path,license_file) {
   cmd <- paste(
     "bash", script_majiq,
     work_path,
@@ -373,6 +379,7 @@ getA35SSALevent <- function(work_path, bam_path, gff, script_majiq,
     genome_name,
     junctionReads,
     majiq_env,
+    condabin_path,
     license_file, ">>", log_file, "2>&1"
   )
   msg <- paste0("[", Sys.time(), "] ", "Run MAJIQ: ", cmd)

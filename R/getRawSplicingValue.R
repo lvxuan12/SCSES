@@ -64,7 +64,7 @@ getRawRC <- function(
       print(msg)
       outpath_per_cell <- paste0(rc_path, "/", type, "_rjm")
       dir.create(outpath_per_cell)
-      log_file <- paste0(work_path, "/java_getRC_", type, ".log")
+      log_file <- paste0(event_path, "/java_getRC_", type, ".log")
       if (file.exists(log_file)) {
         file.remove(log_file)
       }

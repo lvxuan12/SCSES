@@ -77,6 +77,13 @@ server=function(input,output,session){
     updateValue("bampath")
 
   })
+
+  observeEvent(c(input$python_path,input$pythonpath),{
+    showSelect('condabin_path')
+    updateValue("condabin_path")
+    updateValue("condabinpath")
+  })
+
   observeEvent(c(input$python_path,input$pythonpath),{
     showSelect('python_path')
     updateValue("python_path")
@@ -215,6 +222,7 @@ server=function(input,output,session){
     config[['Basic']][['work_path']]=normalizePath(input$workpath)
     config[['Basic']][['core']]=input$max.core
     config[["Basic"]][["conda_envname"]] = input$conda_envname
+    config[["Basic"]][["conda_binpath"]] = normalizePath(input$condabinpath)
     config[["Basic"]][["java_path"]] = normalizePath(input$JAVApath)
     config[["Basic"]][["python_path"]] = normalizePath(input$pythonpath)
     config[['Basic']][['mcr_path']]=normalizePath(input$MCRpath)
@@ -230,7 +238,7 @@ server=function(input,output,session){
     config[["Basic"]][["refgenome"]][["genome_name"]] = input$ref_name
 
     config[['Basic']][['filter_merged_bam']]=list(ExonToIntronReads=input$exon.intron.read,junctionReads=input$junction.read)
-    config[["Basic"]][["filter_events_sc"]] = list(
+    config[["Basic"]][["filter_sc"]] = list(
       minCell = input$minCell, minRC = input$minRC,
       min.percentCells.gene = input$exp.dropout.ratio,
       min.percentCells.event = input$psi.dropout.ratio,

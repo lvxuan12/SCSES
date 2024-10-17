@@ -20,7 +20,7 @@ Default bam_path, java_path, core, and sequence from paras}
 
 \item{core}{the number of threads}
 
-\item{sequence}{full_length or UMI}
+\item{sequence}{full-length or UMI}
 
 \item{event_types}{splicing event types seperated by ";",default=NULL}
 }

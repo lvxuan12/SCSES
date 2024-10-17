@@ -1,14 +1,14 @@
 ---
-title: "SCSES iPSC Tutorial"
+title: "SCSES cell line Tutorial"
 output: html_document
-date: "2024-10-12"
+date: "2024-10-17"
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# SCSES iPSC Tutorial
+# SCSES cell line Tutorial
 
 ## Installation
 
@@ -51,7 +51,7 @@ createConfigshiny(host="127.0.0.1",port = 9999,launch.browser=T)
 ```{r}
 library(SCSES)
 #paras_file: path to configure file generated in the previous step
-paras_file = "/disk/lvxuan/Single-Splicing/result/GSE85908/scses_test/GSE85908.json"
+paras_file = "/disk/lvxuan/Single-Splicing/result/cell_line/scses_test/cell_line.json"
 paras = readSCSESconfig(paras_file)
 ```
 
