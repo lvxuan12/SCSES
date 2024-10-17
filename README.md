@@ -9,7 +9,7 @@ Menu
       - [2. Softwares](#2-softwares)
     - [Installation of SCSES](#installation-of-scses)
       - [Tips for some Installation
-        error](#tips-for-some-installation-error)
+        errors](#tips-for-some-installation-errors)
   - [SCSES input](#scses-input)
   - [Getting started](#getting-started)
     - [Run SCSES step by step (smart-seq2
@@ -111,7 +111,7 @@ type the following command in **R**:
 remotes::install_github("lvxuan12/SCSES")
 ```
 
-#### Tips for some Installation error
+#### Tips for some Installation errors
 
 ##### 1. cannot find fftw.h
 
@@ -143,14 +143,19 @@ Test bam files can be downloaded from …
 
 ##### 3. configure file
 
-You can use `createConfigshiny` to generate configure file for your
-dataset.
+A configure file is required to run SCSES. You can use
+`createConfigshiny` command to generate a configure file:
 
 ``` r
+library(SCSES)
 createConfigshiny(host, port) 
 ```
 
-A json file will be generated in the work_path you provided.
+After running this command, a interactive window will popup which allow
+you to fill some parameters, such as Bam File Path, and Work Path.
+
+Finally, you can click “Create Config” button and a json file will be
+generated in the `work_path` you provided if successful.
 
 ##### 4. phast conservation file in bigWig format
 
@@ -272,13 +277,13 @@ neighbors will be saved to rds file
 to`work_path/imputation/cell_similarity/cell.similars.rds` and
 `work_path/imputation/cell_similarity/dyk.cell.rds`
 
+##### Parameters used in this step
+
 In this step, some parameters can be adjusted in configure file or the
 function parameters directly:
 
-##### For cell similarity networks:
-
-SCSES can use RBP expressions, Raw read count or Raw PSI to measure cell
-similarities.
+For **cell similarity networks**, SCSES can use RBP expressions, Raw
+read count or Raw PSI to measure cell similarities.
 
 `feature_num`: the number of high variable features for PCA before
 calculate cell distance.
@@ -299,10 +304,9 @@ at least on from EXP_RBP, RC, and PSI.
 
 `kcell_min`: Minimum number of neighbors.
 
-##### For event similarity networks:
-
-Event similarities are defined by the RBP regulatory correlations and an
-embedding representation by integrating event sequence similarities.
+For **event similarity networks**, Event similarities are defined by the
+RBP regulatory correlations and an embedding representation by
+integrating event sequence similarities.
 
 `ae.para`: parameters of encoding sequence features
 
@@ -317,16 +321,16 @@ correlations.
 
 #### Step6. Imputation
 
-Based on these weighted similarity networks, SCSES next aggregates the
-information across similar cells or events to impute read count or PSI
-value.
+Based on these weighted similarity networks, SCSES next will use three
+imputation strategies to aggregate the information across similar cells
+or events to impute read count or PSI value
 
 ``` r
 Imputed.data.path = ImputationAll(paras)
 ```
 
-A list of three imputation strategies result will be saved to
-`work_path/imputation/`.
+Results of each imputation strategy will be saved
+into`work_path/imputation`.
 
 #### Step7. Estimation
 
@@ -344,12 +348,15 @@ Imputed.data.path = Estimation(paras,rds_imputed_file)
 
 ##### Fine-tune the model
 
-To improve the fitness of models for the new dataset, we also provide a
-procedure to fine-tune the model. We collect a set of splicing events
-with conserved splicing levels in different human tissue. For a new
-dataset, we compare the splicing level in new data with the reference
+To improve the fitness of models for a new dataset, we also provide a
+procedure to fine-tune the model. For this analysis, we first build a
+reference using a set of splicing events with conserved splicing levels
+in different human tissues (<https://zenodo.org/records/6408906>). Then
+we compare the splicing level in a new dataset with the reference
 records, and give the scenarios definition to each event-cell pair,
 which is used to fine-tune the pre-trained model.
+
+The commands to perform these analyses:
 
 ``` r
 ftrc.path = getFtRawRC(paras)
@@ -365,4 +372,4 @@ A list of final imputation of PSI values will be saved to
 
 ## Tutorials
 
-For nPSC example, see the Rmarkdown tutorials in `analysis/nPSC.Rmd`
+For iPSC example, see the Rmarkdown tutorials in `analysis/iPSC.Rmd`
