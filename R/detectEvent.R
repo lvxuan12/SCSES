@@ -313,7 +313,7 @@ getRIevent <- function(
     star_path, log_file, star_ref_path=NULL) {
   old.path=Sys.getenv("PATH")
   Sys.setenv(PATH=paste0(dirname(samtools_path),":",old.path))
-  if(dir.exist(paste0(work_path,'/REF'))){
+  if(dir.exists(paste0(work_path,'/REF'))){
     stop(paste0(work_path,'/REF should not yet exist!'))
   }
   cmd <- paste(
