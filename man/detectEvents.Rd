@@ -4,10 +4,14 @@
 \alias{detectEvents}
 \title{Detect splicing events and generate event id}
 \usage{
-detectEvents(paras)
+detectEvents(paras, star_ref_path = NULL)
 }
 \arguments{
 \item{paras}{list fromJSON(paras_file)}
+
+\item{star_ref_path}{path to STAR reference.
+Default: NULL, the STAR reference will be generated.
+Providing STAR reference can speed up the function.}
 }
 \value{
 Splicing event directory

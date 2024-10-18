@@ -15,7 +15,8 @@ getRIevent(
   irfinder_path,
   samtools_path,
   star_path,
-  log_file
+  log_file,
+  star_ref_path = NULL
 )
 }
 \arguments{
