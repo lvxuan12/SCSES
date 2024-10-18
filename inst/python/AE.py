@@ -6,7 +6,7 @@ import numpy as np
 from scipy import stats
 import sys,math
 
-def model_training_parameter(data,encoding_dim,layer_dim,max_epoch):
+def model_training_parameter(data,encoding_dim,layer_dim,max_epoch,log_file):
   Standard_data=stats.zscore(data,axis=0)
   Standard_data[np.where(np.isnan(Standard_data))]=0
   
@@ -31,11 +31,14 @@ def model_training_parameter(data,encoding_dim,layer_dim,max_epoch):
   
   autoencoder.compile(optimizer='adam', loss='MSE')
   
-  autoencoder.fit(x_train, x_train,
-                  epochs=int(max_epoch),
-                  batch_size=min(10000,x_train.shape[0]),
-                  shuffle=True,
-                  validation_data=(x_test, x_test))
+  with open(log_file, 'w') as f:
+    sys.stdout = f  # 重定向标准输出
+    autoencoder.fit(x_train, x_train,
+                    epochs=int(max_epoch),
+                    batch_size=min(10000,x_train.shape[0]),
+                    shuffle=True,
+                    validation_data=(x_test, x_test))
+    sys.stdout = sys.__stdout__  # 恢复标准输出
                   
   encoded_imgs = encoder.predict(Standard_data)
   encoded_imgs=pd.DataFrame(encoded_imgs)

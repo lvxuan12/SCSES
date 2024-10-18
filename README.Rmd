@@ -280,8 +280,6 @@ To overcome the high dropout rate and limited read coverage of scRNA-seq techniq
 
 ``` {r}
 cellnet.path = getCellSimilarity(paras)
-old.ld=Sys.getenv("LD_LIBRARY_PATH")
-Sys.setenv(LD_LIBRARY_PATH = paste0("/disk/lvxuan/lib:", old.ld))
 eventnet.path = getEventSimilarity(paras)
 ```
 

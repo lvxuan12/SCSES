@@ -660,6 +660,7 @@ getEventSimilarity <- function(
     for (type in event_types)
     {
         inpath = paste0(output_path, "/", type, "_feature.txt")
+        log_file <- paste0(output_path, "/py_AE_", type, ".log")
         if(file.exists(inpath)){
             print(paste(paste0("[", Sys.time(), "]"), type, "event encoding..."))
             feature = read.table(inpath)
@@ -672,7 +673,8 @@ getEventSimilarity <- function(
                     feature,
                     ae.para[[type]]$embedding,
                     layers,
-                    ae.para[[type]]$epoch
+                    ae.para[[type]]$epoch,
+                    log_file
                 )
                 vars <- apply(auto.feature, 2, var)
                 valid <- which(vars != 0)
@@ -684,6 +686,8 @@ getEventSimilarity <- function(
             print(paste(paste0("[", Sys.time(), "]"), type, "event encoding Finish."))
         }
     }
+    msg = paste0("[", Sys.time(), "] ", "step5 Calculate splicing regulation distance and Combine distance...")
+    print(msg)
     # Calculate splicing regulation distance and Combine distance----
     # validate rbp
     if (check.path.or.character(rbp) == "path") {
@@ -712,14 +716,12 @@ getEventSimilarity <- function(
     token = paste(Sys.getpid(), rbinom(1, size = 1000000000, prob = 0.5), sep = "-")
     datapath = paste0(output_path, "/combine_feature_data", token, ".h5")
     distance_path = paste0(output_path, "/feature_combine.h5")
-    msg <- paste0("[", Sys.time(), "] ", "Save data")
-    print(msg)
+    print("Save data")
     saveHdf5File(datapath, list(
         psi = event.psi, rbp = as.matrix(expr[rbp, ]),
         feature = event.features, method = "seuclidean"
     ))
-    msg <- paste0("[", Sys.time(), "] ", "Save data Finished")
-    print(msg)
+    print("Save data Finished")
     log_file <- paste0(output_path, "/mat_combineEventFeatureDistance.log")
     if (file.exists(log_file)) {
       file.remove(log_file)
@@ -730,14 +732,14 @@ getEventSimilarity <- function(
     file.remove(datapath)
 
     # Get event similarity----
+    msg = paste0("[", Sys.time(), "] ", "step6 Calculate combined event similarity...")
+    print(msg)
     h5createGroup(file = distance_path, group = "event_names")
     for (type in names(event.features))
     {
         h5write(obj = event.info[[type]]$event, file = distance_path, name = paste0("/event_names/", type), )
     }
 
-    msg = paste0("[", Sys.time(), "] ", "Calculate event similarity...")
-    print(msg)
     log_file <- paste0(output_path, "/mat_calculateEventSimilarity.log")
     if (file.exists(log_file)) {
       file.remove(log_file)
@@ -782,11 +784,11 @@ getEventSimilarity <- function(
                 file.remove(inpath, outpath)
             }
         }
-        msg <- paste(paste0("[", Sys.time(), "]"), "Computing", type, "event Similarity Finished")
+        msg <- paste(paste0("[", Sys.time(), "]"), "Calculate", type, "event Similarity Finished")
         print(msg)
         event.similars[[type]] = similar
     }
-    msg = paste0("[", Sys.time(), "] ", "Calculate event similarity Finish.")
+    msg = paste0("[", Sys.time(), "] ", "Calculate event similarity Finished.")
     print(msg)
     saveRDS(event.similars, paste0(output_path, "/event.similars.rds"))
     gc()
