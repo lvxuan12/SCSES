@@ -92,6 +92,7 @@ export PATH=/path/to/IRFinder-2.0.1/bin/:$PATH
 Currently SCSES can only be installed from GitHub. To install SCSES, type the following command in **R**:
 
 ``` r
+options(download.file.method = "wget", times=100)
 remotes::install_github("lvxuan12/SCSES")
 ```
 
@@ -322,7 +323,7 @@ A list of different types of cell similarity and a list of the number of neighbo
 ```{r}
 print(cellnet.path)
 cell.similars=readRDS(paste0(cellnet.path,'/cell.similars.rds'))
-## three different features can be chosen to quantify cell similarity
+## three different features can be chosen to quantify cell similarity, including raw event PSI(PSI), and raw junction read counts(RC), and RBP expression(EXP_RBP)
 print(names(cell.similars))
 
 print(eventnet.path)
@@ -378,6 +379,12 @@ Results of each imputation strategy will be saved into`work_path/imputation`.
 
 ``` {r}
 Imputed_seperated = readRDS(Imputed.data.path)
+str(Imputed_seperated,max.level=3)
+# explain:
+# For example:
+# cell/PSI_PSI: PSI value is used to quantify cell-cell splicing similarity. Impute raw PSI with cell similarities.
+# cell/PSI_PSI: PSI value is used to quantify cell-cell splicing similarity. Impute raw inclusion and exclusion read counts with cell similarities, and then calculate the imputed PSI.
+# cell_event/PSI_PSI: PSI value is used to quantify cell-cell splicing similarity. Impute raw inclusion and exclusion read counts with cell similarities, and then calculate the imputed PSI. Further impute the results using event similarities.
 
 ```
 
@@ -385,27 +392,80 @@ Imputed_seperated = readRDS(Imputed.data.path)
 
 We recommend different imputation strategies for four scenarios defined by the abundance of reads counts in the target cell and neighbor cells (ND, BD, TD+Info, and TD-Info). SCSES pre-trains models to predict the probability of specific scenario for each cell-event pair. Finally, SCSES calculates the PSI value using a linear combination of predictions from the four strategies, weighted by these probabilities.
 
-``` r
+``` {r}
 #rds_imputed_file: path to the list of three imputation strategies results generated in the previous step
-Imputed.data.path = Estimation(paras,rds_imputed_file)
+Imputed.data.final.path = Estimation(paras,rds_imputed_file = Imputed.data.path)
 ```
 
+A list of final imputation of PSI values will be saved to `work_path/imputation/Imputed_combined*`.
+
+``` {r}
+Imputed_combined = readRDS(Imputed.data.final.path)
+str(Imputed_combined,max.level=2)
+# The finally imputed PSI were named by cell-cell splicing similarity features, including raw event PSI(PSI), and raw junction read counts(RC), and RBP expression(EXP_RBP).
+
+```
 #### Fine-tune the model
 
 To improve the fitness of models for a new dataset, we also provide a procedure to fine-tune the model. For this analysis, we first build a reference using a set of splicing events with conserved splicing levels in different human tissues (<https://zenodo.org/records/6408906>). Then we compare the splicing level in a new dataset with the reference records, and give the scenarios definition to each event-cell pair, which is used to fine-tune the pre-trained model.
 
 The commands to perform these analyses:
 
-``` r
+``` {r}
 ftrc.path = getFtRawRC(paras)
 ftpsi.path = getFtRawPSI(paras)
 ftrds.path = mergeFtSplicingValue(paras)
 ftmodel.path = FtClassifier(paras)
 #rds_imputed_file: path to the list of three imputation strategies results generated in the previous step
-Imputed.data.path = Estimation(paras,rds_imputed_file)
+ImputedFt.data.final.path = Estimation(paras,rds_imputed_file = Imputed.data.path)
+
+print(ImputedFt.data.final.path)
 ```
 
-A list of final imputation of PSI values will be saved to `work_path/imputation/`.
+### Step8. Cell Clustering
+
+``` {r}
+library(umap)
+library(ggplot2)
+calcu_umap<-function(data,n_neighbors){
+  set.seed(12345)
+  data = data[which(apply(data, 1, mean) != 0), ]
+  data = data[which(apply(data, 1, var) != 0), ]
+  v=apply(data,1,var)
+  data = data[order(v,decreasing = T)[1:ceiling(nrow(data)*1)],]
+  D_Reduct_res <- prcomp(t(data), center = T, scale. = T)
+  sdev <- D_Reduct_res$sdev
+  var_prop <- sdev^2 / sum(sdev^2)
+  cumulative_variance <- cumsum(var_prop)
+  n_components <- which(cumulative_variance >= 0.9)[1]
+  print(n_components)
+  D_Reduct <- D_Reduct_res$x[, 1:n_components]
+  umap_res <- umap::umap(D_Reduct,n_neighbors = n_neighbors)
+  input <- umap_res$layout
+  df<-as.data.frame(input)
+  row.names(df)<-colnames(data)
+  return(df)
+}
+
+mycol=c("#fbb45d","#699ed4","#ef8183")
+annotation=read.table("/disk/lvxuan/Single-Splicing/result/cell_line/scses_test/refgenome/annotation.txt",sep="\t")
+Imputed_combined = readRDS(Imputed.data.final.path)
+data_umap=calcu_umap(Imputed_combined[[1]],n_neighbors = 3)
+row.names(data_umap)=gsub(".bam","",row.names(data_umap))
+data_umap$group=annotation$V2[match(row.names(data_umap),annotation$V1)]
+
+ggplot(data = data_umap,aes(x =V1 ,y =V2))+
+    geom_point(aes(fill=group),shape=21,size=1.5,stroke=0.05)+
+    scale_fill_manual(values = mycol)+
+    xlab("UMAP1")+
+    ylab("UMAP2")
+
+
+```
+
+```{r pressure, echo=FALSE}
+p
+```
 
 ## Example
 
