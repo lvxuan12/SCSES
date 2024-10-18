@@ -109,7 +109,7 @@ ImputationAll <- function(
         psi.results.event <- list()
         for (data_type in cell_similarity_data)
         {
-            msg <- paste0("[", Sys.time(), "] ", "Running ", paste0("Event_type=", type, ";similarity_type=", data_type))
+            msg <- paste0("[", Sys.time(), "] ", "Running ", paste0("Event_type=", type, ";cell_similarity_feature=", data_type))
             print(msg)
             # similarity data
             cell_similarity_type <- cell_similarity[[data_type]]
@@ -195,7 +195,7 @@ ImputationAll <- function(
         ".rds"
     )
     saveRDS(psi_imputed_seperated, output_name)
-    return(output_path)
+    return(output_name)
 }
 
 #' @title Perform SCSES imputation
@@ -295,7 +295,7 @@ Imputation <- function(
     {
         gc()
         events <- event.info[[type]]
-        msg <- paste0("[", Sys.time(), "] ", "Running ", paste0("Event_type=", type, ";similarity_type=", cell_similarity_type))
+        msg <- paste0("[", Sys.time(), "] ", "Running ", paste0("Event_type=", type, ";cell_similarity_feature=", cell_similarity_type))
         print(msg)
         similarity_type <- list(
             cell = cell_similarity[[cell_similarity_type]],
@@ -319,14 +319,12 @@ Imputation <- function(
         psi_data <- list(as.matrix(psi_type))
         names(psi_data) <- "all"
         all_data <- list(PSI = psi_data, RC = rc_data)
-        msg <- paste0("[", Sys.time(), "] ", "Save data")
-        print(msg)
+        print("Save data")
         saveHdf5File(datapath, list(
             similar = similarity_type, data = all_data,
             parameter = list(decay = decay_impute)
         ))
-        msg <- paste0("[", Sys.time(), "] ", "Save data Finished")
-        print(msg)
+        print("Save data Finished")
         # run scses
         cmd <- paste("bash", mat_scses, mcr_path, datapath,
                      resultpath, ">>", log_file, "2>&1")
@@ -366,6 +364,6 @@ Imputation <- function(
         ".rds"
     )
     saveRDS(psi_imputed_seperated, output_name)
-    return(output_path)
+    return(output_name)
 }
 

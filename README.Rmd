@@ -321,12 +321,14 @@ A list of different types of cell similarity and a list of the number of neighbo
 
 ```{r}
 print(cellnet.path)
-
+cell.similars=readRDS(paste0(cellnet.path,'/cell.similars.rds'))
+## three different features can be chosen to quantify cell similarity
+print(names(cell.similars))
 
 print(eventnet.path)
 event.similars=readRDS(paste0(eventnet.path,'/event.similars.rds'))
+## different splicing event types
 print(names(event.similars))
-
 
 ```
 
@@ -368,11 +370,16 @@ For **event similarity networks**, Event similarities are defined by the RBP reg
 
 Based on these weighted similarity networks, SCSES next will use three imputation strategies to aggregate the information across similar cells or events to impute read count or PSI value
 
-``` r
+``` {r}
 Imputed.data.path = ImputationAll(paras)
 ```
 
 Results of each imputation strategy will be saved into`work_path/imputation`.
+
+``` {r}
+Imputed_seperated = readRDS(Imputed.data.path)
+
+```
 
 ### Step7. Estimation
 
