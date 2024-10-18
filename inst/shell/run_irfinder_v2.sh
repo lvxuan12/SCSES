@@ -41,7 +41,7 @@ else
 fi
 
 
-$IRFinder_path -m BuildRefFromSTARRef -r $workpath/REF \
+$IRFinder_path BuildRefFromSTARRef -r $workpath/REF \
 -x $star_ref \
 -f $ref \
 -g $gtf \
@@ -58,7 +58,7 @@ do
     fi
     mkdir $workpath/$name
     ${samtools_path} sort -m 2G -n -@ $core -o $workpath/$name/${name}.bam $bam
-    ${IRFinder_path} -m BAM -r $workpath/REF -t $core -d $workpath/$name $workpath/$name/${name}.bam && rm $workpath/$name/IRFinder-ChrCoverage.txt $workpath/$name/IRFinder-JuncCount.txt $workpath/$name/IRFinder-ROI.txt $workpath/$name/IRFinder-SpansPoint.txt $workpath/$name/${name}.bam
+    ${IRFinder_path} BAM -r $workpath/REF -t $core -d $workpath/$name $workpath/$name/${name}.bam && rm $workpath/$name/IRFinder-ChrCoverage.txt $workpath/$name/IRFinder-JuncCount.txt $workpath/$name/IRFinder-ROI.txt $workpath/$name/IRFinder-SpansPoint.txt $workpath/$name/${name}.bam
 done
 rm -r $workpath/REF
 
