@@ -302,7 +302,11 @@ getCellSimilarity <- function(
            ))
         }
         if (feature_num > nrow(data)) {
-            stop("The number of features is greater than the number of rows in the input data.")
+            print("The number of features is greater than the number of rows in the input data.")
+            print(paste(
+              "Total",nrow(data), "features will be used"
+            ))
+            feature_num = nrow(data)
         }
         v <- apply(data, 1, var)
         id_select <- row.names(data)[order(v, decreasing = T)[1:feature_num]]
@@ -427,9 +431,10 @@ getEventSimilarity <- function(
     mcr_path = paras$Basic$mcr_path
     mat_combineDistance = paste0(matlab_path, "/combineDistance/run_combineDistance.sh")
     mat_knn_similarity = paste0(matlab_path, "/knn_similarity_from_path/run_knn_similarity_from_path.sh")
-    py_path <- system.file("python", package = "SCSES")
+    py_srcpath <- system.file("python", package = "SCSES")
+    py_path <- paras$Basic$python_path
     Sys.setenv(RETICULATE_PYTHON=py_path)
-    source_python(paste0(py_path, "/AE.py"))
+    source_python(paste0(py_srcpath, "/AE.py"))
     # validate parameters----
     alpha_event <- check.double.or.null(x = alpha_event, default = 0.8)
     print(paste0("alpha_event=", paste(alpha_event, collapse = ";"), "  checked"))

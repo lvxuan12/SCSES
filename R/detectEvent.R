@@ -5,11 +5,14 @@
 
 #'
 #' @param paras list fromJSON(paras_file)
+#' @param star_ref_path path to STAR reference.
+#' Default: NULL, the STAR reference will be generated.
+#' Providing STAR reference can speed up the function.
 
 #' @return Splicing event directory
 #' @export
 
-detectEvents <- function(paras) {
+detectEvents <- function(paras,star_ref_path=NULL) {
   options("scipen" = 100)
   # input
   print("Checking cells...")
@@ -307,9 +310,12 @@ getSEevent <- function(work_path, bam_path, gtf, paired, readlength, rmats_path,
 getRIevent <- function(
     work_path, bam_path, gtf, ref, core,readlength,
     script_irfinder, irfinder_path, samtools_path,
-    star_path, log_file) {
+    star_path, log_file, star_ref_path=NULL) {
   old.path=Sys.getenv("PATH")
   Sys.setenv(PATH=paste0(dirname(samtools_path),":",old.path))
+  if(dir.exist(paste0(work_path,'/REF'))){
+    stop(paste0(work_path,'/REF should not yet exist!'))
+  }
   cmd <- paste(
     "bash", script_irfinder,
     work_path,
@@ -320,7 +326,7 @@ getRIevent <- function(
     readlength,
     irfinder_path,
     samtools_path,
-    star_path, ">>", log_file, "2>&1"
+    star_path, star_ref_path, ">>", log_file, "2>&1"
   )
   msg <- paste0("[", Sys.time(), "] ", "Run IRFinder: ", cmd)
   print(msg)
@@ -333,7 +339,8 @@ getRIevent <- function(
       pattern = "IRFinder-IR-nondir.txt",
       recursive = TRUE, full.names = TRUE
     )
-    if(length(res.file)>0){
+    print(res.file)
+    if(file.exists(res.file)){
       msg <- paste0("[", Sys.time(), "] ", "Run IRFinder Finish.")
       print(msg)
     } else{

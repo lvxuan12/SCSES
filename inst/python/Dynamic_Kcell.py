@@ -46,17 +46,16 @@ def cell_similarity(data_similar,parameter):
     sse = np.sum(np.square(m - m1))
     ssr = np.sum(np.square(m1 - np.mean(m,axis=None)))
     delta = sse/(sse+ssr)
-    # delta_all = np.array([delta])
-    print(delta)
+    delta_all = np.array([delta])
     while delta > decay:
         m2 = alpha * np.dot(m1,m) + (1-alpha) * m
         sse = np.sum(np.square(m2 - m1))
         ssr = np.sum(np.square(m2 - np.mean(m1,axis=None)))
         delta = sse/(sse+ssr)
-        print(delta)
         m1 = m2
-        # delta_all = np.append(delta_all,delta)
+        delta_all = np.append(delta_all,delta)
     m1_kth = np.sort(m1,axis=1)[np.arange(0,rows),rows-k-1]
     m1[np.where(m1<m1_kth.reshape(rows,1))] = 0
     m2 = m1/((m1.sum(axis=1)).reshape(rows,1))
+    print("Delta:",delta_all)
     return(m2,k)
