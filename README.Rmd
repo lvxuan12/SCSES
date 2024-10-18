@@ -240,6 +240,7 @@ Different types of splicing events will be saved to `work_path/events/`, separat
 
 ```{r}
 se.event=readLines(paste0(event.path,'SE.txt'))
+print(nrow(se.event))
 print(se.event[1])
 ```
 
@@ -270,22 +271,64 @@ rawrc.path = getRawRC(paras)
 rawpsi.path = getRawPSI(paras)
 rawrds.path = mergeSplicingValue(paras)
 processed.data.path = preprocessEvent(paras)
+print(rawrds.path)
+print(processed.data.path)
 ```
 
-Raw read count matrix and PSI matrix for different types of splicing events will be saved to `work_path/splicing_value/`, separately.
+Raw read count matrix, PSI matrix, and event annotation will be saved to `work_path/rds/`.Then, data after quality control process will be saved to `work_path/rds_processed/`, which will be used for **subsequent calculations**.
+
+```{r}
+## read count for each type of splicing events in each single cell
+list.files(rawrc.path,pattern = "*_rjm")
+## data for each type of splicing event
+rawrc.files = list.files(rawrc.path,pattern = "*_rc.rds")
+print(rawrc.files)
+rawpsi.files = list.files(rawpsi.path,pattern = "*_psi.rds")
+print(rawpsi.files)
+## merged data
+psi = readRDS(paste0(rawrds.path,'/psi.rds'))
+print(psi[1:3,1:3])
+print(dim(psi))
+
+rc = readRDS(paste0(rawrds.path,'/rc.rds'))
+print(rc[1:3,1:3])
+print(dim(rc))
+
+event = readRDS(paste0(rawrds.path,'/event.rds'))
+print(event[1:3,])
+
+## processed data
+psi_processed = readRDS(paste0(processed.data.path,'/psi.rds'))
+rc_processed = readRDS(paste0(processed.data.path,'/rc.rds'))
+print(dim(psi_processed))
+print(dim(rc_processed))
+
+```
 
 ### Step5. Constructs similarity networks
 
 To overcome the high dropout rate and limited read coverage of scRNA-seq techniques, SCSES constructs cell similarity and event similarity networks by K-nearest neighbor algorithm (KNN) to learn information from similar cells/events.
 
-``` {r}
+```{r}
 cellnet.path = getCellSimilarity(paras)
 eventnet.path = getEventSimilarity(paras)
+
 ```
 
 A list of event similarity for different types of splicing events will be saved to `work_path/imputation/event_similarity/event.similars.rds`;
 
 A list of different types of cell similarity and a list of the number of neighbors will be saved to rds file to`work_path/imputation/cell_similarity/cell.similars.rds` and `work_path/imputation/cell_similarity/dyk.cell.rds`
+
+```{r}
+print(cellnet.path)
+
+
+print(eventnet.path)
+event.similars=readRDS(paste0(eventnet.path,'/event.similars.rds'))
+print(names(event.similars))
+
+
+```
 
 #### Parameters used in this step
 

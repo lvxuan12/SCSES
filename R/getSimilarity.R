@@ -354,6 +354,7 @@ getCellSimilarity <- function(
     saveRDS(dyk_cell, paste0(output_path, "/dyk.cell.rds"))
     msg <- paste0("[", Sys.time(), "] ", "Calculate cell similarity Finish.")
     print(msg)
+    return(output_path)
 }
 
 
