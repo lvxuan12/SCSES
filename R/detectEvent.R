@@ -91,7 +91,7 @@ detectEvents <- function(paras,star_ref_path=NULL) {
     res <- getRIevent(
       irfinder.work.path, bam_path, gtf, ref, core,readlength,
       script_irfinder, irfinder_path, samtools_path,
-      star_path, log_file
+      star_path, log_file,star_ref_path
     )
   }
   res.file <- list.files(paste0(work_path,'/rMats/'),
@@ -225,7 +225,7 @@ getEvent <- function(paras, event_type) {
       res <- getRIevent(
         irfinder.work.path, bam_path, gtf, ref, core,readlength,
         script_irfinder, irfinder_path, samtools_path,
-        star_path, log_file
+        star_path, log_file,star_ref_path
       )
     }
     if (SEMX) {

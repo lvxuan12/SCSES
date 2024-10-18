@@ -245,7 +245,7 @@ print(nrow(se.event))
 print(se.event[1])
 ```
 
-###### for UMI dataset
+#### for UMI dataset
 
 SCSES requires single cell bam files being saved in a directory. For UMI-based dataset, and using CellRanger for data process, the function `split10XBAM` can be used to get single cell bam files.
 
