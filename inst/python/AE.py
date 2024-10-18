@@ -31,15 +31,16 @@ def model_training_parameter(data,encoding_dim,layer_dim,max_epoch,log_file):
   
   autoencoder.compile(optimizer='adam', loss='MSE')
   
-  with open(log_file, 'w') as f:
-    sys.stdout = f  # 重定向标准输出
-    autoencoder.fit(x_train, x_train,
-                    epochs=int(max_epoch),
-                    batch_size=min(10000,x_train.shape[0]),
-                    shuffle=True,
-                    validation_data=(x_test, x_test))
-    sys.stdout = sys.__stdout__  # 恢复标准输出
-                  
+  # creat CSVLogger callbacks
+  csv_logger = CSVLogger(log_file, append=True)
+
+  autoencoder.fit(x_train, x_train,
+                  epochs=int(max_epoch),
+                  batch_size=min(10000,x_train.shape[0]),
+                  shuffle=True,
+                  validation_data=(x_test, x_test),
+                  callbacks=[csv_logger])
+
   encoded_imgs = encoder.predict(Standard_data)
   encoded_imgs=pd.DataFrame(encoded_imgs)
 
