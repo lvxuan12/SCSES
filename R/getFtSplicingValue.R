@@ -2,7 +2,7 @@
 #' @description  Quantify raw reads for events in ft_event_path
 #' save to work_path/splicing_value_ft/*_rc.rds
 
-#' @param paras list fromJSON(paras_file)
+#' @param paras list readSCSESconfig(paras_file)
 #' Default bam_path, java_path, core, and sequence from paras
 #' @param bam_path The path to save single cell bam file
 #' @param core the number of threads
@@ -228,7 +228,7 @@ getFtRawRC <- function(
 #' @description  Save raw PSI for events in ft_event_path
 #' save to work_path/splicing_value_ft/*_psi.rds
 
-#' @param paras list fromJSON(paras_file)
+#' @param paras list readSCSESconfig(paras_file)
 
 #' @return raw PSI path
 #'

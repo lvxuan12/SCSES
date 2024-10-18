@@ -10,7 +10,7 @@
 #'  the results using event similarities
 
 #'
-#' @param paras list fromJSON(paras_file)
+#' @param paras list readSCSESconfig(paras_file)
 #' Default decay_impute from paras
 #' @param output_path path to event similarity
 #' @param decay_impute threshold of change in the similarity matrix
@@ -202,7 +202,7 @@ ImputationAll <- function(
 #' @description run three PSI imputation strategies
 #' for a sepcific type of cell similarity
 #'
-#' @param paras list fromJSON(paras_file)
+#' @param paras list readSCSESconfig(paras_file)
 #' Default decay_impute from paras
 #' @param output_path path to event similarity
 #' @param decay_impute threshold of change in the similarity matrix

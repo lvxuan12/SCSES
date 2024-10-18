@@ -4,7 +4,7 @@
 #' in work_path/data and generate event id saved to work_path/events
 
 #'
-#' @param paras list fromJSON(paras_file)
+#' @param paras list readSCSESconfig(paras_file)
 #' @param star_ref_path path to STAR reference.
 #' Default: NULL, the STAR reference will be generated.
 #' Providing STAR reference can speed up the function.
@@ -159,7 +159,7 @@ detectEvents <- function(paras,star_ref_path=NULL) {
 #' @description Detect a specific type of splicing events based on Pseudobulk
 #' bam in work_path/data and generate event id saved to work_path/events
 
-#' @param paras list, read json configuration files
+#' @param paras list readSCSESconfig(paras_file)
 #' @param event_type splicing event type (A3SS,A5SS,AL,SE,MXE,RI)
 
 #' @return Splicing event directory

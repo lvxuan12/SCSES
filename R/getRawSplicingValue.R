@@ -5,7 +5,7 @@
 #' @description  Quantify raw reads for events in work_path/events
 #' save to work_path/splicing_value/*_rc.rds
 
-#' @param paras list fromJSON(paras_file)
+#' @param paras list readSCSESconfig(paras_file)
 #' Default bam_path, java_path, core, and sequence from paras
 #' @param bam_path The path to save single cell bam file
 #' @param core the number of threads
@@ -245,7 +245,7 @@ getRawRC <- function(
 #' @description  Save raw PSI for events in work_path/events
 #' save to work_path/splicing_value/*_psi.rds
 
-#' @param paras list fromJSON(paras_file)
+#' @param paras list readSCSESconfig(paras_file)
 #' @param event_types splicing event types seperated by ";",default=NULL
 
 #' @return raw PSI path

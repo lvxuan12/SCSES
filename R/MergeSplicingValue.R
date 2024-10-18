@@ -1,7 +1,7 @@
 #' @title Merge splicing events
 #' @description Merge different types of splicing events
 #' in work_path/splicing_value, and save merged splicing value to work_path/rds
-#' @param paras list fromJSON(paras_file)
+#' @param paras list readSCSESconfig(paras_file)
 
 #' @return Merged splicing value path
 #'

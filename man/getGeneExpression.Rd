@@ -15,7 +15,7 @@ getGeneExpression(
 )
 }
 \arguments{
-\item{paras}{list fromJSON(paras_file)
+\item{paras}{list readSCSESconfig(paras_file)
 Default bam_path, gtf, ref, script, featureCounts_path,
 dataset, and core from paras}
 

@@ -7,7 +7,7 @@
 mergeFtSplicingValue(paras)
 }
 \arguments{
-\item{paras}{list fromJSON(paras_file)}
+\item{paras}{list readSCSESconfig(paras_file)}
 }
 \value{
 Merged splicing value path

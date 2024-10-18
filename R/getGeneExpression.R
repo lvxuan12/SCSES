@@ -1,7 +1,7 @@
 #' @title Get gene expression by featureCounts
 #' @description save featureCounts output to work_path/expr
 #'
-#' @param paras list fromJSON(paras_file)
+#' @param paras list readSCSESconfig(paras_file)
 #' Default bam_path, gtf, ref, script, featureCounts_path,
 #' dataset, and core from paras
 #' @param bam_path directory to single cell bam file
@@ -57,7 +57,7 @@ getGeneExpression <- function(
 #' @description save gene expression count and TPM matrix to work_path/rds/
 #'
 #'
-#' @param paras list fromJSON(paras_file)
+#' @param paras list readSCSESconfig(paras_file)
 #' Default dataset, filter.mt, filter.rp from paras
 #' @param expr_path directory to the featureCounts output
 #' @param dataset the name of dataset

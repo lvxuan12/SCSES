@@ -13,7 +13,7 @@ getEXPmatrix(
 )
 }
 \arguments{
-\item{paras}{list fromJSON(paras_file)
+\item{paras}{list readSCSESconfig(paras_file)
 Default dataset, filter.mt, filter.rp from paras}
 
 \item{expr_path}{directory to the featureCounts output}

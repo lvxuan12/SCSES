@@ -21,7 +21,7 @@ getEventSimilarity(
 )
 }
 \arguments{
-\item{paras}{list fromJSON(paras_file)
+\item{paras}{list readSCSESconfig(paras_file)
 Default core, pkg, ref_path,phast.path,chr.prefix, ae.para,
 rbp, kevent, alpha_event,decay_event from paras}
 

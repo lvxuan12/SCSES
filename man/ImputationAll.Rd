@@ -16,7 +16,7 @@ ImputationAll(
 )
 }
 \arguments{
-\item{paras}{list fromJSON(paras_file)
+\item{paras}{list readSCSESconfig(paras_file)
 Default decay_impute from paras}
 
 \item{output_path}{path to event similarity}

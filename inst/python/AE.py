@@ -1,6 +1,7 @@
 import keras
 from keras import layers
 from keras import regularizers
+from keras.callbacks import CSVLogger
 import pandas as pd
 import numpy as np
 from scipy import stats

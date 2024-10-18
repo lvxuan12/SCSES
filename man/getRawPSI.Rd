@@ -7,7 +7,7 @@
 getRawPSI(paras, event_types = NULL)
 }
 \arguments{
-\item{paras}{list fromJSON(paras_file)}
+\item{paras}{list readSCSESconfig(paras_file)}
 
 \item{event_types}{splicing event types seperated by ";",default=NULL}
 }

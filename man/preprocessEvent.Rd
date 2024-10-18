@@ -17,7 +17,7 @@ preprocessEvent(
 )
 }
 \arguments{
-\item{paras}{list fromJSON(paras_file)
+\item{paras}{list readSCSESconfig(paras_file)
 Default min.percentCells.gene, min.percentCells.event, min.Cell,min.RC,
 min.nCount, min.nFeatures, max.percentMT from paras}
 

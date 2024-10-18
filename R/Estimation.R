@@ -132,7 +132,7 @@ getClassifierFeature <- function(
 #' @description Model1 is used to predict the probabilities belonging to BD and TD,
 #' and Model2 is used to predict probabilities belonging to TD-Info and TD+Info
 #'
-#' @param paras list fromJSON(paras_file)
+#' @param paras list readSCSESconfig(paras_file)
 #' Default decay_impute from paras
 #' @param rds_path path to processed rds data
 #' @param rds_ft_path path to rds data of fine tune splicing events
@@ -531,7 +531,7 @@ getPredictProb <- function(feature_df, model1, model2, psi) {
 #' For each event-cell pair, the different imputation results are combined with
 #' the probabilities of different groups as the coefficients.
 #'
-#' @param paras list fromJSON(paras_file)
+#' @param paras list readSCSESconfig(paras_file)
 #' @param rds_imputed_file path to the list of three imputation strategies results
 #' named by the strategies
 #' @param output_path path to save the final imputation of PSI values

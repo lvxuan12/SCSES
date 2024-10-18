@@ -42,7 +42,7 @@ filterMXE <- function(event, rc, min.Cell) {
 #' @description process raw data in work_path/rds and
 #' save filtered data to work_path/rds_processed
 
-#' @param paras list fromJSON(paras_file)
+#' @param paras list readSCSESconfig(paras_file)
 #' Default min.percentCells.gene, min.percentCells.event, min.Cell,min.RC,
 #' min.nCount, min.nFeatures, max.percentMT from paras
 #' @param min.percentCells.gene the minimum percentage of cells that

@@ -136,7 +136,7 @@ createBSgenome <- function(ref_path,out_path,pkg) {
 #' @description Computes cell distance and the k nearest
 #' neighbors for given dataset by data types.
 #'
-#' @param paras list fromJSON(paras_file)
+#' @param paras list readSCSESconfig(paras_file)
 #' Default core, pkg, ref_path,phast.path, ae.para,
 #' rbp, kevent, alpha_event,decay_event from paras
 #' @param rds_path path to processed rds data
@@ -362,7 +362,7 @@ getCellSimilarity <- function(
 #' neighbors for given dataset by event types
 #'
 #'
-#' @param paras list fromJSON(paras_file)
+#' @param paras list readSCSESconfig(paras_file)
 #' Default core, pkg, ref_path,phast.path,chr.prefix, ae.para,
 #' rbp, kevent, alpha_event,decay_event from paras
 #' @param rds_path path to processed rds data
@@ -469,7 +469,7 @@ getEventSimilarity <- function(
     # get events feature----
     msg <- paste0("[", Sys.time(), "] ", "Calculate events feature...")
     print(msg)
-    msg = paste0("[", Sys.time(), "] ", "step1 Creating BSgenome for ", pkg, "...", "")
+    msg = paste0("[", Sys.time(), "] ", "step1 Creating BSgenome for ", pkg, "=======", "")
     print(msg)
     if (!requireNamespace(pkg, quietly = TRUE)) {
       createBSgenome(ref_path = ref_path,
@@ -478,7 +478,7 @@ getEventSimilarity <- function(
     }
     library(pkg, character.only = T, quietly = T)
     bs.genome = get(pkg)
-    msg = paste0("[", Sys.time(), "] ", "step2 Extracting features...")
+    msg = paste0("[", Sys.time(), "] ", "step2 Extracting features =======")
     print(msg)
     for (type in event_types)
     {
@@ -589,7 +589,7 @@ getEventSimilarity <- function(
         }
     }
     # combine events feature----
-    msg = paste0("[", Sys.time(), "] ", "step3 Combining events feature...")
+    msg = paste0("[", Sys.time(), "] ", "step3 Combining events feature =======")
     print(msg)
     for (type in event_types)
     {
@@ -654,7 +654,7 @@ getEventSimilarity <- function(
             "Cannot find numpy, please install through pip (e.g. pip install scipy)."
         )
     }
-    msg = paste0("[", Sys.time(), "] ", "step4 Encoding events feature...")
+    msg = paste0("[", Sys.time(), "] ", "step4 Encoding events feature =======")
     print(msg)
     event.features = list()
     for (type in event_types)
@@ -686,7 +686,7 @@ getEventSimilarity <- function(
             print(paste(paste0("[", Sys.time(), "]"), type, "event encoding Finish."))
         }
     }
-    msg = paste0("[", Sys.time(), "] ", "step5 Calculate splicing regulation distance and Combine distance...")
+    msg = paste0("[", Sys.time(), "] ", "step5 Calculate splicing regulation distance and Combine distance =======")
     print(msg)
     # Calculate splicing regulation distance and Combine distance----
     # validate rbp
@@ -732,7 +732,7 @@ getEventSimilarity <- function(
     file.remove(datapath)
 
     # Get event similarity----
-    msg = paste0("[", Sys.time(), "] ", "step6 Calculate combined event similarity...")
+    msg = paste0("[", Sys.time(), "] ", "step6 Calculate combined event similarity =======")
     print(msg)
     h5createGroup(file = distance_path, group = "event_names")
     for (type in names(event.features))

@@ -13,7 +13,7 @@ getFtRawRC(
 )
 }
 \arguments{
-\item{paras}{list fromJSON(paras_file)
+\item{paras}{list readSCSESconfig(paras_file)
 Default bam_path, java_path, core, and sequence from paras}
 
 \item{bam_path}{The path to save single cell bam file}

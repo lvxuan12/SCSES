@@ -7,7 +7,7 @@
 detectEvents(paras, star_ref_path = NULL)
 }
 \arguments{
-\item{paras}{list fromJSON(paras_file)}
+\item{paras}{list readSCSESconfig(paras_file)}
 
 \item{star_ref_path}{path to STAR reference.
 Default: NULL, the STAR reference will be generated.

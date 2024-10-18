@@ -7,7 +7,7 @@
 getEvent(paras, event_type)
 }
 \arguments{
-\item{paras}{list, read json configuration files}
+\item{paras}{list readSCSESconfig(paras_file)}
 
 \item{event_type}{splicing event type (A3SS,A5SS,AL,SE,MXE,RI)}
 }

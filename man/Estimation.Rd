@@ -17,7 +17,7 @@ Estimation(
 )
 }
 \arguments{
-\item{paras}{list fromJSON(paras_file)}
+\item{paras}{list readSCSESconfig(paras_file)}
 
 \item{rds_imputed_file}{path to the list of three imputation strategies results
 named by the strategies}

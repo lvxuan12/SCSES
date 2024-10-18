@@ -1,7 +1,7 @@
 #' @title Merge splicing events for classifer fine tune
 #' @description Merge different types of splicing events in
 #' work_path/splicing_value_ft, and save to work_path/rds_ft
-#' @param paras list fromJSON(paras_file)
+#' @param paras list readSCSESconfig(paras_file)
 
 #' @return Merged splicing value path
 #'
