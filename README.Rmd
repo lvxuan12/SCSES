@@ -78,7 +78,7 @@ export MAJIQ_LICENSE_FILE=/path/to/majiq_license_academic_official.lic
 ##### 2.3 [IRFinder](https://github.com/dgaolab/IRFinder)
 
 ``` bash
-wget https://github.com/dgaolab/IRFinder/archive/refs/tags/v1.3.1.tar.gz
+wget https://github.com/RitchieLabIGH/IRFinder/archive/refs/tags/v2.0.1.tar.gz
 tar -zxvf v1.3.0.tar.gz
 export PATH=/path/to/IRFinder-2.0.1/bin/:$PATH
 ```
@@ -159,7 +159,7 @@ rbp[1:10]
 
 The **test bam files** can be downloaded from <https://doi.org/10.5281/zenodo.13943076>. The dataset includes three cell lines (HCT1954, HepG2, and HL-60), with each cell type comprising five cells. The cell identities can be found in `annotation.txt`.
 
-The other input data required for SCSES for the test data can be downloaded from ---, including genome FASTA file, annotation GTF and GFF3 file, RBP file, phast conservation file, and configure file.
+The other input data required for SCSES for the test data can be downloaded from <https://doi.org/10.5281/zenodo.13951696>, including genome FASTA file, annotation GTF and GFF3 file, RBP file,STAR reference, phast conservation file, and configure file.
 
 Move test bam files to directory bam/. Move other input data to directory refgenome/.
 
@@ -371,13 +371,13 @@ For **event similarity networks**, Event similarities are defined by the RBP reg
 
 Based on these weighted similarity networks, SCSES next will use three imputation strategies to aggregate the information across similar cells or events to impute read count or PSI value
 
-``` {r}
+```{r}
 Imputed.data.path = ImputationAll(paras)
 ```
 
 Results of each imputation strategy will be saved into`work_path/imputation`.
 
-``` {r}
+```{r}
 Imputed_seperated = readRDS(Imputed.data.path)
 str(Imputed_seperated,max.level=3)
 # explain:
@@ -392,26 +392,27 @@ str(Imputed_seperated,max.level=3)
 
 We recommend different imputation strategies for four scenarios defined by the abundance of reads counts in the target cell and neighbor cells (ND, BD, TD+Info, and TD-Info). SCSES pre-trains models to predict the probability of specific scenario for each cell-event pair. Finally, SCSES calculates the PSI value using a linear combination of predictions from the four strategies, weighted by these probabilities.
 
-``` {r}
+```{r}
 #rds_imputed_file: path to the list of three imputation strategies results generated in the previous step
 Imputed.data.final.path = Estimation(paras,rds_imputed_file = Imputed.data.path)
 ```
 
 A list of final imputation of PSI values will be saved to `work_path/imputation/Imputed_combined*`.
 
-``` {r}
+```{r}
 Imputed_combined = readRDS(Imputed.data.final.path)
 str(Imputed_combined,max.level=2)
 # The finally imputed PSI were named by cell-cell splicing similarity features, including raw event PSI(PSI), and raw junction read counts(RC), and RBP expression(EXP_RBP).
 
 ```
+
 #### Fine-tune the model
 
 To improve the fitness of models for a new dataset, we also provide a procedure to fine-tune the model. For this analysis, we first build a reference using a set of splicing events with conserved splicing levels in different human tissues (<https://zenodo.org/records/6408906>). Then we compare the splicing level in a new dataset with the reference records, and give the scenarios definition to each event-cell pair, which is used to fine-tune the pre-trained model.
 
 The commands to perform these analyses:
 
-``` {r}
+```{r}
 ftrc.path = getFtRawRC(paras)
 ftpsi.path = getFtRawPSI(paras)
 ftrds.path = mergeFtSplicingValue(paras)
@@ -424,21 +425,18 @@ print(ImputedFt.data.final.path)
 
 ### Step8. Cell Clustering
 
-``` {r}
+```{r pressure, echo=FALSE}
 library(umap)
 library(ggplot2)
 calcu_umap<-function(data,n_neighbors){
   set.seed(12345)
   data = data[which(apply(data, 1, mean) != 0), ]
   data = data[which(apply(data, 1, var) != 0), ]
-  v=apply(data,1,var)
-  data = data[order(v,decreasing = T)[1:ceiling(nrow(data)*1)],]
   D_Reduct_res <- prcomp(t(data), center = T, scale. = T)
   sdev <- D_Reduct_res$sdev
   var_prop <- sdev^2 / sum(sdev^2)
   cumulative_variance <- cumsum(var_prop)
-  n_components <- which(cumulative_variance >= 0.9)[1]
-  print(n_components)
+  n_components <- which(cumulative_variance >= 0.7)[1]
   D_Reduct <- D_Reduct_res$x[, 1:n_components]
   umap_res <- umap::umap(D_Reduct,n_neighbors = n_neighbors)
   input <- umap_res$layout
@@ -449,22 +447,18 @@ calcu_umap<-function(data,n_neighbors){
 
 mycol=c("#fbb45d","#699ed4","#ef8183")
 annotation=read.table("/disk/lvxuan/Single-Splicing/result/cell_line/scses_test/refgenome/annotation.txt",sep="\t")
-Imputed_combined = readRDS(Imputed.data.final.path)
-data_umap=calcu_umap(Imputed_combined[[1]],n_neighbors = 3)
+Imputed_combined = readRDS(ImputedFt.data.final.path)
+data_umap=calcu_umap(Imputed_combined[[3]],n_neighbors = 5)
 row.names(data_umap)=gsub(".bam","",row.names(data_umap))
 data_umap$group=annotation$V2[match(row.names(data_umap),annotation$V1)]
 
-ggplot(data = data_umap,aes(x =V1 ,y =V2))+
+p=ggplot(data = data_umap,aes(x =V1 ,y =V2))+
     geom_point(aes(fill=group),shape=21,size=1.5,stroke=0.05)+
     scale_fill_manual(values = mycol)+
     xlab("UMAP1")+
     ylab("UMAP2")
 
-
-```
-
-```{r pressure, echo=FALSE}
-p
+print(p)
 ```
 
 ## Example
