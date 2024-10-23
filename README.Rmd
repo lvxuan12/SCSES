@@ -159,7 +159,7 @@ rbp[1:10]
 
 The **test bam files** can be downloaded from <https://doi.org/10.5281/zenodo.13943076>. The dataset includes three cell lines (HCT1954, HepG2, and HL-60), with each cell type comprising five cells. The cell identities can be found in `annotation.txt`.
 
-The other input data required for SCSES for the test data can be downloaded from <https://doi.org/10.5281/zenodo.13951696>, including genome FASTA file, annotation GTF and GFF3 file, RBP file,STAR reference, phast conservation file, and configure file.
+The other input data required for SCSES for the test data can be downloaded from <https://doi.org/10.5281/zenodo.13951695>, including genome FASTA file, annotation GTF and GFF3 file, RBP file,STAR reference, phast conservation file, and configure file.
 
 Move test bam files to directory bam/. Move other input data to directory refgenome/.
 
@@ -425,7 +425,7 @@ print(ImputedFt.data.final.path)
 
 ### Step8. Cell Clustering
 
-```{r pressure, echo=FALSE}
+```{r}
 library(umap)
 library(ggplot2)
 calcu_umap<-function(data,n_neighbors){
