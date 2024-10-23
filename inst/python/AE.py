@@ -32,15 +32,24 @@ def model_training_parameter(data,encoding_dim,layer_dim,max_epoch,log_file):
   
   autoencoder.compile(optimizer='adam', loss='MSE')
   
-  # creat CSVLogger callbacks
-  csv_logger = CSVLogger(log_file, append=True)
-
-  autoencoder.fit(x_train, x_train,
-                  epochs=int(max_epoch),
-                  batch_size=min(10000,x_train.shape[0]),
-                  shuffle=True,
-                  validation_data=(x_test, x_test),
-                  callbacks=[csv_logger])
+  # # creat CSVLogger callbacks
+  # csv_logger = CSVLogger(log_file, append=True)
+  # autoencoder.fit(x_train, x_train,
+  #                 epochs=int(max_epoch),
+  #                 batch_size=min(10000,x_train.shape[0]),
+  #                 shuffle=True,
+  #                 validation_data=(x_test, x_test),
+  #                 callbacks=[csv_logger])
+  
+  with open(log_file, 'w') as f:
+    original_stdout = sys.stdout
+    sys.stdout = f
+    autoencoder.fit(x_train, x_train,
+                epochs=int(max_epoch),
+                batch_size=min(10000,x_train.shape[0]),
+                shuffle=True,
+                validation_data=(x_test, x_test))
+    sys.stdout = original_stdout
 
   encoded_imgs = encoder.predict(Standard_data)
   encoded_imgs=pd.DataFrame(encoded_imgs)
