@@ -57,7 +57,14 @@ conda activate SCSES_test
 To use SCSES, you will need to install R, Python, Matlab, and Java.
 
 ``` bash
+## install R in conda environment
 conda install -c conda-forge r-base=4.3.1
+## install MCR
+mkdir /path/to/MCR && \
+cd /path/to/MCR && \
+wget https://ssd.mathworks.com/supportfiles/downloads/R2022b/Release/10/deployment_files/installer/complete/glnxa64/MATLAB_Runtime_R2022b_Update_10_glnxa64.zip && \
+unzip -q MATLAB_Runtime_R2022b_Update_10_glnxa64.zip && \
+./install -destinationFolder /opt/mcr -agreeToLicense yes -mode silent
 ```
 
 #### 1. python module
