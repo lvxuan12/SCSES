@@ -48,12 +48,12 @@ body <- dashboardBody(
                                    tabPanel(
                                           "Tools Info",
                                           h3("SCSES Program Essential"),
-                                          textInput(inputId = "conda_envname", label = "conda environment", placeholder = "Input the name of conda env for SCSES"),
+                                          textInput(inputId = "conda_envname", label = "conda environment", placeholder = "Input the name of conda env for SCSES",value='base'),
                                           fluidRow(
-                                                 createTextFile(id = "condabin_path", label = "Conda bin Path", type = "shinyDirButton"),
+                                                 createTextFile(id = "condabin_path", label = "Conda bin Path", type = "shinyDirButton",value="/software/miniconda3/bin/conda"),
                                                  createTextFile(id = "python_path", label = "Python Path", type = "shinyFilesButton"),
                                                  createTextFile(id = "JAVA_path", label = "JAVA Path", type = "shinyFilesButton"),
-                                                 createTextFile(id = "MCR_path", label = "MCR Path", type = "shinyDirButton")
+                                                 createTextFile(id = "MCR_path", label = "MCR Path", type = "shinyDirButton",value='/opt/mcr/R2022b/')
                                           ),
                                           fluidRow(
                                                  createTextFile(id = "Samtools_path", label = "Samtools Path", type = "shinyFilesButton"),
@@ -62,11 +62,11 @@ body <- dashboardBody(
                                           hr(),
                                           h3("Splicing Event Detection Essential"),
                                           fluidRow(
-                                                 createTextFile(id = "rmats_path", label = "rMats Path", type = "shinyFilesButton")
+                                                 createTextFile(id = "rmats_path", label = "rMats Path", type = "shinyFilesButton",value='/software/rmats_turbo_v4_3_0/rmats.py')
                                           ),
-                                          textInput(inputId = "MAJIQ_env", label = "MAJIQ conda environment", placeholder = "Input the name of conda env for MAJIQ"),
+                                          textInput(inputId = "MAJIQ_env", label = "MAJIQ conda environment", placeholder = "Input the name of conda env for MAJIQ",value = 'MAJIQ'),
                                           fluidRow(
-                                                 createTextFile(id = "MAJIQ_license_path", label = "MAJIQ License Path", type = "shinyFilesButton")
+                                                 createTextFile(id = "MAJIQ_license_path", label = "MAJIQ License Path", type = "shinyFilesButton",value='/software/majiq_license_academic_official.lic')
                                           ),
                                           fluidRow(
                                                  createTextFile(id = "IRFinder_path", label = "IRFinder Path", type = "shinyFilesButton"),

@@ -33,7 +33,7 @@ server=function(input,output,session){
   updateTextInput(session = session,inputId = gsub(pattern = "_",replacement = "",x = 'featurecounts_path'),value = getDefaultPath(cmd = 'featureCounts'))
   updateTextInput(session = session, inputId = gsub(pattern = "_", replacement = "", x = "IRFinder_path"), value = getDefaultPath(cmd = "IRFinder"))
   updateTextInput(session = session, inputId = gsub(pattern = "_", replacement = "", x = "STAR_path"), value = getDefaultPath(cmd = "STAR"))
-  updateTextInput(session = session, inputId = gsub(pattern = "_", replacement = "", x = "rmats_path"), value = getDefaultPath(cmd = "rmats.py"))
+  # updateTextInput(session = session, inputId = gsub(pattern = "_", replacement = "", x = "rmats_path"), value = getDefaultPath(cmd = "rmats.py"))
 # updateTextInput(session = session,inputId = gsub(pattern = "_",replacement = "",x = 'Matlab_path'),value = getDefaultPath(cmd = 'Matlab_path'))
 
   # textinput action----
