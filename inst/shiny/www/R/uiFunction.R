@@ -3,7 +3,7 @@ createTextFile=function(id,label,type='shinyFilesButton',...)
 {
   ui=list(
     div(class="col-sm-2",style="padding-right:0",
-        textInput(inputId = gsub(pattern = '_',replacement = "",x = id),label = label),
+        textInput(inputId = gsub(pattern = '_',replacement = "",x = id),label = label,...),
     ),
     div(class='col-sm-1',style='padding-left:0',
         div(class='form-group shiny-input-container',
