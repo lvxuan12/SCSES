@@ -90,6 +90,13 @@ export PATH=/path/to/rmats_turbo_v4_3_0/:$PATH
 ``` bash
 conda create -n MAJIQ python=3.11
 conda activate MAJIQ
+
+# install HTSlib from https://www.htslib.org/download/
+# change to where library/include directories are installed
+
+export HTSLIB_LIBRARY_DIR=/path/to/htslib-1.15.1/lib/
+export HTSLIB_INCLUDE_DIR=/path/to/htslib-1.15.1/include/
+
 pip install git+https://bitbucket.org/biociphers/majiq_academic.git
 export MAJIQ_LICENSE_FILE=/path/to/majiq_license_academic_official.lic
 ```
@@ -124,6 +131,9 @@ remotes::install_github("lvxuan12/SCSES")
 
 ``` bash
 conda install conda-forge::fftw
+# Configure FFTW
+export FFTW_CFLAGS=" -I/path/to/miniconda3/envs/scses/include/"
+export FFTW_LIBS=" -L/path/to/miniconda3/envs/scses/lib -lfftw3"
 ```
 
 ##### 2. cannot find -lxml2
