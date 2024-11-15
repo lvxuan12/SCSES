@@ -91,7 +91,7 @@ export PATH=/path/to/rmats_turbo_v4_3_0/:$PATH
 conda create -n MAJIQ python=3.11
 conda activate MAJIQ
 
-# install HTSlib from https://www.htslib.org/download/
+# install HTSlib from <https://www.htslib.org/download/>
 # change to where library/include directories are installed
 
 export HTSLIB_LIBRARY_DIR=/path/to/htslib-1.15.1/lib/
