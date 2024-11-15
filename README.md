@@ -2,6 +2,9 @@ Menu
 ================
 
 - [SCSES](#scses)
+  - [Hardware requirements](#hardware-requirements)
+  - [Software requirements](#software-requirements)
+    - [OS Requirements](#os-requirements)
   - [Installation](#installation)
     - [Installation of dependencies and
       requirements](#installation-of-dependencies-and-requirements)
@@ -31,17 +34,27 @@ Menu
     - [Step7. Estimation](#step7-estimation)
       - [Fine-tune the model](#fine-tune-the-model)
     - [Step8. Cell Clustering](#step8-cell-clustering)
-  - [Example](#example)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 # SCSES
 
 <!-- badges: start -->
-
 <!-- badges: end -->
 
 Single-cell Splicing Estimation based on Network Diffusion
+
+## Hardware requirements
+
+`SCSES` package requires only a standard computer with enough RAM to
+support the in-memory operations.
+
+## Software requirements
+
+### OS Requirements
+
+This package is supported for Linux. The package has been tested on
+Debian-11.21.
 
 ## Installation
 
@@ -54,10 +67,17 @@ conda create -n SCSES_test python=3.11
 conda activate SCSES_test
 ```
 
-To use SCSES, you will need to install R, Python, Matlab, and Java.
+To use SCSES, you will need to install R, Python, MCR, and Java.
 
 ``` bash
+## install R in conda environment
 conda install -c conda-forge r-base=4.3.1
+## install MCR
+mkdir /path/to/MCR && \
+cd /path/to/MCR && \
+wget https://ssd.mathworks.com/supportfiles/downloads/R2022b/Release/10/deployment_files/installer/complete/glnxa64/MATLAB_Runtime_R2022b_Update_10_glnxa64.zip && \
+unzip -q MATLAB_Runtime_R2022b_Update_10_glnxa64.zip && \
+./install -destinationFolder /opt/mcr -agreeToLicense yes -mode silent
 ```
 
 #### 1. python module
@@ -99,9 +119,9 @@ export MAJIQ_LICENSE_FILE=/path/to/majiq_license_academic_official.lic
 ##### 2.3 [IRFinder](https://github.com/dgaolab/IRFinder)
 
 ``` bash
-wget https://github.com/RitchieLabIGH/IRFinder/archive/refs/tags/v2.0.1.tar.gz
+wget https://github.com/dgaolab/IRFinder/archive/refs/tags/v1.3.1.tar.gz
 tar -zxvf v1.3.0.tar.gz
-export PATH=/path/to/IRFinder-2.0.1/bin/:$PATH
+export PATH=/path/to/IRFinder-1.3.0/bin/:$PATH
 ```
 
 **NOTE:** [STAR](https://github.com/alexdobin/STAR) is required to build
@@ -182,7 +202,7 @@ For human and mouse, you could read from `extdata/rbp`.
 ``` r
 library(SCSES)
 #> Loading required package: BiocManager
-#> Bioconductor version '3.16' is out-of-date; the current release version '3.19'
+#> Bioconductor version '3.16' is out-of-date; the current release version '3.20'
 #>   is available with R version '4.4'; see https://bioconductor.org/install
 #> Warning: replacing previous import 'hdf5r::h5const' by 'rhdf5::h5const' when
 #> loading 'SCSES'
@@ -214,8 +234,8 @@ downloaded from <https://doi.org/10.5281/zenodo.13951695>, including
 genome FASTA file, annotation GTF and GFF3 file, RBP file,STAR
 reference, phast conservation file, and configure file.
 
-Move test bam files to directory bam/. Move other input data to
-directory refgenome/.
+Move test bam files to directory `bam/`. Move other input data to
+directory `refgenome/`.
 
 ``` bash
 ls /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/bam/
@@ -264,6 +284,7 @@ ls /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/refgenome/
 ### Step1. Read configure file
 
 ``` r
+## Loading packages
 library(SCSES)
 #paras_file: path to configure file generated in the previous step
 paras = readSCSESconfig(paras_file)
@@ -301,17 +322,18 @@ expression count and TPM matrix to `work_path/rds/`.
 
 ``` r
 featurecounts.path = getGeneExpression(paras) 
-#> [1] "[2024-10-23 11:17:16] Detect gene expression: bash /tmp/RtmpIQFQgd/temp_libpath3e3cee4e6e926b/SCSES/shell/run_featurecounts.sh /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/expr/ /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/refgenome/test.fa /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/refgenome/test.gtf /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/bam 20 cell_line paired /disk/software/subread-2.0.6-source/bin/featureCounts >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/runfeatureCounts.log 2>&1"
-#> [1] "[2024-10-23 11:17:35] Detect gene expression Finish."
+rds.path = getEXPmatrix(paras)
+```
+
+``` r
+featurecounts.path = getGeneExpression(paras) 
+#> [1] "[2024-11-15 10:33:03] Detect gene expression: bash /tmp/RtmpWLitzG/temp_libpatha4849b1094ca/SCSES/shell/run_featurecounts.sh /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/expr/ /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/refgenome/test.fa /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/refgenome/test.gtf /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/bam 20 cell_line paired /disk/software/subread-2.0.6-source/bin/featureCounts >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/runfeatureCounts.log 2>&1"
+#> [1] "[2024-11-15 10:33:21] Detect gene expression Finish."
 rds.path = getEXPmatrix(paras)
 print(rds.path)
 #> [1] "/disk/lvxuan/Single-Splicing/result/cell_line/scses_test/rds/"
 list.files(rds.path)
 #> [1] "count.rds" "event.rds" "psi.rds"   "rc.rds"    "TPM.rds"
-```
-
-``` r
-
 tpm = readRDS(paste0(rds.path,'/TPM.rds'))
 tpm[1:5,1:5]
 #>            SRR11826368.bam SRR11826371.bam SRR11826409.bam SRR11826436.bam
@@ -348,16 +370,21 @@ and identifies all types of splicing events by conventional algorithms.
 
 ``` r
 pseudobulk.path = createPseudobulk(paras)
+event.path = detectEvents(paras,star_ref_path)
+```
+
+``` r
+pseudobulk.path = createPseudobulk(paras)
 #> [1] "Input: /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/bam"
 #> [1] "Output: /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/data/"
-#> [1] "[2024-10-23 11:17:36] Creating Pseudobulk directory..."
+#> [1] "[2024-11-15 10:33:22] Creating Pseudobulk directory..."
 #> Warning in dir.create(path = pseudobulk.path, recursive = T):
 #> '/disk/lvxuan/Single-Splicing/result/cell_line/scses_test/data' already exists
 #> [1] "Pseudobulk bam file exists."
-#> [1] "[2024-10-23 11:17:36] Merge Bam Files: /disk/software/samtools/bin/samtools merge -f -@ 20 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/data//all.bam /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/bam/*.bam --no-PG"
-#> [1] "[2024-10-23 11:18:16] Merge Bam Files Finish."
-#> [1] "[2024-10-23 11:18:16] Bam File Index: /disk/software/samtools/bin/samtools index -@ 20 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/data//all.bam"
-#> [1] "[2024-10-23 11:18:22] Bam File Index Finish."
+#> [1] "[2024-11-15 10:33:22] Merge Bam Files: /disk/software/samtools/bin/samtools merge -f -@ 20 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/data//all.bam /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/bam/*.bam --no-PG"
+#> [1] "[2024-11-15 10:34:08] Merge Bam Files Finish."
+#> [1] "[2024-11-15 10:34:08] Bam File Index: /disk/software/samtools/bin/samtools index -@ 20 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/data//all.bam"
+#> [1] "[2024-11-15 10:34:14] Bam File Index Finish."
 print(pseudobulk.path)
 #> [1] "/disk/lvxuan/Single-Splicing/result/cell_line/scses_test/data/"
 list.files(pseudobulk.path)
@@ -373,43 +400,46 @@ event.path = detectEvents(paras,star_ref_path="/disk/lvxuan/Single-Splicing/resu
 #> [1] "Checking events..."
 #> [1] "event_type=SE;RI;A3SS;A5SS;MXE  checked"
 #> [1] "Output: /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/events/"
-#> [1] "[2024-10-23 11:18:22] Creating events directory..."
-#> Warning in dir.create(path = work_path):
-#> '/disk/lvxuan/Single-Splicing/result/cell_line/scses_test/events' already
-#> exists
-#> [1] "[2024-10-23 11:18:22] Generating SE event id"
+#> [1] "[2024-11-15 10:34:14] Creating events directory..."
+#> [1] "[2024-11-15 10:34:14] MAJIQ..."
+#> [1] "[2024-11-15 10:34:14] Run MAJIQ: bash /tmp/RtmpWLitzG/temp_libpatha4849b1094ca/SCSES/shell/run_majiq.sh /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/events//majiq/ /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/data/ /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/refgenome/test.gff3 20 hg19 25 MAJIQ /disk/lvxuan/software/miniconda/bin /home/Liulab/wenx/majiq_license_academic_official.lic >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/events//detectEvents.log 2>&1"
+#> [1] "[2024-11-15 10:35:49] Run MAJIQ Finish."
+#> [1] "[2024-11-15 10:35:49] IRFinder..."
+#> [1] "[2024-11-15 10:35:49] Run IRFinder: bash /tmp/RtmpWLitzG/temp_libpatha4849b1094ca/SCSES/shell/run_irfinder.sh /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/events//IRFinder/ /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/refgenome/test.fa /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/refgenome/test.gtf /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/data/ 20 100 /disk/lvxuan/software/IRFinder-2.0.1/bin/IRFinder /disk/software/samtools/bin/samtools /usr/local/bin/STAR /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/refgenome/STAR_Reference >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/events//detectEvents.log 2>&1"
+#> [1] "/disk/lvxuan/Single-Splicing/result/cell_line/scses_test/events//IRFinder//all/IRFinder-IR-nondir.txt"
+#> [1] "[2024-11-15 10:50:09] Run IRFinder Finish."
+#> [1] "[2024-11-15 10:50:09] rMats..."
+#> [1] "[2024-11-15 10:50:09] Run rMats: bash /tmp/RtmpWLitzG/temp_libpatha4849b1094ca/SCSES/shell/run_rmats.sh /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/events//rMats/ /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/data/ /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/refgenome/test.gtf paired 100 20 /disk/lvxuan/software/SCSES_test3/rmats_turbo_v4_3_0/rmats.py /disk/lvxuan/software/miniconda/envs/SCSES_test3/bin/python >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/events//detectEvents.log 2>&1"
+#> [1] "[2024-11-15 10:53:55] Run rMats Finish."
+#> [1] "[2024-11-15 10:53:55] Generating SE event id"
 #> arguments 'show.output.on.console', 'minimized' and 'invisible' are for Windows only
-#> [1] "[2024-10-23 11:18:22] Generating SE event id Finish."
-#> [1] "[2024-10-23 11:18:22] Generating RI event id"
+#> [1] "[2024-11-15 10:53:56] Generating SE event id Finish."
+#> [1] "[2024-11-15 10:53:56] Generating RI event id"
 #> arguments 'show.output.on.console', 'minimized' and 'invisible' are for Windows only
-#> [1] "[2024-10-23 11:18:37] Generating RI event id Finish."
-#> [1] "[2024-10-23 11:18:37] Generating A3SS event id"
-#> [1] "[2024-10-23 11:18:37] Generating A3SS event id Finish."
-#> [1] "[2024-10-23 11:18:37] Generating A5SS event id"
-#> [1] "[2024-10-23 11:18:38] Generating A5SS event id Finish."
-#> [1] "[2024-10-23 11:18:38] Generating MXE event id"
-#> [1] "[2024-10-23 11:18:38] Generating MXE event id Finish."
+#> [1] "[2024-11-15 10:54:11] Generating RI event id Finish."
+#> [1] "[2024-11-15 10:54:11] Generating A3SS event id"
+#> [1] "[2024-11-15 10:54:11] Generating A3SS event id Finish."
+#> [1] "[2024-11-15 10:54:11] Generating A5SS event id"
+#> [1] "[2024-11-15 10:54:11] Generating A5SS event id Finish."
+#> [1] "[2024-11-15 10:54:11] Generating MXE event id"
+#> [1] "[2024-11-15 10:54:11] Generating MXE event id Finish."
 #> [1] "Total splicing event: SE=5764 RI=582 A3SS=237 A5SS=231 MXE=349"
 print(event.path)
 #> [1] "/disk/lvxuan/Single-Splicing/result/cell_line/scses_test/events/"
 list.files(event.path)
-#>  [1] "A3SS.txt"            "A5SS.txt"            "IRFinder"           
-#>  [4] "java_getRC_A3SS.log" "java_getRC_A5SS.log" "java_getRC_MXE.log" 
-#>  [7] "java_getRC_RI.log"   "java_getRC_SE.log"   "majiq"              
-#> [10] "MXE.txt"             "RI.txt"              "rMats"              
-#> [13] "SE.txt"
-```
-
-Different types of splicing events will be saved to `work_path/events/`,
-separately.
-
-``` r
+#> [1] "A3SS.txt"         "A5SS.txt"         "detectEvents.log" "IRFinder"        
+#> [5] "majiq"            "MXE.txt"          "RI.txt"           "rMats"           
+#> [9] "SE.txt"
+## SE events
 se.event=readLines(paste0(event.path,'SE.txt'))
 print(nrow(se.event))
 #> NULL
 print(se.event[1])
 #> [1] "isoform1=exon:chr5:180219870-180220097:-@junction:chr5:180220098-180229679:-@exon:chr5:180229680-180229803:-|isoform2=junction:chr5:180220098-180222655:-@exon:chr5:180222656-180222875:-@junction:chr5:180222876-180229679:-|MGAT1|SE"
 ```
+
+Different types of splicing events will be saved to `work_path/events/`,
+separately.
 
 #### for UMI dataset
 
@@ -441,13 +471,20 @@ different AS events:](png/PSI.png)
 
 ``` r
 rawrc.path = getRawRC(paras)
+rawpsi.path = getRawPSI(paras)
+rawrds.path = mergeSplicingValue(paras)
+processed.data.path = preprocessEvent(paras)
+```
+
+``` r
+rawrc.path = getRawRC(paras)
 #> [1] "Checking events..."
 #> [1] "event_type=A3SS;A5SS;MXE;RI;SE  checked"
 #> [1] "Checking cells..."
 #> [1] "15 cells are considered."
 #> [1] "Output: /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/splicing_value/"
 #> [1] "Splicing event types: A3SS A5SS MXE RI SE"
-#> [1] "[2024-10-23 11:18:38] Counting reads of A3SS events..."
+#> [1] "[2024-11-15 10:54:11] Counting reads of A3SS events..."
 #> Warning in dir.create(outpath_per_cell):
 #> '/disk/lvxuan/Single-Splicing/result/cell_line/scses_test/splicing_value//A3SS_rjm'
 #> already exists
@@ -462,8 +499,8 @@ rawrc.path = getRawRC(paras)
 #> [1] "Reading RJC File Progress: 80%"
 #> [1] "Reading RJC File Progress: 90%"
 #> [1] "Reading RJC File Progress: 100%"
-#> [1] "[2024-10-23 11:18:41] Counting reads of A3SS events Finish."
-#> [1] "[2024-10-23 11:18:41] Counting reads of A5SS events..."
+#> [1] "[2024-11-15 10:54:14] Counting reads of A3SS events Finish."
+#> [1] "[2024-11-15 10:54:14] Counting reads of A5SS events..."
 #> Warning in dir.create(outpath_per_cell):
 #> '/disk/lvxuan/Single-Splicing/result/cell_line/scses_test/splicing_value//A5SS_rjm'
 #> already exists
@@ -478,8 +515,8 @@ rawrc.path = getRawRC(paras)
 #> [1] "Reading RJC File Progress: 80%"
 #> [1] "Reading RJC File Progress: 90%"
 #> [1] "Reading RJC File Progress: 100%"
-#> [1] "[2024-10-23 11:18:44] Counting reads of A5SS events Finish."
-#> [1] "[2024-10-23 11:18:44] Counting reads of MXE events..."
+#> [1] "[2024-11-15 10:54:17] Counting reads of A5SS events Finish."
+#> [1] "[2024-11-15 10:54:17] Counting reads of MXE events..."
 #> Warning in dir.create(outpath_per_cell):
 #> '/disk/lvxuan/Single-Splicing/result/cell_line/scses_test/splicing_value//MXE_rjm'
 #> already exists
@@ -494,8 +531,8 @@ rawrc.path = getRawRC(paras)
 #> [1] "Reading RJC File Progress: 80%"
 #> [1] "Reading RJC File Progress: 90%"
 #> [1] "Reading RJC File Progress: 100%"
-#> [1] "[2024-10-23 11:18:49] Counting reads of MXE events Finish."
-#> [1] "[2024-10-23 11:18:49] Counting reads of RI events..."
+#> [1] "[2024-11-15 10:54:22] Counting reads of MXE events Finish."
+#> [1] "[2024-11-15 10:54:22] Counting reads of RI events..."
 #> Warning in dir.create(outpath_per_cell):
 #> '/disk/lvxuan/Single-Splicing/result/cell_line/scses_test/splicing_value//RI_rjm'
 #> already exists
@@ -516,8 +553,8 @@ rawrc.path = getRawRC(paras)
 #> [1] "Reading RJC File Progress: 90%"
 #> [1] "Reading RJC File Progress: 90%"
 #> [1] "Reading RJC File Progress:100%"
-#> [1] "[2024-10-23 11:18:58] Counting reads of RI events Finish."
-#> [1] "[2024-10-23 11:18:58] Counting reads of SE events..."
+#> [1] "[2024-11-15 10:54:30] Counting reads of RI events Finish."
+#> [1] "[2024-11-15 10:54:30] Counting reads of SE events..."
 #> Warning in dir.create(outpath_per_cell):
 #> '/disk/lvxuan/Single-Splicing/result/cell_line/scses_test/splicing_value//SE_rjm'
 #> already exists
@@ -532,24 +569,24 @@ rawrc.path = getRawRC(paras)
 #> [1] "Reading RJC File Progress: 80%"
 #> [1] "Reading RJC File Progress: 90%"
 #> [1] "Reading RJC File Progress: 100%"
-#> [1] "[2024-10-23 11:19:27] Counting reads of SE events Finish."
+#> [1] "[2024-11-15 10:54:59] Counting reads of SE events Finish."
 rawpsi.path = getRawPSI(paras)
 #> [1] "Checking raw reads..."
 #> [1] "Checking events..."
 #> [1] "event_type=A3SS;A5SS;MXE;RI;SE  checked"
-#> [1] "[2024-10-23 11:19:27] Calculating PSI value of A3SS events..."
-#> [1] "[2024-10-23 11:19:27] Calculating PSI value of A3SS events Finish."
-#> [1] "[2024-10-23 11:19:27] Calculating PSI value of A5SS events..."
-#> [1] "[2024-10-23 11:19:27] Calculating PSI value of A5SS events Finish."
-#> [1] "[2024-10-23 11:19:27] Calculating PSI value of MXE events..."
-#> [1] "[2024-10-23 11:19:27] Calculating PSI value of MXE events Finish."
-#> [1] "[2024-10-23 11:19:27] Calculating PSI value of RI events..."
-#> [1] "[2024-10-23 11:19:27] Calculating PSI value of RI events Finish."
-#> [1] "[2024-10-23 11:19:27] Calculating PSI value of SE events..."
-#> [1] "[2024-10-23 11:19:28] Calculating PSI value of SE events Finish."
+#> [1] "[2024-11-15 10:54:59] Calculating PSI value of A3SS events..."
+#> [1] "[2024-11-15 10:54:59] Calculating PSI value of A3SS events Finish."
+#> [1] "[2024-11-15 10:54:59] Calculating PSI value of A5SS events..."
+#> [1] "[2024-11-15 10:54:59] Calculating PSI value of A5SS events Finish."
+#> [1] "[2024-11-15 10:54:59] Calculating PSI value of MXE events..."
+#> [1] "[2024-11-15 10:54:59] Calculating PSI value of MXE events Finish."
+#> [1] "[2024-11-15 10:54:59] Calculating PSI value of RI events..."
+#> [1] "[2024-11-15 10:54:59] Calculating PSI value of RI events Finish."
+#> [1] "[2024-11-15 10:54:59] Calculating PSI value of SE events..."
+#> [1] "[2024-11-15 10:54:59] Calculating PSI value of SE events Finish."
 rawrds.path = mergeSplicingValue(paras)
 processed.data.path = preprocessEvent(paras)
-#> [1] "[2024-10-23 11:19:28] Processing raw data..."
+#> [1] "[2024-11-15 10:55:00] Processing raw data..."
 #> [1] "Input: /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/rds/"
 #> [1] "Output: /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/rds_processed/"
 #> [1] "Before filtering"
@@ -561,19 +598,12 @@ processed.data.path = preprocessEvent(paras)
 #> [1] "expr: 5669*15"
 #> [1] "psi: 2550*15"
 #> [1] "rc: 6087*15"
-#> [1] "[2024-10-23 11:19:29] Successfully processed data."
+#> [1] "[2024-11-15 10:55:01] Successfully processed data."
 print(rawrds.path)
 #> [1] "/disk/lvxuan/Single-Splicing/result/cell_line/scses_test/rds/"
 print(processed.data.path)
 #> [1] "/disk/lvxuan/Single-Splicing/result/cell_line/scses_test/rds_processed/"
-```
 
-Raw read count matrix, PSI matrix, and event annotation will be saved to
-`work_path/rds/`.Then, data after quality control process will be saved
-to `work_path/rds_processed/`, which will be used for **subsequent
-calculations**.
-
-``` r
 ## read count for each type of splicing events in each single cell
 list.files(rawrc.path,pattern = "*_rjm")
 #> [1] "A3SS_rjm" "A5SS_rjm" "MXE_rjm"  "RI_rjm"   "SE_rjm"
@@ -584,51 +614,51 @@ print(rawrc.files)
 rawpsi.files = list.files(rawpsi.path,pattern = "*_psi.rds")
 print(rawpsi.files)
 #> [1] "A3SS_psi.rds" "A5SS_psi.rds" "MXE_psi.rds"  "RI_psi.rds"   "SE_psi.rds"
-## merged data
+## merged raw data
 psi = readRDS(paste0(rawrds.path,'/psi.rds'))
 print(psi[1:3,1:3])
-#>                                                                                                                                                                                                                                       SRR11826368.bam
-#> isoform1=exon:chr4:146019084-146019571:+@junction:chr4:146019572-146025540:+@exon:chr4:146025541-146025667:+|isoform2=exon:chr4:146019084-146019571:+@junction:chr4:146019572-146025537:+@exon:chr4:146025538-146025667:+|ABCE1|A3SS        0.8888889
-#> isoform1=exon:chr2:233599865-233599948:+@junction:chr2:233599949-233600472:+@exon:chr2:233600473-233601358:+|isoform2=exon:chr2:233599865-233599948:+@junction:chr2:233599949-233600462:+@exon:chr2:233600463-233601358:+|GIGYF2|A3SS       0.0000000
-#> isoform1=exon:chr2:233651860-233652039:+@junction:chr2:233652040-233655425:+@exon:chr2:233655426-233655625:+|isoform2=exon:chr2:233651860-233652039:+@junction:chr2:233652040-233655407:+@exon:chr2:233655408-233655625:+|GIGYF2|A3SS       1.0000000
-#>                                                                                                                                                                                                                                       SRR11826371.bam
-#> isoform1=exon:chr4:146019084-146019571:+@junction:chr4:146019572-146025540:+@exon:chr4:146025541-146025667:+|isoform2=exon:chr4:146019084-146019571:+@junction:chr4:146019572-146025537:+@exon:chr4:146025538-146025667:+|ABCE1|A3SS        1.0000000
-#> isoform1=exon:chr2:233599865-233599948:+@junction:chr2:233599949-233600472:+@exon:chr2:233600473-233601358:+|isoform2=exon:chr2:233599865-233599948:+@junction:chr2:233599949-233600462:+@exon:chr2:233600463-233601358:+|GIGYF2|A3SS       0.0000000
-#> isoform1=exon:chr2:233651860-233652039:+@junction:chr2:233652040-233655425:+@exon:chr2:233655426-233655625:+|isoform2=exon:chr2:233651860-233652039:+@junction:chr2:233652040-233655407:+@exon:chr2:233655408-233655625:+|GIGYF2|A3SS       0.6666667
-#>                                                                                                                                                                                                                                       SRR11826409.bam
-#> isoform1=exon:chr4:146019084-146019571:+@junction:chr4:146019572-146025540:+@exon:chr4:146025541-146025667:+|isoform2=exon:chr4:146019084-146019571:+@junction:chr4:146019572-146025537:+@exon:chr4:146025538-146025667:+|ABCE1|A3SS        0.8888889
-#> isoform1=exon:chr2:233599865-233599948:+@junction:chr2:233599949-233600472:+@exon:chr2:233600473-233601358:+|isoform2=exon:chr2:233599865-233599948:+@junction:chr2:233599949-233600462:+@exon:chr2:233600463-233601358:+|GIGYF2|A3SS       0.0000000
-#> isoform1=exon:chr2:233651860-233652039:+@junction:chr2:233652040-233655425:+@exon:chr2:233655426-233655625:+|isoform2=exon:chr2:233651860-233652039:+@junction:chr2:233652040-233655407:+@exon:chr2:233655408-233655625:+|GIGYF2|A3SS       0.9230769
+#>                                                                                                                                                                                                                                        SRR11826368.bam
+#> isoform1=exon:chr2:178083975-178084042:+@junction:chr2:178084043-178086787:+@exon:chr2:178086788-178088686:+|isoform2=exon:chr2:178083975-178084042:+@junction:chr2:178084043-178084135:+@exon:chr2:178084136-178088686:+|HNRNPA3|A3SS       1.0000000
+#> isoform1=exon:chr4:146019084-146019571:+@junction:chr4:146019572-146025540:+@exon:chr4:146025541-146025667:+|isoform2=exon:chr4:146019084-146019571:+@junction:chr4:146019572-146025537:+@exon:chr4:146025538-146025667:+|ABCE1|A3SS         0.8888889
+#> isoform1=exon:chr3:184040871-184041029:+@junction:chr3:184041030-184041195:+@exon:chr3:184041196-184041381:+|isoform2=exon:chr3:184040871-184041029:+@junction:chr3:184041030-184041192:+@exon:chr3:184041193-184041381:+|EIF4G1|A3SS        0.4615385
+#>                                                                                                                                                                                                                                        SRR11826371.bam
+#> isoform1=exon:chr2:178083975-178084042:+@junction:chr2:178084043-178086787:+@exon:chr2:178086788-178088686:+|isoform2=exon:chr2:178083975-178084042:+@junction:chr2:178084043-178084135:+@exon:chr2:178084136-178088686:+|HNRNPA3|A3SS       1.0000000
+#> isoform1=exon:chr4:146019084-146019571:+@junction:chr4:146019572-146025540:+@exon:chr4:146025541-146025667:+|isoform2=exon:chr4:146019084-146019571:+@junction:chr4:146019572-146025537:+@exon:chr4:146025538-146025667:+|ABCE1|A3SS         1.0000000
+#> isoform1=exon:chr3:184040871-184041029:+@junction:chr3:184041030-184041195:+@exon:chr3:184041196-184041381:+|isoform2=exon:chr3:184040871-184041029:+@junction:chr3:184041030-184041192:+@exon:chr3:184041193-184041381:+|EIF4G1|A3SS        0.2727273
+#>                                                                                                                                                                                                                                        SRR11826409.bam
+#> isoform1=exon:chr2:178083975-178084042:+@junction:chr2:178084043-178086787:+@exon:chr2:178086788-178088686:+|isoform2=exon:chr2:178083975-178084042:+@junction:chr2:178084043-178084135:+@exon:chr2:178084136-178088686:+|HNRNPA3|A3SS       1.0000000
+#> isoform1=exon:chr4:146019084-146019571:+@junction:chr4:146019572-146025540:+@exon:chr4:146025541-146025667:+|isoform2=exon:chr4:146019084-146019571:+@junction:chr4:146019572-146025537:+@exon:chr4:146025538-146025667:+|ABCE1|A3SS         0.8888889
+#> isoform1=exon:chr3:184040871-184041029:+@junction:chr3:184041030-184041195:+@exon:chr3:184041196-184041381:+|isoform2=exon:chr3:184040871-184041029:+@junction:chr3:184041030-184041192:+@exon:chr3:184041193-184041381:+|EIF4G1|A3SS        0.2500000
 print(dim(psi))
 #> [1] 7149   16
 
 rc = readRDS(paste0(rawrds.path,'/rc.rds'))
 print(rc[1:3,1:3])
 #>                                     SRR11826368.bam SRR11826371.bam
+#> junction:chr2:178084043-178086787:+               0               0
 #> junction:chr4:146019572-146025540:+               2               0
-#> junction:chr2:233599949-233600472:+               0               0
-#> junction:chr2:233652040-233655425:+               0               2
+#> junction:chr3:184041030-184041195:+              14               8
 #>                                     SRR11826409.bam
+#> junction:chr2:178084043-178086787:+               0
 #> junction:chr4:146019572-146025540:+               1
-#> junction:chr2:233599949-233600472:+               0
-#> junction:chr2:233652040-233655425:+               1
+#> junction:chr3:184041030-184041195:+              21
 print(dim(rc))
 #> [1] 16049    16
 
 event = readRDS(paste0(rawrds.path,'/event.rds'))
 print(event[1:3,])
-#>                                                                                                                                                                                                                                   event
-#> 1  isoform1=exon:chr4:146019084-146019571:+@junction:chr4:146019572-146025540:+@exon:chr4:146025541-146025667:+|isoform2=exon:chr4:146019084-146019571:+@junction:chr4:146019572-146025537:+@exon:chr4:146025538-146025667:+|ABCE1|A3SS
-#> 2 isoform1=exon:chr2:233599865-233599948:+@junction:chr2:233599949-233600472:+@exon:chr2:233600473-233601358:+|isoform2=exon:chr2:233599865-233599948:+@junction:chr2:233599949-233600462:+@exon:chr2:233600463-233601358:+|GIGYF2|A3SS
-#> 3 isoform1=exon:chr2:233651860-233652039:+@junction:chr2:233652040-233655425:+@exon:chr2:233655426-233655625:+|isoform2=exon:chr2:233651860-233652039:+@junction:chr2:233652040-233655407:+@exon:chr2:233655408-233655625:+|GIGYF2|A3SS
+#>                                                                                                                                                                                                                                    event
+#> 1 isoform1=exon:chr2:178083975-178084042:+@junction:chr2:178084043-178086787:+@exon:chr2:178086788-178088686:+|isoform2=exon:chr2:178083975-178084042:+@junction:chr2:178084043-178084135:+@exon:chr2:178084136-178088686:+|HNRNPA3|A3SS
+#> 2   isoform1=exon:chr4:146019084-146019571:+@junction:chr4:146019572-146025540:+@exon:chr4:146025541-146025667:+|isoform2=exon:chr4:146019084-146019571:+@junction:chr4:146019572-146025537:+@exon:chr4:146025538-146025667:+|ABCE1|A3SS
+#> 3  isoform1=exon:chr3:184040871-184041029:+@junction:chr3:184041030-184041195:+@exon:chr3:184041196-184041381:+|isoform2=exon:chr3:184040871-184041029:+@junction:chr3:184041030-184041192:+@exon:chr3:184041193-184041381:+|EIF4G1|A3SS
 #>                            exclusion1 exclusion2
-#> 1 junction:chr4:146019572-146025540:+       <NA>
-#> 2 junction:chr2:233599949-233600472:+       <NA>
-#> 3 junction:chr2:233652040-233655425:+       <NA>
+#> 1 junction:chr2:178084043-178086787:+       <NA>
+#> 2 junction:chr4:146019572-146025540:+       <NA>
+#> 3 junction:chr3:184041030-184041195:+       <NA>
 #>                            retention1 retention2 type
-#> 1 junction:chr4:146019572-146025537:+       <NA> A3SS
-#> 2 junction:chr2:233599949-233600462:+       <NA> A3SS
-#> 3 junction:chr2:233652040-233655407:+       <NA> A3SS
+#> 1 junction:chr2:178084043-178084135:+       <NA> A3SS
+#> 2 junction:chr4:146019572-146025537:+       <NA> A3SS
+#> 3 junction:chr3:184041030-184041192:+       <NA> A3SS
 
 ## processed data
 psi_processed = readRDS(paste0(processed.data.path,'/psi.rds'))
@@ -639,6 +669,11 @@ print(dim(rc_processed))
 #> [1] 6087   15
 ```
 
+Raw read count matrix, PSI matrix, and event annotation will be saved to
+`work_path/rds/`.Then, data after quality control process will be saved
+to `work_path/rds_processed/`, which will be used for **subsequent
+calculations**.
+
 ### Step5. Constructs similarity networks
 
 To overcome the high dropout rate and limited read coverage of scRNA-seq
@@ -648,7 +683,12 @@ similar cells/events.
 
 ``` r
 cellnet.path = getCellSimilarity(paras)
-#> [1] "[2024-10-23 11:19:30] Calculate cell similarity..."
+eventnet.path = getEventSimilarity(paras)
+```
+
+``` r
+cellnet.path = getCellSimilarity(paras)
+#> [1] "[2024-11-15 10:55:01] Calculate cell similarity..."
 #> [1] "Input: /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/rds_processed/"
 #> [1] "Output: /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation/cell_similarity/"
 #> [1] "feature_num=1000  checked"
@@ -664,20 +704,20 @@ cellnet.path = getCellSimilarity(paras)
 #> [1] "6087 reads are used to calculate cell similarity"
 #> [1] "Checking data: EXP_RBP"
 #> [1] "384 rbps are used to calculate cell similarity"
-#> [1] "[2024-10-23 11:19:30] Computing cell similarity based on PSI"
+#> [1] "[2024-11-15 10:55:01] Computing cell similarity based on PSI"
 #> [1] "Calculate similarity among 15 cells."
 #> Delta: [0.17081888 0.02261298]
-#> [1] "[2024-10-23 11:19:40] Computing cell similarity based on RC"
+#> [1] "[2024-11-15 10:55:09] Computing cell similarity based on RC"
 #> [1] "Calculate similarity among 15 cells."
 #> Delta: [0.13512509 0.02119545]
-#> [1] "[2024-10-23 11:19:40] Computing cell similarity based on EXP_RBP"
+#> [1] "[2024-11-15 10:55:10] Computing cell similarity based on EXP_RBP"
 #> [1] "Calculate similarity among 15 cells."
 #> [1] "The number of features is greater than the number of rows in the input data."
 #> [1] "Total 384 features will be used"
 #> Delta: [0.17068148 0.03534559]
-#> [1] "[2024-10-23 11:19:40] Calculate cell similarity Finish."
+#> [1] "[2024-11-15 10:55:10] Calculate cell similarity Finish."
 eventnet.path = getEventSimilarity(paras)
-#> [1] "[2024-10-23 11:19:40] Calculate events KNN..."
+#> [1] "[2024-11-15 10:55:10] Calculate events KNN..."
 #> [1] "Input: /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/rds_processed/"
 #> [1] "Output: /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation/event_similarity/"
 #> [1] "alpha_event=0.8  checked"
@@ -686,8 +726,8 @@ eventnet.path = getEventSimilarity(paras)
 #> [1] "Checking data..."
 #> [1] "Checking events..."
 #> [1] "event_type=A3SS;A5SS;MXE;RI;SE  checked"
-#> [1] "[2024-10-23 11:19:43] Calculate events feature..."
-#> [1] "[2024-10-23 11:19:43] step1 Creating BSgenome for hg19======="
+#> [1] "[2024-11-15 10:55:12] Calculate events feature..."
+#> [1] "[2024-11-15 10:55:12] step1 Creating BSgenome for hg19======="
 #> Warning: previous export ''hg19'' is being replaced
 #> Warning: package 'hg19' was built under R version 4.3.1
 #> 
@@ -713,121 +753,111 @@ eventnet.path = getEventSimilarity(paras)
 #> The following object is masked from 'package:base':
 #> 
 #>     strsplit
-#> [1] "[2024-10-23 11:19:43] step2 Extracting features ======="
-#> [1] "[2024-10-23 11:19:43] Extracting A3SS features..."
-#> [1] "[2024-10-23 11:19:43] Loading events..."
-#> [1] "[2024-10-23 11:19:55] Parsing events region..."
-#> [1] "[2024-10-23 11:20:02] Extracting length features."
-#> [1] "[2024-10-23 11:20:02] Extracting motif features."
-#> [1] "[2024-10-23 11:20:02] Extracting conservation features."
+#> [1] "[2024-11-15 10:55:12] step2 Extracting features ======="
+#> [1] "[2024-11-15 10:55:12] Extracting A3SS features..."
+#> [1] "[2024-11-15 10:55:12] Loading events..."
+#> [1] "[2024-11-15 10:55:23] Parsing events region..."
+#> [1] "[2024-11-15 10:55:31] Extracting length features."
+#> [1] "[2024-11-15 10:55:31] Extracting motif features."
+#> [1] "[2024-11-15 10:55:31] Extracting conservation features."
 #> [1] "Checking chromosome prefix..."
-#> [1] "[2024-10-23 11:20:03] Extracting kmer features."
-#> [1] "[2024-10-23 11:20:03] Extracting A Ratio features."
-#> [1] "[2024-10-23 11:20:04] Saving Result"
-#> [1] "[2024-10-23 11:20:04] Extracting A3SS features Finished"
-#> [1] "[2024-10-23 11:20:04] Extracting A5SS features..."
-#> [1] "[2024-10-23 11:20:04] Loading events..."
-#> [1] "[2024-10-23 11:20:16] Parsing events region..."
-#> [1] "[2024-10-23 11:20:23] Extracting length features."
-#> [1] "[2024-10-23 11:20:23] Extracting motif features."
-#> [1] "[2024-10-23 11:20:23] Extracting conservation features."
+#> [1] "[2024-11-15 10:55:31] Extracting kmer features."
+#> [1] "[2024-11-15 10:55:31] Extracting A Ratio features."
+#> [1] "[2024-11-15 10:55:33] Saving Result"
+#> [1] "[2024-11-15 10:55:33] Extracting A3SS features Finished"
+#> [1] "[2024-11-15 10:55:33] Extracting A5SS features..."
+#> [1] "[2024-11-15 10:55:33] Loading events..."
+#> [1] "[2024-11-15 10:55:44] Parsing events region..."
+#> [1] "[2024-11-15 10:55:51] Extracting length features."
+#> [1] "[2024-11-15 10:55:51] Extracting motif features."
+#> [1] "[2024-11-15 10:55:51] Extracting conservation features."
 #> [1] "Checking chromosome prefix..."
-#> [1] "[2024-10-23 11:20:24] Extracting kmer features."
-#> [1] "[2024-10-23 11:20:24] Extracting A Ratio features."
-#> [1] "[2024-10-23 11:20:25] Saving Result"
-#> [1] "[2024-10-23 11:20:25] Extracting A5SS features Finished"
-#> [1] "[2024-10-23 11:20:25] Extracting MXE features..."
-#> [1] "[2024-10-23 11:20:25] Loading events..."
-#> [1] "[2024-10-23 11:20:36] Parsing events region..."
-#> [1] "[2024-10-23 11:20:45] Extracting length features."
-#> [1] "[2024-10-23 11:20:45] Extracting motif features."
-#> [1] "[2024-10-23 11:20:45] Extracting conservation features."
+#> [1] "[2024-11-15 10:55:52] Extracting kmer features."
+#> [1] "[2024-11-15 10:55:52] Extracting A Ratio features."
+#> [1] "[2024-11-15 10:55:54] Saving Result"
+#> [1] "[2024-11-15 10:55:54] Extracting A5SS features Finished"
+#> [1] "[2024-11-15 10:55:54] Extracting MXE features..."
+#> [1] "[2024-11-15 10:55:54] Loading events..."
+#> [1] "[2024-11-15 10:56:04] Parsing events region..."
+#> [1] "[2024-11-15 10:56:12] Extracting length features."
+#> [1] "[2024-11-15 10:56:12] Extracting motif features."
+#> [1] "[2024-11-15 10:56:12] Extracting conservation features."
 #> [1] "Checking chromosome prefix..."
-#> [1] "[2024-10-23 11:20:45] Extracting kmer features."
-#> [1] "[2024-10-23 11:20:45] Extracting A Ratio features."
-#> [1] "[2024-10-23 11:20:45] Saving Result"
-#> [1] "[2024-10-23 11:20:45] Extracting MXE features Finished"
-#> [1] "[2024-10-23 11:20:45] Extracting RI features..."
-#> [1] "[2024-10-23 11:20:45] Loading events..."
-#> [1] "[2024-10-23 11:20:56] Parsing events region..."
-#> [1] "[2024-10-23 11:21:03] Extracting length features."
-#> [1] "[2024-10-23 11:21:04] Extracting motif features."
-#> [1] "[2024-10-23 11:21:04] Extracting conservation features."
+#> [1] "[2024-11-15 10:56:13] Extracting kmer features."
+#> [1] "[2024-11-15 10:56:13] Extracting A Ratio features."
+#> [1] "[2024-11-15 10:56:13] Saving Result"
+#> [1] "[2024-11-15 10:56:13] Extracting MXE features Finished"
+#> [1] "[2024-11-15 10:56:13] Extracting RI features..."
+#> [1] "[2024-11-15 10:56:13] Loading events..."
+#> [1] "[2024-11-15 10:56:23] Parsing events region..."
+#> [1] "[2024-11-15 10:56:30] Extracting length features."
+#> [1] "[2024-11-15 10:56:30] Extracting motif features."
+#> [1] "[2024-11-15 10:56:30] Extracting conservation features."
 #> [1] "Checking chromosome prefix..."
-#> [1] "[2024-10-23 11:21:04] Extracting kmer features."
-#> [1] "[2024-10-23 11:21:04] Extracting A Ratio features."
-#> [1] "[2024-10-23 11:21:05] Saving Result"
-#> [1] "[2024-10-23 11:21:05] Extracting RI features Finished"
-#> [1] "[2024-10-23 11:21:05] Extracting SE features..."
-#> [1] "[2024-10-23 11:21:05] Loading events..."
-#> [1] "[2024-10-23 11:21:17] Parsing events region..."
-#> [1] "[2024-10-23 11:21:28] Extracting length features."
-#> [1] "[2024-10-23 11:21:30] Extracting motif features."
-#> [1] "[2024-10-23 11:21:30] Extracting conservation features."
+#> [1] "[2024-11-15 10:56:31] Extracting kmer features."
+#> [1] "[2024-11-15 10:56:31] Extracting A Ratio features."
+#> [1] "[2024-11-15 10:56:32] Saving Result"
+#> [1] "[2024-11-15 10:56:32] Extracting RI features Finished"
+#> [1] "[2024-11-15 10:56:32] Extracting SE features..."
+#> [1] "[2024-11-15 10:56:32] Loading events..."
+#> [1] "[2024-11-15 10:56:43] Parsing events region..."
+#> [1] "[2024-11-15 10:56:54] Extracting length features."
+#> [1] "[2024-11-15 10:56:56] Extracting motif features."
+#> [1] "[2024-11-15 10:56:56] Extracting conservation features."
 #> [1] "Checking chromosome prefix..."
-#> [1] "[2024-10-23 11:21:33] Extracting kmer features."
-#> [1] "[2024-10-23 11:21:33] Extracting A Ratio features."
-#> [1] "[2024-10-23 11:21:33] Saving Result"
-#> [1] "[2024-10-23 11:21:33] Extracting SE features Finished"
-#> [1] "[2024-10-23 11:21:33] step3 Combining events feature ======="
-#> [1] "[2024-10-23 11:21:33] Parsing A3SS features..."
-#> [1] "[2024-10-23 11:21:34] Parsing A3SS features Finished"
-#> [1] "[2024-10-23 11:21:34] Parsing A5SS features..."
-#> [1] "[2024-10-23 11:21:34] Parsing A5SS features Finished"
-#> [1] "[2024-10-23 11:21:34] Parsing MXE features..."
-#> [1] "[2024-10-23 11:21:34] Parsing MXE features Finished"
-#> [1] "[2024-10-23 11:21:34] Parsing RI features..."
-#> [1] "[2024-10-23 11:21:35] Parsing RI features Finished"
-#> [1] "[2024-10-23 11:21:35] Parsing SE features..."
-#> [1] "[2024-10-23 11:21:36] Parsing SE features Finished"
-#> [1] "[2024-10-23 11:21:36] step4 Encoding events feature ======="
-#> [1] "[2024-10-23 11:21:36] A3SS event encoding..."
+#> [1] "[2024-11-15 10:56:59] Extracting kmer features."
+#> [1] "[2024-11-15 10:56:59] Extracting A Ratio features."
+#> [1] "[2024-11-15 10:56:59] Saving Result"
+#> [1] "[2024-11-15 10:56:59] Extracting SE features Finished"
+#> [1] "[2024-11-15 10:56:59] step3 Combining events feature ======="
+#> [1] "[2024-11-15 10:56:59] Parsing A3SS features..."
+#> [1] "[2024-11-15 10:57:00] Parsing A3SS features Finished"
+#> [1] "[2024-11-15 10:57:00] Parsing A5SS features..."
+#> [1] "[2024-11-15 10:57:00] Parsing A5SS features Finished"
+#> [1] "[2024-11-15 10:57:00] Parsing MXE features..."
+#> [1] "[2024-11-15 10:57:00] Parsing MXE features Finished"
+#> [1] "[2024-11-15 10:57:00] Parsing RI features..."
+#> [1] "[2024-11-15 10:57:01] Parsing RI features Finished"
+#> [1] "[2024-11-15 10:57:01] Parsing SE features..."
+#> [1] "[2024-11-15 10:57:02] Parsing SE features Finished"
+#> [1] "[2024-11-15 10:57:02] step4 Encoding events feature ======="
+#> [1] "[2024-11-15 10:57:02] A3SS event encoding..."
+#> 1/4 [======>.......................] - ETA: 0s4/4 [==============================] - 0s 2ms/step
+#> [1] "[2024-11-15 10:57:12] A3SS event encoding Finish."
+#> [1] "[2024-11-15 10:57:12] A5SS event encoding..."
 #> 1/4 [======>.......................] - ETA: 0s4/4 [==============================] - 0s 1ms/step
-#> [1] "[2024-10-23 11:21:45] A3SS event encoding Finish."
-#> [1] "[2024-10-23 11:21:45] A5SS event encoding..."
-#> 1/4 [======>.......................] - ETA: 0s4/4 [==============================] - 0s 1ms/step
-#> [1] "[2024-10-23 11:21:53] A5SS event encoding Finish."
-#> [1] "[2024-10-23 11:21:53] MXE event encoding..."
+#> [1] "[2024-11-15 10:57:20] A5SS event encoding Finish."
+#> [1] "[2024-11-15 10:57:20] MXE event encoding..."
 #> 1/2 [==============>...............] - ETA: 0s2/2 [==============================] - 0s 2ms/step
-#> [1] "[2024-10-23 11:22:01] MXE event encoding Finish."
-#> [1] "[2024-10-23 11:22:01] RI event encoding..."
+#> [1] "[2024-11-15 10:57:28] MXE event encoding Finish."
+#> [1] "[2024-11-15 10:57:28] RI event encoding..."
 #>  1/12 [=>............................] - ETA: 0s12/12 [==============================] - 0s 1ms/step
-#> [1] "[2024-10-23 11:22:10] RI event encoding Finish."
-#> [1] "[2024-10-23 11:22:10] SE event encoding..."
-#>  1/61 [..............................] - ETA: 4s42/61 [===================>..........] - ETA: 0s61/61 [==============================] - 0s 1ms/step
-#> [1] "[2024-10-23 11:22:22] SE event encoding Finish."
-#> [1] "[2024-10-23 11:22:22] step5 Calculate splicing regulation distance and Combine distance ======="
+#> [1] "[2024-11-15 10:57:37] RI event encoding Finish."
+#> [1] "[2024-11-15 10:57:37] SE event encoding..."
+#>  1/61 [..............................] - ETA: 4s46/61 [=====================>........] - ETA: 0s61/61 [==============================] - 0s 1ms/step
+#> [1] "[2024-11-15 10:57:47] SE event encoding Finish."
+#> [1] "[2024-11-15 10:57:47] step5 Calculate splicing regulation distance and Combine distance ======="
 #> [1] "384 rbps are used to calculate splicing regulation information"
 #> [1] "Save data"
 #> [1] "Save data Finished"
-#> [1] "[2024-10-23 11:22:34] step6 Calculate combined event similarity ======="
-#> [1] "[2024-10-23 11:22:35] Calculate  A3SS event Similarity"
+#> [1] "[2024-11-15 10:58:00] step6 Calculate combined event similarity ======="
+#> [1] "[2024-11-15 10:58:01] Calculate  A3SS event Similarity"
 #> 
 #> Attaching package: 'Matrix'
 #> The following object is masked from 'package:S4Vectors':
 #> 
 #>     expand
-#> [1] "[2024-10-23 11:22:44] Calculate A3SS event Similarity Finished"
-#> [1] "[2024-10-23 11:22:45] Calculate  A5SS event Similarity"
-#> [1] "[2024-10-23 11:22:54] Calculate A5SS event Similarity Finished"
-#> [1] "[2024-10-23 11:22:54] Calculate  MXE event Similarity"
-#> [1] "[2024-10-23 11:23:03] Calculate MXE event Similarity Finished"
-#> [1] "[2024-10-23 11:23:04] Calculate  RI event Similarity"
-#> [1] "[2024-10-23 11:23:13] Calculate RI event Similarity Finished"
-#> [1] "[2024-10-23 11:23:14] Calculate  SE event Similarity"
-#> [1] "[2024-10-23 11:23:23] Calculate SE event Similarity Finished"
-#> [1] "[2024-10-23 11:23:23] Calculate event similarity Finished."
-```
+#> [1] "[2024-11-15 10:58:10] Calculate A3SS event Similarity Finished"
+#> [1] "[2024-11-15 10:58:11] Calculate  A5SS event Similarity"
+#> [1] "[2024-11-15 10:58:20] Calculate A5SS event Similarity Finished"
+#> [1] "[2024-11-15 10:58:21] Calculate  MXE event Similarity"
+#> [1] "[2024-11-15 10:58:30] Calculate MXE event Similarity Finished"
+#> [1] "[2024-11-15 10:58:31] Calculate  RI event Similarity"
+#> [1] "[2024-11-15 10:58:40] Calculate RI event Similarity Finished"
+#> [1] "[2024-11-15 10:58:41] Calculate  SE event Similarity"
+#> [1] "[2024-11-15 10:58:50] Calculate SE event Similarity Finished"
+#> [1] "[2024-11-15 10:58:50] Calculate event similarity Finished."
 
-A list of event similarity for different types of splicing events will
-be saved to `work_path/imputation/event_similarity/event.similars.rds`;
-
-A list of different types of cell similarity and a list of the number of
-neighbors will be saved to rds file
-to`work_path/imputation/cell_similarity/cell.similars.rds` and
-`work_path/imputation/cell_similarity/dyk.cell.rds`
-
-``` r
 print(cellnet.path)
 #> [1] "/disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation/cell_similarity/"
 cell.similars=readRDS(paste0(cellnet.path,'/cell.similars.rds'))
@@ -842,6 +872,14 @@ event.similars=readRDS(paste0(eventnet.path,'/event.similars.rds'))
 print(names(event.similars))
 #> [1] "A3SS" "A5SS" "MXE"  "RI"   "SE"
 ```
+
+A list of event similarity for different types of splicing events will
+be saved to `work_path/imputation/event_similarity/event.similars.rds`;
+
+A list of different types of cell similarity and a list of the number of
+neighbors will be saved to rds file
+to`work_path/imputation/cell_similarity/cell.similars.rds` and
+`work_path/imputation/cell_similarity/dyk.cell.rds`
 
 #### Parameters used in this step
 
@@ -893,7 +931,11 @@ or events to impute read count or PSI value
 
 ``` r
 Imputed.data.path = ImputationAll(paras)
-#> [1] "[2024-10-23 11:23:24] Get imputed result using cell similarity and event similarity."
+```
+
+``` r
+Imputed.data.path = ImputationAll(paras)
+#> [1] "[2024-11-15 10:58:51] Get imputed result using cell similarity and event similarity."
 #> [1] "Checking data..."
 #> [1] "rc checked"
 #> [1] "psi checked"
@@ -909,95 +951,89 @@ Imputed.data.path = ImputationAll(paras)
 #> '/disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation' already
 #> exists
 #> [1] "Output: /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation/"
-#> [1] "[2024-10-23 11:23:24] Running Event_type=A3SS;cell_similarity_feature=PSI"
-#> [1] "[2024-10-23 11:23:24] Save data"
-#> [1] "[2024-10-23 11:23:24] Save data Finished"
-#> [1] "bash /tmp/RtmpIQFQgd/temp_libpath3e3cee4e6e926b/SCSES/matlab/scses/run_scses.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_data_235469-500002467.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_result_235469-500002467.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//mat_Imputation.log 2>&1"
-#> [1] "[2024-10-23 11:23:37] Running Event_type=A3SS;cell_similarity_feature=RC"
-#> [1] "[2024-10-23 11:23:37] Save data"
-#> [1] "[2024-10-23 11:23:37] Save data Finished"
-#> [1] "bash /tmp/RtmpIQFQgd/temp_libpath3e3cee4e6e926b/SCSES/matlab/scses/run_scses.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_data_235469-500014026.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_result_235469-500014026.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//mat_Imputation.log 2>&1"
-#> [1] "[2024-10-23 11:23:50] Running Event_type=A3SS;cell_similarity_feature=EXP_RBP"
-#> [1] "[2024-10-23 11:23:50] Save data"
-#> [1] "[2024-10-23 11:23:50] Save data Finished"
-#> [1] "bash /tmp/RtmpIQFQgd/temp_libpath3e3cee4e6e926b/SCSES/matlab/scses/run_scses.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_data_235469-500008328.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_result_235469-500008328.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//mat_Imputation.log 2>&1"
-#> [1] "[2024-10-23 11:24:04] Running Event_type=A5SS;cell_similarity_feature=PSI"
-#> [1] "[2024-10-23 11:24:04] Save data"
-#> [1] "[2024-10-23 11:24:04] Save data Finished"
-#> [1] "bash /tmp/RtmpIQFQgd/temp_libpath3e3cee4e6e926b/SCSES/matlab/scses/run_scses.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_data_235469-500013673.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_result_235469-500013673.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//mat_Imputation.log 2>&1"
-#> [1] "[2024-10-23 11:24:17] Running Event_type=A5SS;cell_similarity_feature=RC"
-#> [1] "[2024-10-23 11:24:17] Save data"
-#> [1] "[2024-10-23 11:24:17] Save data Finished"
-#> [1] "bash /tmp/RtmpIQFQgd/temp_libpath3e3cee4e6e926b/SCSES/matlab/scses/run_scses.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_data_235469-500003453.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_result_235469-500003453.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//mat_Imputation.log 2>&1"
-#> [1] "[2024-10-23 11:24:30] Running Event_type=A5SS;cell_similarity_feature=EXP_RBP"
-#> [1] "[2024-10-23 11:24:30] Save data"
-#> [1] "[2024-10-23 11:24:30] Save data Finished"
-#> [1] "bash /tmp/RtmpIQFQgd/temp_libpath3e3cee4e6e926b/SCSES/matlab/scses/run_scses.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_data_235469-500000405.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_result_235469-500000405.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//mat_Imputation.log 2>&1"
-#> [1] "[2024-10-23 11:24:44] Running Event_type=MXE;cell_similarity_feature=PSI"
-#> [1] "[2024-10-23 11:24:44] Save data"
-#> [1] "[2024-10-23 11:24:44] Save data Finished"
-#> [1] "bash /tmp/RtmpIQFQgd/temp_libpath3e3cee4e6e926b/SCSES/matlab/scses/run_scses.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_data_235469-500006028.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_result_235469-500006028.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//mat_Imputation.log 2>&1"
-#> [1] "[2024-10-23 11:24:57] Running Event_type=MXE;cell_similarity_feature=RC"
-#> [1] "[2024-10-23 11:24:57] Save data"
-#> [1] "[2024-10-23 11:24:57] Save data Finished"
-#> [1] "bash /tmp/RtmpIQFQgd/temp_libpath3e3cee4e6e926b/SCSES/matlab/scses/run_scses.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_data_235469-500032918.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_result_235469-500032918.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//mat_Imputation.log 2>&1"
-#> [1] "[2024-10-23 11:25:09] Running Event_type=MXE;cell_similarity_feature=EXP_RBP"
-#> [1] "[2024-10-23 11:25:09] Save data"
-#> [1] "[2024-10-23 11:25:10] Save data Finished"
-#> [1] "bash /tmp/RtmpIQFQgd/temp_libpath3e3cee4e6e926b/SCSES/matlab/scses/run_scses.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_data_235469-500008736.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_result_235469-500008736.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//mat_Imputation.log 2>&1"
-#> [1] "[2024-10-23 11:25:23] Running Event_type=RI;cell_similarity_feature=PSI"
-#> [1] "[2024-10-23 11:25:23] Save data"
-#> [1] "[2024-10-23 11:25:23] Save data Finished"
-#> [1] "bash /tmp/RtmpIQFQgd/temp_libpath3e3cee4e6e926b/SCSES/matlab/scses/run_scses.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_data_235469-499993819.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_result_235469-499993819.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//mat_Imputation.log 2>&1"
-#> [1] "[2024-10-23 11:25:36] Running Event_type=RI;cell_similarity_feature=RC"
-#> [1] "[2024-10-23 11:25:36] Save data"
-#> [1] "[2024-10-23 11:25:36] Save data Finished"
-#> [1] "bash /tmp/RtmpIQFQgd/temp_libpath3e3cee4e6e926b/SCSES/matlab/scses/run_scses.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_data_235469-500010480.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_result_235469-500010480.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//mat_Imputation.log 2>&1"
-#> [1] "[2024-10-23 11:25:49] Running Event_type=RI;cell_similarity_feature=EXP_RBP"
-#> [1] "[2024-10-23 11:25:49] Save data"
-#> [1] "[2024-10-23 11:25:49] Save data Finished"
-#> [1] "bash /tmp/RtmpIQFQgd/temp_libpath3e3cee4e6e926b/SCSES/matlab/scses/run_scses.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_data_235469-500012871.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_result_235469-500012871.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//mat_Imputation.log 2>&1"
-#> [1] "[2024-10-23 11:26:02] Running Event_type=SE;cell_similarity_feature=PSI"
-#> [1] "[2024-10-23 11:26:02] Save data"
-#> [1] "[2024-10-23 11:26:02] Save data Finished"
-#> [1] "bash /tmp/RtmpIQFQgd/temp_libpath3e3cee4e6e926b/SCSES/matlab/scses/run_scses.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_data_235469-500008517.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_result_235469-500008517.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//mat_Imputation.log 2>&1"
-#> [1] "[2024-10-23 11:26:15] Running Event_type=SE;cell_similarity_feature=RC"
-#> [1] "[2024-10-23 11:26:15] Save data"
-#> [1] "[2024-10-23 11:26:15] Save data Finished"
-#> [1] "bash /tmp/RtmpIQFQgd/temp_libpath3e3cee4e6e926b/SCSES/matlab/scses/run_scses.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_data_235469-500019548.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_result_235469-500019548.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//mat_Imputation.log 2>&1"
-#> [1] "[2024-10-23 11:26:28] Running Event_type=SE;cell_similarity_feature=EXP_RBP"
-#> [1] "[2024-10-23 11:26:28] Save data"
-#> [1] "[2024-10-23 11:26:28] Save data Finished"
-#> [1] "bash /tmp/RtmpIQFQgd/temp_libpath3e3cee4e6e926b/SCSES/matlab/scses/run_scses.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_data_235469-500004581.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_result_235469-500004581.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//mat_Imputation.log 2>&1"
-#> [1] "[2024-10-23 11:26:41] Get imputed result using cell similarity and event similarity Finish."
-```
-
-Results of each imputation strategy will be saved
-into`work_path/imputation`.
-
-``` r
+#> [1] "[2024-11-15 10:58:52] Running Event_type=A3SS;cell_similarity_feature=PSI"
+#> [1] "[2024-11-15 10:58:52] Save data"
+#> [1] "[2024-11-15 10:58:52] Save data Finished"
+#> [1] "bash /tmp/RtmpWLitzG/temp_libpatha4849b1094ca/SCSES/matlab/scses/run_scses.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_data_808735-499964422.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_result_808735-499964422.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//mat_Imputation.log 2>&1"
+#> [1] "[2024-11-15 10:59:06] Running Event_type=A3SS;cell_similarity_feature=RC"
+#> [1] "[2024-11-15 10:59:06] Save data"
+#> [1] "[2024-11-15 10:59:06] Save data Finished"
+#> [1] "bash /tmp/RtmpWLitzG/temp_libpatha4849b1094ca/SCSES/matlab/scses/run_scses.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_data_808735-500017016.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_result_808735-500017016.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//mat_Imputation.log 2>&1"
+#> [1] "[2024-11-15 10:59:20] Running Event_type=A3SS;cell_similarity_feature=EXP_RBP"
+#> [1] "[2024-11-15 10:59:20] Save data"
+#> [1] "[2024-11-15 10:59:20] Save data Finished"
+#> [1] "bash /tmp/RtmpWLitzG/temp_libpatha4849b1094ca/SCSES/matlab/scses/run_scses.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_data_808735-500015314.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_result_808735-500015314.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//mat_Imputation.log 2>&1"
+#> [1] "[2024-11-15 10:59:33] Running Event_type=A5SS;cell_similarity_feature=PSI"
+#> [1] "[2024-11-15 10:59:33] Save data"
+#> [1] "[2024-11-15 10:59:34] Save data Finished"
+#> [1] "bash /tmp/RtmpWLitzG/temp_libpatha4849b1094ca/SCSES/matlab/scses/run_scses.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_data_808735-500032079.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_result_808735-500032079.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//mat_Imputation.log 2>&1"
+#> [1] "[2024-11-15 10:59:47] Running Event_type=A5SS;cell_similarity_feature=RC"
+#> [1] "[2024-11-15 10:59:47] Save data"
+#> [1] "[2024-11-15 10:59:47] Save data Finished"
+#> [1] "bash /tmp/RtmpWLitzG/temp_libpatha4849b1094ca/SCSES/matlab/scses/run_scses.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_data_808735-500027218.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_result_808735-500027218.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//mat_Imputation.log 2>&1"
+#> [1] "[2024-11-15 11:00:00] Running Event_type=A5SS;cell_similarity_feature=EXP_RBP"
+#> [1] "[2024-11-15 11:00:00] Save data"
+#> [1] "[2024-11-15 11:00:00] Save data Finished"
+#> [1] "bash /tmp/RtmpWLitzG/temp_libpatha4849b1094ca/SCSES/matlab/scses/run_scses.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_data_808735-500023356.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_result_808735-500023356.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//mat_Imputation.log 2>&1"
+#> [1] "[2024-11-15 11:00:14] Running Event_type=MXE;cell_similarity_feature=PSI"
+#> [1] "[2024-11-15 11:00:14] Save data"
+#> [1] "[2024-11-15 11:00:14] Save data Finished"
+#> [1] "bash /tmp/RtmpWLitzG/temp_libpatha4849b1094ca/SCSES/matlab/scses/run_scses.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_data_808735-499973523.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_result_808735-499973523.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//mat_Imputation.log 2>&1"
+#> [1] "[2024-11-15 11:00:27] Running Event_type=MXE;cell_similarity_feature=RC"
+#> [1] "[2024-11-15 11:00:27] Save data"
+#> [1] "[2024-11-15 11:00:27] Save data Finished"
+#> [1] "bash /tmp/RtmpWLitzG/temp_libpatha4849b1094ca/SCSES/matlab/scses/run_scses.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_data_808735-499988068.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_result_808735-499988068.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//mat_Imputation.log 2>&1"
+#> [1] "[2024-11-15 11:00:41] Running Event_type=MXE;cell_similarity_feature=EXP_RBP"
+#> [1] "[2024-11-15 11:00:41] Save data"
+#> [1] "[2024-11-15 11:00:41] Save data Finished"
+#> [1] "bash /tmp/RtmpWLitzG/temp_libpatha4849b1094ca/SCSES/matlab/scses/run_scses.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_data_808735-500031996.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_result_808735-500031996.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//mat_Imputation.log 2>&1"
+#> [1] "[2024-11-15 11:00:54] Running Event_type=RI;cell_similarity_feature=PSI"
+#> [1] "[2024-11-15 11:00:54] Save data"
+#> [1] "[2024-11-15 11:00:54] Save data Finished"
+#> [1] "bash /tmp/RtmpWLitzG/temp_libpatha4849b1094ca/SCSES/matlab/scses/run_scses.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_data_808735-499988122.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_result_808735-499988122.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//mat_Imputation.log 2>&1"
+#> [1] "[2024-11-15 11:01:07] Running Event_type=RI;cell_similarity_feature=RC"
+#> [1] "[2024-11-15 11:01:07] Save data"
+#> [1] "[2024-11-15 11:01:07] Save data Finished"
+#> [1] "bash /tmp/RtmpWLitzG/temp_libpatha4849b1094ca/SCSES/matlab/scses/run_scses.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_data_808735-499992316.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_result_808735-499992316.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//mat_Imputation.log 2>&1"
+#> [1] "[2024-11-15 11:01:21] Running Event_type=RI;cell_similarity_feature=EXP_RBP"
+#> [1] "[2024-11-15 11:01:21] Save data"
+#> [1] "[2024-11-15 11:01:21] Save data Finished"
+#> [1] "bash /tmp/RtmpWLitzG/temp_libpatha4849b1094ca/SCSES/matlab/scses/run_scses.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_data_808735-500004568.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_result_808735-500004568.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//mat_Imputation.log 2>&1"
+#> [1] "[2024-11-15 11:01:35] Running Event_type=SE;cell_similarity_feature=PSI"
+#> [1] "[2024-11-15 11:01:35] Save data"
+#> [1] "[2024-11-15 11:01:35] Save data Finished"
+#> [1] "bash /tmp/RtmpWLitzG/temp_libpatha4849b1094ca/SCSES/matlab/scses/run_scses.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_data_808735-499971903.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_result_808735-499971903.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//mat_Imputation.log 2>&1"
+#> [1] "[2024-11-15 11:01:49] Running Event_type=SE;cell_similarity_feature=RC"
+#> [1] "[2024-11-15 11:01:49] Save data"
+#> [1] "[2024-11-15 11:01:49] Save data Finished"
+#> [1] "bash /tmp/RtmpWLitzG/temp_libpatha4849b1094ca/SCSES/matlab/scses/run_scses.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_data_808735-499994704.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_result_808735-499994704.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//mat_Imputation.log 2>&1"
+#> [1] "[2024-11-15 11:02:02] Running Event_type=SE;cell_similarity_feature=EXP_RBP"
+#> [1] "[2024-11-15 11:02:02] Save data"
+#> [1] "[2024-11-15 11:02:02] Save data Finished"
+#> [1] "bash /tmp/RtmpWLitzG/temp_libpatha4849b1094ca/SCSES/matlab/scses/run_scses.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_data_808735-499990315.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//imputation_result_808735-499990315.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//mat_Imputation.log 2>&1"
+#> [1] "[2024-11-15 11:02:15] Get imputed result using cell similarity and event similarity Finish."
 Imputed_seperated = readRDS(Imputed.data.path)
 str(Imputed_seperated,max.level=3)
 #> List of 2
 #>  $ cell      :List of 6
-#>   ..$ PSI_PSI    : num [1:2550, 1:15] 0.955 0.829 0.545 0.523 0.284 ...
+#>   ..$ PSI_PSI    : num [1:2550, 1:15] 0.881 0.955 0.211 0.138 0.721 ...
 #>   .. ..- attr(*, "dimnames")=List of 2
-#>   ..$ PSI_RC     : num [1:2550, 1:15] 0.889 0.72 0.551 0.82 0.401 ...
+#>   ..$ PSI_RC     : num [1:2550, 1:15] 1 0.889 0.371 0.256 0.662 ...
 #>   .. ..- attr(*, "dimnames")=List of 2
-#>   ..$ RC_PSI     : num [1:2550, 1:15] 0.939 0.776 0.635 0.605 0.206 ...
+#>   ..$ RC_PSI     : num [1:2550, 1:15] 0.8106 0.9394 0.261 0.0567 0.7259 ...
 #>   .. ..- attr(*, "dimnames")=List of 2
-#>   ..$ RC_RC      : num [1:2550, 1:15] 0.849 0.673 0.563 0.723 0.299 ...
+#>   ..$ RC_RC      : num [1:2550, 1:15] 1 0.849 0.422 0.177 0.611 ...
 #>   .. ..- attr(*, "dimnames")=List of 2
-#>   ..$ EXP_RBP_PSI: num [1:2550, 1:15] 0.908 0.764 0.498 0.582 0.345 ...
+#>   ..$ EXP_RBP_PSI: num [1:2550, 1:15] 0.8759 0.9082 0.2418 0.0698 0.5931 ...
 #>   .. ..- attr(*, "dimnames")=List of 2
-#>   ..$ EXP_RBP_RC : num [1:2550, 1:15] 0.844 0.682 0.513 0.79 0.423 ...
+#>   ..$ EXP_RBP_RC : num [1:2550, 1:15] 1 0.844 0.414 0.192 0.61 ...
 #>   .. ..- attr(*, "dimnames")=List of 2
 #>  $ cell_event:List of 3
-#>   ..$ PSI_PSI    : num [1:2550, 1:15] 0.709 0.625 0.545 0.507 0.559 ...
+#>   ..$ PSI_PSI    : num [1:2550, 1:15] 0.561 0.713 0.511 0.575 0.675 ...
 #>   .. ..- attr(*, "dimnames")=List of 2
-#>   ..$ RC_PSI     : num [1:2550, 1:15] 0.667 0.599 0.538 0.496 0.541 ...
+#>   ..$ RC_PSI     : num [1:2550, 1:15] 0.535 0.673 0.508 0.577 0.646 ...
 #>   .. ..- attr(*, "dimnames")=List of 2
-#>   ..$ EXP_RBP_PSI: num [1:2550, 1:15] 0.628 0.591 0.539 0.509 0.552 ...
+#>   ..$ EXP_RBP_PSI: num [1:2550, 1:15] 0.542 0.648 0.523 0.581 0.638 ...
 #>   .. ..- attr(*, "dimnames")=List of 2
 # explain:
 # For example:
@@ -1005,6 +1041,9 @@ str(Imputed_seperated,max.level=3)
 # cell/PSI_PSI: PSI value is used to quantify cell-cell splicing similarity. Impute raw inclusion and exclusion read counts with cell similarities, and then calculate the imputed PSI.
 # cell_event/PSI_PSI: PSI value is used to quantify cell-cell splicing similarity. Impute raw inclusion and exclusion read counts with cell similarities, and then calculate the imputed PSI. Further impute the results using event similarities.
 ```
+
+Results of each imputation strategy will be saved
+into`work_path/imputation`.
 
 ### Step7. Estimation
 
@@ -1018,9 +1057,14 @@ from the four strategies, weighted by these probabilities.
 ``` r
 #rds_imputed_file: path to the list of three imputation strategies results generated in the previous step
 Imputed.data.final.path = Estimation(paras,rds_imputed_file = Imputed.data.path)
-#> [1] "[2024-10-23 11:26:41] Combine imputed psi."
-#> [1] "[2024-10-23 11:26:41] Loading data..."
-#> [1] "Input: /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//Imputed_seperated_499997095.rds"
+```
+
+``` r
+#rds_imputed_file: path to the list of three imputation strategies results generated in the previous step
+Imputed.data.final.path = Estimation(paras,rds_imputed_file = Imputed.data.path)
+#> [1] "[2024-11-15 11:02:16] Combine imputed psi."
+#> [1] "[2024-11-15 11:02:16] Loading data..."
+#> [1] "Input: /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//Imputed_seperated_500023248.rds"
 #> [1] "Checking data..."
 #> [1] "rc checked"
 #> [1] "psi checked"
@@ -1033,24 +1077,21 @@ Imputed.data.final.path = Estimation(paras,rds_imputed_file = Imputed.data.path)
 #> [1] "Output: /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation/"
 #> [1] "Checking cell similarity type"
 #> [1] "cell_similarity_data=PSI;RC;EXP_RBP  checked"
-#> [1] "[2024-10-23 11:26:45] Combine imputed psi Finish."
+#> [1] "[2024-11-15 11:02:19] Combine imputed psi Finish."
+Imputed_combined = readRDS(Imputed.data.final.path)
+str(Imputed_combined,max.level=2)
+#> List of 3
+#>  $ PSI    : num [1:2550, 1:15] 1 0.955 0.211 0.138 0.721 ...
+#>   ..- attr(*, "dimnames")=List of 2
+#>  $ RC     : num [1:2550, 1:15] 1 0.9394 0.261 0.0567 0.7259 ...
+#>   ..- attr(*, "dimnames")=List of 2
+#>  $ EXP_RBP: num [1:2550, 1:15] 1 0.9082 0.2418 0.0698 0.5931 ...
+#>   ..- attr(*, "dimnames")=List of 2
+# The finally imputed PSI were named by cell-cell splicing similarity features, including raw event PSI(PSI), and raw junction read counts(RC), and RBP expression(EXP_RBP).
 ```
 
 A list of final imputation of PSI values will be saved to
 `work_path/imputation/Imputed_combined*`.
-
-``` r
-Imputed_combined = readRDS(Imputed.data.final.path)
-str(Imputed_combined,max.level=2)
-#> List of 3
-#>  $ PSI    : num [1:2550, 1:15] 0.955 0.829 0.545 0.82 0.284 ...
-#>   ..- attr(*, "dimnames")=List of 2
-#>  $ RC     : num [1:2550, 1:15] 0.939 0.776 0.635 0.723 0.206 ...
-#>   ..- attr(*, "dimnames")=List of 2
-#>  $ EXP_RBP: num [1:2550, 1:15] 0.908 0.764 0.498 0.79 0.345 ...
-#>   ..- attr(*, "dimnames")=List of 2
-# The finally imputed PSI were named by cell-cell splicing similarity features, including raw event PSI(PSI), and raw junction read counts(RC), and RBP expression(EXP_RBP).
-```
 
 #### Fine-tune the model
 
@@ -1066,11 +1107,20 @@ The commands to perform these analyses:
 
 ``` r
 ftrc.path = getFtRawRC(paras)
+ftpsi.path = getFtRawPSI(paras)
+ftrds.path = mergeFtSplicingValue(paras)
+ftmodel.path = FtClassifier(paras)
+#rds_imputed_file: path to the list of three imputation strategies results generated in the previous step
+ImputedFt.data.final.path = Estimation(paras,rds_imputed_file = Imputed.data.path)
+```
+
+``` r
+ftrc.path = getFtRawRC(paras)
 #> [1] "Loading splicing events for classifer fine tune..."
 #> [1] "Checking cells..."
 #> [1] "15 cells are considered."
 #> [1] "Output: /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/splicing_value_ft/"
-#> [1] "[2024-10-23 11:26:45] Counting reads of A3SS events..."
+#> [1] "[2024-11-15 11:02:19] Counting reads of A3SS events..."
 #> Warning in dir.create(outpath_per_cell):
 #> '/disk/lvxuan/Single-Splicing/result/cell_line/scses_test/splicing_value_ft//A3SS_rjm'
 #> already exists
@@ -1085,8 +1135,8 @@ ftrc.path = getFtRawRC(paras)
 #> [1] "Reading RJC File Progress: 80%"
 #> [1] "Reading RJC File Progress: 90%"
 #> [1] "Reading RJC File Progress: 100%"
-#> [1] "[2024-10-23 11:26:48] Counting reads of A3SS events Finish."
-#> [1] "[2024-10-23 11:26:48] Counting reads of A5SS events..."
+#> [1] "[2024-11-15 11:02:22] Counting reads of A3SS events Finish."
+#> [1] "[2024-11-15 11:02:22] Counting reads of A5SS events..."
 #> Warning in dir.create(outpath_per_cell):
 #> '/disk/lvxuan/Single-Splicing/result/cell_line/scses_test/splicing_value_ft//A5SS_rjm'
 #> already exists
@@ -1101,8 +1151,8 @@ ftrc.path = getFtRawRC(paras)
 #> [1] "Reading RJC File Progress: 80%"
 #> [1] "Reading RJC File Progress: 90%"
 #> [1] "Reading RJC File Progress: 100%"
-#> [1] "[2024-10-23 11:26:50] Counting reads of A5SS events Finish."
-#> [1] "[2024-10-23 11:26:50] Counting reads of MXE events..."
+#> [1] "[2024-11-15 11:02:24] Counting reads of A5SS events Finish."
+#> [1] "[2024-11-15 11:02:24] Counting reads of MXE events..."
 #> Warning in dir.create(outpath_per_cell):
 #> '/disk/lvxuan/Single-Splicing/result/cell_line/scses_test/splicing_value_ft//MXE_rjm'
 #> already exists
@@ -1117,8 +1167,8 @@ ftrc.path = getFtRawRC(paras)
 #> [1] "Reading RJC File Progress: 80%"
 #> [1] "Reading RJC File Progress: 90%"
 #> [1] "Reading RJC File Progress: 100%"
-#> [1] "[2024-10-23 11:26:52] Counting reads of MXE events Finish."
-#> [1] "[2024-10-23 11:26:52] Counting reads of SE events..."
+#> [1] "[2024-11-15 11:02:25] Counting reads of MXE events Finish."
+#> [1] "[2024-11-15 11:02:25] Counting reads of SE events..."
 #> Warning in dir.create(outpath_per_cell):
 #> '/disk/lvxuan/Single-Splicing/result/cell_line/scses_test/splicing_value_ft//SE_rjm'
 #> already exists
@@ -1133,73 +1183,73 @@ ftrc.path = getFtRawRC(paras)
 #> [1] "Reading RJC File Progress: 80%"
 #> [1] "Reading RJC File Progress: 90%"
 #> [1] "Reading RJC File Progress: 100%"
-#> [1] "[2024-10-23 11:26:55] Counting reads of SE events Finish."
+#> [1] "[2024-11-15 11:02:28] Counting reads of SE events Finish."
 ftpsi.path = getFtRawPSI(paras)
 #> [1] "Checking raw reads..."
 #> [1] "Loading splicing events for classifer fine tune..."
-#> [1] "[2024-10-23 11:26:55] Calculating PSI value of A3SS events..."
-#> [1] "[2024-10-23 11:26:55] Calculating PSI value of A3SS events Finish."
-#> [1] "[2024-10-23 11:26:55] Calculating PSI value of A5SS events..."
-#> [1] "[2024-10-23 11:26:55] Calculating PSI value of A5SS events Finish."
-#> [1] "[2024-10-23 11:26:55] Calculating PSI value of MXE events..."
-#> [1] "[2024-10-23 11:26:55] Calculating PSI value of MXE events Finish."
-#> [1] "[2024-10-23 11:26:55] Calculating PSI value of SE events..."
-#> [1] "[2024-10-23 11:26:55] Calculating PSI value of SE events Finish."
+#> [1] "[2024-11-15 11:02:28] Calculating PSI value of A3SS events..."
+#> [1] "[2024-11-15 11:02:28] Calculating PSI value of A3SS events Finish."
+#> [1] "[2024-11-15 11:02:28] Calculating PSI value of A5SS events..."
+#> [1] "[2024-11-15 11:02:28] Calculating PSI value of A5SS events Finish."
+#> [1] "[2024-11-15 11:02:28] Calculating PSI value of MXE events..."
+#> [1] "[2024-11-15 11:02:28] Calculating PSI value of MXE events Finish."
+#> [1] "[2024-11-15 11:02:28] Calculating PSI value of SE events..."
+#> [1] "[2024-11-15 11:02:28] Calculating PSI value of SE events Finish."
 ftrds.path = mergeFtSplicingValue(paras)
 ftmodel.path = FtClassifier(paras)
 #> [1] "Reading true Ft PSI..."
 #> [1] "Loading Pre-training classifer..."
-#> [1] "[2024-10-23 11:26:55] Classifer fine tune"
-#> [1] "[2024-10-23 11:26:55] Processing raw Ft data..."
+#> [1] "[2024-11-15 11:02:28] Classifer fine tune"
+#> [1] "[2024-11-15 11:02:28] Processing raw Ft data..."
 #> [1] "Checking data..."
 #> [1] "Checking cell similarity type"
 #> [1] "cell_similarity_data=PSI;RC;EXP_RBP  checked"
 #> [1] "Calculating Classifier Features..."
-#> [1] "[2024-10-23 11:26:56] Save data"
-#> [1] "[2024-10-23 11:26:56] Save data Finished"
-#> [1] "bash /tmp/RtmpIQFQgd/temp_libpath3e3cee4e6e926b/SCSES/matlab/imputation1/run_imputation1.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//imputation1_data_235469-500004909.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//imputation1_result_235469-500004909.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//mat_calculateFtFeature.log 2>&1"
-#> [1] "[2024-10-23 11:27:19] Save data"
-#> [1] "[2024-10-23 11:27:19] Save data Finished"
-#> [1] "bash /tmp/RtmpIQFQgd/temp_libpath3e3cee4e6e926b/SCSES/matlab/imputation1/run_imputation1.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//imputation1_data_235469-499973591.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//imputation1_result_235469-499973591.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//mat_calculateFtFeature.log 2>&1"
-#> [1] "[2024-10-23 11:27:42] Save data"
-#> [1] "[2024-10-23 11:27:42] Save data Finished"
-#> [1] "bash /tmp/RtmpIQFQgd/temp_libpath3e3cee4e6e926b/SCSES/matlab/imputation1/run_imputation1.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//imputation1_data_235469-500004255.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//imputation1_result_235469-500004255.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//mat_calculateFtFeature.log 2>&1"
-#> [1] "[2024-10-23 11:28:05] Save data"
-#> [1] "[2024-10-23 11:28:05] Save data Finished"
-#> [1] "bash /tmp/RtmpIQFQgd/temp_libpath3e3cee4e6e926b/SCSES/matlab/imputation1/run_imputation1.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//imputation1_data_235469-500005644.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//imputation1_result_235469-500005644.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//mat_calculateFtFeature.log 2>&1"
-#> [1] "[2024-10-23 11:28:27] Save data"
-#> [1] "[2024-10-23 11:28:27] Save data Finished"
-#> [1] "bash /tmp/RtmpIQFQgd/temp_libpath3e3cee4e6e926b/SCSES/matlab/imputation1/run_imputation1.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//imputation1_data_235469-499997067.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//imputation1_result_235469-499997067.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//mat_calculateFtFeature.log 2>&1"
-#> [1] "[2024-10-23 11:28:50] Save data"
-#> [1] "[2024-10-23 11:28:50] Save data Finished"
-#> [1] "bash /tmp/RtmpIQFQgd/temp_libpath3e3cee4e6e926b/SCSES/matlab/imputation1/run_imputation1.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//imputation1_data_235469-500027391.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//imputation1_result_235469-500027391.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//mat_calculateFtFeature.log 2>&1"
-#> [1] "[2024-10-23 11:29:13] Save data"
-#> [1] "[2024-10-23 11:29:13] Save data Finished"
-#> [1] "bash /tmp/RtmpIQFQgd/temp_libpath3e3cee4e6e926b/SCSES/matlab/imputation1/run_imputation1.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//imputation1_data_235469-500015877.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//imputation1_result_235469-500015877.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//mat_calculateFtFeature.log 2>&1"
-#> [1] "[2024-10-23 11:29:37] Save data"
-#> [1] "[2024-10-23 11:29:37] Save data Finished"
-#> [1] "bash /tmp/RtmpIQFQgd/temp_libpath3e3cee4e6e926b/SCSES/matlab/imputation1/run_imputation1.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//imputation1_data_235469-499987695.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//imputation1_result_235469-499987695.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//mat_calculateFtFeature.log 2>&1"
-#> [1] "[2024-10-23 11:30:01] Save data"
-#> [1] "[2024-10-23 11:30:01] Save data Finished"
-#> [1] "bash /tmp/RtmpIQFQgd/temp_libpath3e3cee4e6e926b/SCSES/matlab/imputation1/run_imputation1.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//imputation1_data_235469-500018207.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//imputation1_result_235469-500018207.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//mat_calculateFtFeature.log 2>&1"
-#> [1] "[2024-10-23 11:30:27] Save data"
-#> [1] "[2024-10-23 11:30:27] Save data Finished"
-#> [1] "bash /tmp/RtmpIQFQgd/temp_libpath3e3cee4e6e926b/SCSES/matlab/imputation1/run_imputation1.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//imputation1_data_235469-499989589.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//imputation1_result_235469-499989589.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//mat_calculateFtFeature.log 2>&1"
-#> [1] "[2024-10-23 11:30:50] Save data"
-#> [1] "[2024-10-23 11:30:50] Save data Finished"
-#> [1] "bash /tmp/RtmpIQFQgd/temp_libpath3e3cee4e6e926b/SCSES/matlab/imputation1/run_imputation1.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//imputation1_data_235469-500002464.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//imputation1_result_235469-500002464.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//mat_calculateFtFeature.log 2>&1"
-#> [1] "[2024-10-23 11:31:14] Save data"
-#> [1] "[2024-10-23 11:31:14] Save data Finished"
-#> [1] "bash /tmp/RtmpIQFQgd/temp_libpath3e3cee4e6e926b/SCSES/matlab/imputation1/run_imputation1.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//imputation1_data_235469-500055797.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//imputation1_result_235469-500055797.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//mat_calculateFtFeature.log 2>&1"
-#> [1] "[2024-10-23 11:31:37]  Model training;similarity_type=PSI"
-#> [1] "[2024-10-23 11:31:38]  Model training;similarity_type=RC"
-#> [1] "[2024-10-23 11:31:39]  Model training;similarity_type=EXP_RBP"
-#> [1] "[2024-10-23 11:31:39] Classifer fine tune Finish."
+#> [1] "[2024-11-15 11:02:29] Save data"
+#> [1] "[2024-11-15 11:02:29] Save data Finished"
+#> [1] "bash /tmp/RtmpWLitzG/temp_libpatha4849b1094ca/SCSES/matlab/imputation1/run_imputation1.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//imputation1_data_808735-499998855.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//imputation1_result_808735-499998855.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//mat_calculateFtFeature.log 2>&1"
+#> [1] "[2024-11-15 11:02:53] Save data"
+#> [1] "[2024-11-15 11:02:53] Save data Finished"
+#> [1] "bash /tmp/RtmpWLitzG/temp_libpatha4849b1094ca/SCSES/matlab/imputation1/run_imputation1.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//imputation1_data_808735-500024407.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//imputation1_result_808735-500024407.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//mat_calculateFtFeature.log 2>&1"
+#> [1] "[2024-11-15 11:03:17] Save data"
+#> [1] "[2024-11-15 11:03:17] Save data Finished"
+#> [1] "bash /tmp/RtmpWLitzG/temp_libpatha4849b1094ca/SCSES/matlab/imputation1/run_imputation1.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//imputation1_data_808735-500005407.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//imputation1_result_808735-500005407.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//mat_calculateFtFeature.log 2>&1"
+#> [1] "[2024-11-15 11:03:42] Save data"
+#> [1] "[2024-11-15 11:03:42] Save data Finished"
+#> [1] "bash /tmp/RtmpWLitzG/temp_libpatha4849b1094ca/SCSES/matlab/imputation1/run_imputation1.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//imputation1_data_808735-500003524.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//imputation1_result_808735-500003524.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//mat_calculateFtFeature.log 2>&1"
+#> [1] "[2024-11-15 11:04:05] Save data"
+#> [1] "[2024-11-15 11:04:05] Save data Finished"
+#> [1] "bash /tmp/RtmpWLitzG/temp_libpatha4849b1094ca/SCSES/matlab/imputation1/run_imputation1.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//imputation1_data_808735-500015156.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//imputation1_result_808735-500015156.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//mat_calculateFtFeature.log 2>&1"
+#> [1] "[2024-11-15 11:04:28] Save data"
+#> [1] "[2024-11-15 11:04:28] Save data Finished"
+#> [1] "bash /tmp/RtmpWLitzG/temp_libpatha4849b1094ca/SCSES/matlab/imputation1/run_imputation1.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//imputation1_data_808735-500008509.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//imputation1_result_808735-500008509.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//mat_calculateFtFeature.log 2>&1"
+#> [1] "[2024-11-15 11:04:51] Save data"
+#> [1] "[2024-11-15 11:04:51] Save data Finished"
+#> [1] "bash /tmp/RtmpWLitzG/temp_libpatha4849b1094ca/SCSES/matlab/imputation1/run_imputation1.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//imputation1_data_808735-499970222.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//imputation1_result_808735-499970222.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//mat_calculateFtFeature.log 2>&1"
+#> [1] "[2024-11-15 11:05:16] Save data"
+#> [1] "[2024-11-15 11:05:16] Save data Finished"
+#> [1] "bash /tmp/RtmpWLitzG/temp_libpatha4849b1094ca/SCSES/matlab/imputation1/run_imputation1.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//imputation1_data_808735-500013888.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//imputation1_result_808735-500013888.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//mat_calculateFtFeature.log 2>&1"
+#> [1] "[2024-11-15 11:05:41] Save data"
+#> [1] "[2024-11-15 11:05:41] Save data Finished"
+#> [1] "bash /tmp/RtmpWLitzG/temp_libpatha4849b1094ca/SCSES/matlab/imputation1/run_imputation1.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//imputation1_data_808735-499999657.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//imputation1_result_808735-499999657.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//mat_calculateFtFeature.log 2>&1"
+#> [1] "[2024-11-15 11:06:06] Save data"
+#> [1] "[2024-11-15 11:06:06] Save data Finished"
+#> [1] "bash /tmp/RtmpWLitzG/temp_libpatha4849b1094ca/SCSES/matlab/imputation1/run_imputation1.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//imputation1_data_808735-500030973.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//imputation1_result_808735-500030973.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//mat_calculateFtFeature.log 2>&1"
+#> [1] "[2024-11-15 11:06:30] Save data"
+#> [1] "[2024-11-15 11:06:30] Save data Finished"
+#> [1] "bash /tmp/RtmpWLitzG/temp_libpatha4849b1094ca/SCSES/matlab/imputation1/run_imputation1.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//imputation1_data_808735-500005827.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//imputation1_result_808735-500005827.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//mat_calculateFtFeature.log 2>&1"
+#> [1] "[2024-11-15 11:06:54] Save data"
+#> [1] "[2024-11-15 11:06:54] Save data Finished"
+#> [1] "bash /tmp/RtmpWLitzG/temp_libpatha4849b1094ca/SCSES/matlab/imputation1/run_imputation1.sh /disk/software/matlab2022 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//imputation1_data_808735-499969431.h5 /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//imputation1_result_808735-499969431.mat >> /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/classifer//mat_calculateFtFeature.log 2>&1"
+#> [1] "[2024-11-15 11:07:17]  Model training;similarity_type=PSI"
+#> [1] "[2024-11-15 11:07:18]  Model training;similarity_type=RC"
+#> [1] "[2024-11-15 11:07:19]  Model training;similarity_type=EXP_RBP"
+#> [1] "[2024-11-15 11:07:20] Classifer fine tune Finish."
 #rds_imputed_file: path to the list of three imputation strategies results generated in the previous step
 ImputedFt.data.final.path = Estimation(paras,rds_imputed_file = Imputed.data.path)
-#> [1] "[2024-10-23 11:31:39] Combine imputed psi."
-#> [1] "[2024-10-23 11:31:39] Loading data..."
-#> [1] "Input: /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//Imputed_seperated_499997095.rds"
+#> [1] "[2024-11-15 11:07:20] Combine imputed psi."
+#> [1] "[2024-11-15 11:07:20] Loading data..."
+#> [1] "Input: /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//Imputed_seperated_500023248.rds"
 #> [1] "Checking data..."
 #> [1] "rc checked"
 #> [1] "psi checked"
@@ -1212,10 +1262,30 @@ ImputedFt.data.final.path = Estimation(paras,rds_imputed_file = Imputed.data.pat
 #> [1] "Output: /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation/"
 #> [1] "Checking cell similarity type"
 #> [1] "cell_similarity_data=PSI;RC;EXP_RBP  checked"
-#> [1] "[2024-10-23 11:31:43] Combine imputed psi Finish."
+#> [1] "[2024-11-15 11:07:23] Combine imputed psi Finish."
 
 print(ImputedFt.data.final.path)
-#> [1] "/disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//Imputed_combined_499988896.rds"
+#> [1] "/disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation//Imputed_combined_499995221.rds"
+```
+
+The final imputation results of the test data can be found in
+**analysis/Imputed_combined_499988896.rds**.
+
+``` r
+Imputed_combined = readRDS(ImputedFt.data.final.path)
+Imputed_combined[["EXP_RBP"]][1:3,1:3]
+#>                                                                                                                                                                                                                                        SRR11826368.bam
+#> isoform1=exon:chr2:178083975-178084042:+@junction:chr2:178084043-178086787:+@exon:chr2:178086788-178088686:+|isoform2=exon:chr2:178083975-178084042:+@junction:chr2:178084043-178084135:+@exon:chr2:178084136-178088686:+|HNRNPA3|A3SS       1.0000000
+#> isoform1=exon:chr4:146019084-146019571:+@junction:chr4:146019572-146025540:+@exon:chr4:146025541-146025667:+|isoform2=exon:chr4:146019084-146019571:+@junction:chr4:146019572-146025537:+@exon:chr4:146025538-146025667:+|ABCE1|A3SS         0.9081793
+#> isoform1=exon:chr3:184040871-184041029:+@junction:chr3:184041030-184041195:+@exon:chr3:184041196-184041381:+|isoform2=exon:chr3:184040871-184041029:+@junction:chr3:184041030-184041192:+@exon:chr3:184041193-184041381:+|EIF4G1|A3SS        0.2417979
+#>                                                                                                                                                                                                                                        SRR11826371.bam
+#> isoform1=exon:chr2:178083975-178084042:+@junction:chr2:178084043-178086787:+@exon:chr2:178086788-178088686:+|isoform2=exon:chr2:178083975-178084042:+@junction:chr2:178084043-178084135:+@exon:chr2:178084136-178088686:+|HNRNPA3|A3SS       0.9325028
+#> isoform1=exon:chr4:146019084-146019571:+@junction:chr4:146019572-146025540:+@exon:chr4:146025541-146025667:+|isoform2=exon:chr4:146019084-146019571:+@junction:chr4:146019572-146025537:+@exon:chr4:146025538-146025667:+|ABCE1|A3SS         0.8759136
+#> isoform1=exon:chr3:184040871-184041029:+@junction:chr3:184041030-184041195:+@exon:chr3:184041196-184041381:+|isoform2=exon:chr3:184040871-184041029:+@junction:chr3:184041030-184041192:+@exon:chr3:184041193-184041381:+|EIF4G1|A3SS        0.1922552
+#>                                                                                                                                                                                                                                        SRR11826409.bam
+#> isoform1=exon:chr2:178083975-178084042:+@junction:chr2:178084043-178086787:+@exon:chr2:178086788-178088686:+|isoform2=exon:chr2:178083975-178084042:+@junction:chr2:178084043-178084135:+@exon:chr2:178084136-178088686:+|HNRNPA3|A3SS       0.9437169
+#> isoform1=exon:chr4:146019084-146019571:+@junction:chr4:146019572-146025540:+@exon:chr4:146025541-146025667:+|isoform2=exon:chr4:146019084-146019571:+@junction:chr4:146019572-146025537:+@exon:chr4:146025538-146025667:+|ABCE1|A3SS         0.8796700
+#> isoform1=exon:chr3:184040871-184041029:+@junction:chr3:184041030-184041195:+@exon:chr3:184041196-184041381:+|isoform2=exon:chr3:184040871-184041029:+@junction:chr3:184041030-184041192:+@exon:chr3:184041193-184041381:+|EIF4G1|A3SS        0.2184908
 ```
 
 ### Step8. Cell Clustering
@@ -1256,8 +1326,4 @@ p=ggplot(data = data_umap,aes(x =V1 ,y =V2))+
 print(p)
 ```
 
-<img src="man/figures/README-unnamed-chunk-18-1.png" width="100%" />
-
-## Example
-
-For iPSC example, see the Rmarkdown tutorials in `analysis/iPSC.Rmd`
+<img src="man/figures/README-unnamed-chunk-13-1.png" width="100%" />

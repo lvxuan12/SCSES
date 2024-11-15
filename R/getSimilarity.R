@@ -150,7 +150,7 @@ createBSgenome <- function(ref_path,out_path,pkg) {
 #' PSI means psi value of splicing events,  default: rds_processed/psi.rds
 #' @param distance_method method used to calculate distance,
 #' euclidean or cosine
-#' @param alpha_cell restart probability for random walk
+#' @param alpha_cell 1-restart probability for random walk
 #' @param decay_cell threshold of change in the similarity matrix
 #' @param kcell_max Maximum number of neighbors
 #' @param kcell_min Minimum number of neighbors
@@ -376,7 +376,7 @@ getCellSimilarity <- function(
 #' @param ae.para parameters of encoding sequence features
 #' @param rbp path to rbp or character string of rbp
 #' @param kevent the number of neighbors
-#' @param alpha_event restart probability for random walk
+#' @param alpha_event 1-restart probability for random walk
 #' @param decay_event threshold of change in the similarity matrix
 #'
 #' @return path to event similarity
