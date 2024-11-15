@@ -48,6 +48,8 @@ conda activate SCSES_test
 
 To use SCSES, you will need to install R, Python, MCR, and Java.
 
+The MCR is quite large, so downloading may take some time.
+
 ``` bash
 ## install R in conda environment
 conda install -c conda-forge r-base=4.3.1
@@ -58,6 +60,7 @@ wget https://ssd.mathworks.com/supportfiles/downloads/R2022b/Release/10/deployme
 unzip -q MATLAB_Runtime_R2022b_Update_10_glnxa64.zip && \
 ./install -destinationFolder /opt/mcr -agreeToLicense yes -mode silent
 ```
+
 
 #### 1. python module
 
@@ -96,9 +99,9 @@ export MAJIQ_LICENSE_FILE=/path/to/majiq_license_academic_official.lic
 ##### 2.3 [IRFinder](https://github.com/dgaolab/IRFinder)
 
 ``` bash
-wget https://github.com/dgaolab/IRFinder/archive/refs/tags/v1.3.1.tar.gz
-tar -zxvf v1.3.0.tar.gz
-export PATH=/path/to/IRFinder-1.3.0/bin/:$PATH
+wget https://github.com/RitchieLabIGH/IRFinder/archive/refs/tags/v2.0.1.tar.gz
+tar -zxvf v2.0.1.tar.gz
+export PATH=/path/to/IRFinder-2.0.1/bin/:$PATH
 ```
 
 **NOTE:** [STAR](https://github.com/alexdobin/STAR) is required to build IRFinder reference! To run IRFinder correctly, you also need to install STAR.
@@ -110,6 +113,7 @@ export PATH=/path/to/IRFinder-1.3.0/bin/:$PATH
 Currently SCSES can only be installed from GitHub. To install SCSES, type the following command in **R**:
 
 ``` r
+install.packages(remotes)
 options(download.file.method = "wget", times=100)
 remotes::install_github("lvxuan12/SCSES")
 ```
@@ -203,7 +207,9 @@ For real dataset, users can modify this file to fit their input and software env
 ## Loading packages
 library(SCSES)
 #paras_file: path to configure file generated in the previous step
-paras = readSCSESconfig(paste0(system.file("analysis", package = "SCSES"),'/cell_line.json'))
+print(system.file("analysis", package = "SCSES"))
+# paras = readSCSESconfig(paste0(system.file("analysis", package = "SCSES"),'/cell_line.json'))
+paras = readSCSESconfig("/disk/lvxuan/Single-Splicing/src/package/SCSES/analysis/cell_line.json")
 names(paras)
 print(paras$DataSet)
 print(paras$Basic$bam_path)
@@ -475,7 +481,8 @@ Imputed_combined[["EXP_RBP"]][1:3,1:3]
 The reference results of the test data can be found [here](https://github.com/lvxuan12/SCSES/blob/main/analysis/Imputed_combined_499988896.rds), or loaded by command:
 
 ``` r
-ref.path <- paste0(system.file("analysis", package = "SCSES"),'/Imputed_combined_499988896.rds')
+ref.path <- paste0(system.file("analysis", package = "SCSES"),'/Imputed_combined_499988896.rds'1
+)
 ref.result <- readRDS(ref.path)
 ```
 
@@ -502,8 +509,8 @@ calcu_umap<-function(data,n_neighbors){
 }
 
 mycol=c("#fbb45d","#699ed4","#ef8183")
-annotation=read.table(paste0(system.file("analysis", package = "SCSES"),'/cell_line_annotation.txt'),sep="\t")
-Imputed_combined=readRDS(paste0(system.file("analysis", package = "SCSES"),'/Imputed_combined_499988896.rds'))
+annotation=read.table("/disk/lvxuan/Single-Splicing/src/package/SCSES/analysis/cell_line_annotation.txt",sep="\t")
+Imputed_combined=readRDS("/disk/lvxuan/Single-Splicing/src/package/SCSES/analysis/Imputed_combined_499988896.rds")
 data_umap=calcu_umap(Imputed_combined[[3]],n_neighbors = 5)
 row.names(data_umap)=gsub(".bam","",row.names(data_umap))
 data_umap$group=annotation$V2[match(row.names(data_umap),annotation$V1)]
