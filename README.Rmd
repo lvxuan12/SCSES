@@ -488,11 +488,10 @@ Imputed_combined = readRDS(ImputedFt.data.final.path)
 Imputed_combined[["EXP_RBP"]][1:3,1:3]
 ```
 
-The reference results of the test data can be found [here](https://github.com/lvxuan12/SCSES/blob/main/analysis/Imputed_combined_499988896.rds), or loaded by command:
+The reference results of the test data can be found [here](https://github.com/lvxuan12/SCSES/blob/main/analysis/Imputed_combined_499993907.rds), or loaded by command:
 
 ``` r
-ref.path <- paste0(system.file("analysis", package = "SCSES"),'/Imputed_combined_499988896.rds'1
-)
+ref.path <- paste0(system.file("analysis", package = "SCSES"),'/Imputed_combined_499993907.rds')
 ref.result <- readRDS(ref.path)
 ```
 
@@ -520,7 +519,7 @@ calcu_umap<-function(data,n_neighbors){
 
 mycol=c("#fbb45d","#699ed4","#ef8183")
 annotation=read.table("/disk/lvxuan/Single-Splicing/src/package/SCSES/analysis/cell_line_annotation.txt",sep="\t")
-Imputed_combined=readRDS("/disk/lvxuan/Single-Splicing/src/package/SCSES/analysis/Imputed_combined_499988896.rds")
+Imputed_combined=readRDS("/disk/lvxuan/Single-Splicing/src/package/SCSES/analysis/Imputed_combined_499993907.rds")
 data_umap=calcu_umap(Imputed_combined[[3]],n_neighbors = 5)
 row.names(data_umap)=gsub(".bam","",row.names(data_umap))
 data_umap$group=annotation$V2[match(row.names(data_umap),annotation$V1)]
