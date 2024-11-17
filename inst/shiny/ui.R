@@ -24,7 +24,7 @@ body <- dashboardBody(
                                           h3("Data Information"),
                                           textInput(inputId = "dataset", label = "Dataset", placeholder = "Input the dataset name"),
                                           fluidRow(
-                                                 createTextFile(id = "bam_path", label = "Bam File Path", type = "shinyDirButton"),
+                                                 createTextFile(id = "bam_path", label = "Directory containing Bam files", type = "shinyDirButton"),
                                                  column(
                                                         width = 2,
                                                         numericInput(inputId = "readlength", label = "Read Length", value = 125, min = 0)

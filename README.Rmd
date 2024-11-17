@@ -122,6 +122,7 @@ Currently SCSES can only be installed from GitHub. To install SCSES, type the fo
 ``` r
 install.packages("remotes")
 remotes::install_version("Matrix", version = "1.6-5")
+install.packages("curl",configure.vars='LIB_DIR=/usr/lib/x86_64-linux-gnu/pkgconfig/')
 options(download.file.method = "wget", times=100)
 remotes::install_github("lvxuan12/SCSES")
 ```
@@ -201,7 +202,9 @@ The **test bam files** can be downloaded from <https://doi.org/10.5281/zenodo.13
 
 The other input data required for SCSES for the test data can be downloaded from <https://doi.org/10.5281/zenodo.13951695>, including genome FASTA file, annotation GTF and GFF3 file, RBP file,STAR reference, phast conservation file, and configure file.
 
-Move test bam files to directory `bam/`. Move other input data to directory `refgenome/`.
+Move test bam files to directory `/path/to/bams/`. 
+
+Move other input data to directory `/path/to/refgenome/`.
 
 ```{bash}
 # Example:
@@ -232,6 +235,7 @@ paras = readSCSESconfig(paste0(system.file("analysis", package = "SCSES"),'/cell
 names(paras)
 print(paras$DataSet)
 print(paras$Basic$bam_path)
+# all outputs will be saved in work_path
 print(paras$Basic$work_path)
 ```
 
@@ -239,7 +243,8 @@ print(paras$Basic$work_path)
 
 #### TPM matrix (for smart-seq2 dataset)
 
-The TPM matrix of gene expression can be obtained by different methods. We use [featureCounts](https://github.com/ShiLab-Bioinformatics/subread) to generate this matrix. You can use `getGeneExpression` to run featureCounts, which will save featureCounts output to `work_path/expr/` and `getEXPmatrix` to generate TPM matrix, which will save gene expression count and TPM matrix to `work_path/rds/`.
+The TPM matrix of gene expression can be obtained by different methods. We use [featureCounts](https://github.com/ShiLab-Bioinformatics/subread) to generate this matrix. 
+You can use `getGeneExpression` to run featureCounts, which will save featureCounts output to `work_path/expr/` and `getEXPmatrix` to generate TPM matrix, which will save gene expression count and TPM matrix to `work_path/rds/`.
 
 ``` r
 featurecounts.path = getGeneExpression(paras) 
@@ -254,6 +259,8 @@ list.files(rds.path)
 tpm = readRDS(paste0(rds.path,'/TPM.rds'))
 tpm[1:5,1:5]
 ```
+
+
 
 #### Normalized UMI count matrix (for UMI dataset)
 
