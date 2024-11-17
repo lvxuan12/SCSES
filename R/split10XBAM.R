@@ -2,7 +2,7 @@
 #' this function will split possorted_genome_bam.bam from 10X CellRanger output
 #' to single cell bam based bam tag "CB:"
 #'
-#' @param CellRanger_path directory to CellRanger output
+#' @param CellRanger_path directory to CellRanger output for one sample
 #' @param out_path directory to save single cell bam
 #' @param core the number of threads
 #' @param times Process the cells in times iterations, default: 50
@@ -20,7 +20,7 @@ split10XBAM <- function(CellRanger_path,out_path,core,times=50) {
     script_split <- paste0(dir_shell, "/split_10XBAM.sh")
     # input
     bam_file = list.files(CellRanger_path,
-        pattern = "possorted_genome_bam.bam",
+        pattern = "possorted_genome_bam.bam$",
         recursive = TRUE, full.names = TRUE
     )
     if (length(bam_file) == 0) {

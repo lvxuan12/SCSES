@@ -44,7 +44,7 @@ default: imputation/event_similarity/event.similars.rds}
 \item{cell_similarity_type}{one data type used to calculate cell similarity (EXP_RBP, RC, PSI)}
 }
 \value{
-path to the result of three imputation strategies
+Return path to the result of three imputation strategies
 save a list of result of three imputation strategies to
 work_path/imputation/Imputed_seperated_event_${cell_similarity_type}_*.rds
 The result contains two lists, each of which contains multiple imputation results.

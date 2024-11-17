@@ -46,7 +46,7 @@ conda create -n SCSES_test python=3.11
 conda activate SCSES_test
 ```
 
-To use SCSES, you will need to install R, Python, MCR, and Java.
+To use SCSES, you will need to install R, Python, Matlab Compiler Runtime(v9.13), and Java(v17.0.10).
 
 The MCR is quite large, so downloading may take some time.
 
@@ -120,7 +120,8 @@ export PATH=/path/to/IRFinder-2.0.1/bin/:$PATH
 Currently SCSES can only be installed from GitHub. To install SCSES, type the following command in **R**:
 
 ``` r
-install.packages(remotes)
+install.packages("remotes")
+remotes::install_version("Matrix", version = "1.6-5")
 options(download.file.method = "wget", times=100)
 remotes::install_github("lvxuan12/SCSES")
 ```
@@ -147,6 +148,13 @@ conda install conda-forge::libxml2
 ``` bash
 ln -s /usr/lib/x86_64-linux-gnu/libsz.so /path/to/miniconda/envs/SCSES_test/lib/libsz.so
 ```
+
+##### 4. error: '::timespec_get' has not been declared
+
+``` bash
+conda upgrade -c conda-forge --all 
+```
+
 
 ## SCSES input
 
@@ -251,6 +259,8 @@ tpm[1:5,1:5]
 You can use `get10XEXPmatrix` to generate Normalized UMI count matrix from 10X CellRanger hdf5 file, which will save normalized UMI count to `work_path/rds/`.
 
 ``` r
+# install.packages('Seurat')
+# In expr_path, there are different subdirectories, each named after a sample name.
 rds.path = get10XEXPmatrix(paras,expr_path,sample_name)
 ```
 
@@ -272,6 +282,7 @@ list.files(pseudobulk.path)
 
 #if you meet:
 #irfinder: error while loading shared libraries: libboost_iostreams.so.1.71.0: cannot open shared object file: No such file or directory
+#libboost_iostreams.so.1.71.0 exists in /disk/lvxuan/lib
 old.ld=Sys.getenv("LD_LIBRARY_PATH")
 Sys.setenv(LD_LIBRARY_PATH = paste0("/disk/lvxuan/lib:", old.ld))
 # you can Provide STAR reference to speed up the function
@@ -288,15 +299,17 @@ Different types of splicing events will be saved to `work_path/events/`, separat
 
 #### for UMI dataset
 
-SCSES requires single cell bam files being saved in a directory. For UMI-based dataset, and using CellRanger for data process, the function `split10XBAM` can be used to get single cell bam files.
+SCSES requires single cell bam files being saved in a directory. For UMI-based dataset using CellRanger for data process, the function `split10XBAM` can be used to get single cell bam files for each sample.
 
 ``` r
 # CellRanger_path: directory to CellRanger output
 # out_path: directory to save single cell bam
 # core: the number of threads
-splitbam.path = split10XBAM(CellRanger_path,out_path,core)
-# path to single cell bam files should be added to bam_path in configure file
 
+splitbam.path = split10XBAM(CellRanger_path,out_path,core)
+
+# path to single cell bam files should be added to bam_path in configure file
+paras$Basic$bam_path = splitbam.path
 # pseudobulk.path = createPseudobulk(paras)
 # It is not necessary to execute `createPseudobulk`, and the `possorted_genome_bam.bam`,`possorted_genome_bam.bam.bai` from `CellRanger_path` can be moved to `work_path/data/all.bam`.
 event.path = detectEvents(paras)

@@ -20,7 +20,7 @@ do
         row_to=$n_row
     fi
     sed -n "${row_from},${row_to}p" $cell_info > ${cell_info}.${i}
-    $java_path -Xmx100g -cp $lib_path/* -jar $jar_path $bam_file ${cell_info}.${i} $bam_sc $core
+    $java_path -Xmx100g -cp $lib_path -jar $jar_path $bam_file ${cell_info}.${i} $bam_sc $core
     echo "cell split ${row_from}-${row_to} done"
 done
 

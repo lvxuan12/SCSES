@@ -45,7 +45,7 @@ rbp, kevent, alpha_event,decay_event from paras}
 
 \item{kevent}{the number of neighbors}
 
-\item{alpha_event}{restart probability for random walk}
+\item{alpha_event}{1-restart probability for random walk}
 
 \item{decay_event}{threshold of change in the similarity matrix}
 }
