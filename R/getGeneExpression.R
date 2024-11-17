@@ -102,7 +102,7 @@ getEXPmatrix <- function(
     })
     fea_tpm <- log2(fea_tpm + 1)
     saveRDS(fea, paste0(output_path, "/count.rds"))
-    saveRDS(fea_tpm, paste0(output_path, "/TPM.rds"))
+    saveRDS(fea_tpm, paste0(output_path, "/count_norm.rds"))
     return(output_path)
 }
 
@@ -123,10 +123,10 @@ getEXPmatrix <- function(
 #'
 #' @importFrom stats median
 
-getmulti10XEXPmatrix <- function(
+get10XEXPmatrix <- function(
     paras, expr_path,
     filter.mt = paras$Basic$filter_sc$filter.mt,
-    filter.rp = paras$Basic$filter_sc$filter.rp,sample_name) {
+    filter.rp = paras$Basic$filter_sc$filter.rp) {
   if (!requireNamespace("Seurat", quietly = TRUE)) {
     stop("Please install Seurat to read files")
   }

@@ -178,6 +178,8 @@ After running this command, a interactive window will popup which allow you to f
 
 Finally, you can click "Create Config" button and a json file will be generated in the `work_path` you provided if successful.
 
+The annotation information of the configuration file can be found in the `ConfigurationGuide.txt`
+
 ##### 4. phast conservation file in bigWig format
 
 For human and mouse, you could download it directly from UCSC browser: [mm10.60way.phastCons.bw](http://hgdownload.cse.ucsc.edu/goldenPath/mm10/phastCons60way/), [hg38.phastCons100way.bw](http://hgdownload.cse.ucsc.edu/goldenPath/hg38/phastCons100way/) and [hg19.100way.phastCons.bw](http://hgdownload.cse.ucsc.edu/goldenPath/hg19/phastCons100way/).
@@ -256,11 +258,11 @@ featurecounts.path = getGeneExpression(paras)
 rds.path = getEXPmatrix(paras)
 print(rds.path)
 list.files(rds.path)
-tpm = readRDS(paste0(rds.path,'/TPM.rds'))
+tpm = readRDS(paste0(rds.path,'/count_norm.rds'))
 tpm[1:5,1:5]
 ```
 
-
+After this step, directories `expr` and `rds` will be created.
 
 #### Normalized UMI count matrix (for UMI dataset)
 
@@ -539,8 +541,11 @@ calcu_umap<-function(data,n_neighbors){
 }
 
 mycol=c("#fbb45d","#699ed4","#ef8183")
-annotation=read.table("/disk/lvxuan/Single-Splicing/src/package/SCSES/analysis/cell_line_annotation.txt",sep="\t")
-Imputed_combined=readRDS("/disk/lvxuan/Single-Splicing/src/package/SCSES/analysis/Imputed_combined_499993907.rds")
+
+annotation=read.table(paste0(system.file("analysis", package = "SCSES"),'/cell_line_annotation.txt'),sep="\t")
+# annotation=read.table("/disk/lvxuan/Single-Splicing/src/package/SCSES/analysis/cell_line_annotation.txt",sep="\t")
+Imputed_combined=readRDS(paste0(system.file("analysis", package = "SCSES"),'/Imputed_combined_499993907.rds'))
+# Imputed_combined=readRDS("/disk/lvxuan/Single-Splicing/src/package/SCSES/analysis/Imputed_combined_499993907.rds")
 data_umap=calcu_umap(Imputed_combined[[3]],n_neighbors = 5)
 row.names(data_umap)=gsub(".bam","",row.names(data_umap))
 data_umap$group=annotation$V2[match(row.names(data_umap),annotation$V1)]

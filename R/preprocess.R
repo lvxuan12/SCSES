@@ -88,7 +88,7 @@ preprocessEvent <- function(
     rc <- readRDS(file = paste0(rds_path, "/rc.rds"))
     event <- readRDS(file = paste0(rds_path, "/event.rds"))
     # expr input
-    expr <- readRDS(file = paste0(rds_path, "/TPM.rds"))
+    expr <- readRDS(file = paste0(rds_path, "/count_norm.rds"))
     print("Before filtering")
     print(paste0("expr: ", nrow(expr), "*", ncol(expr)))
     print(paste0("psi: ", nrow(psi), "*", ncol(psi)))

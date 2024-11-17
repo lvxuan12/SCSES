@@ -193,7 +193,7 @@ FtClassifier <- function(
         stop(paste("Preprocessed psi, reads count, and events annotation must be saved in", rds_ft_path))
     }
     rds_files = list.files(path = rds_path, pattern = "*rds")
-    if (!all(c("TPM.rds") %in% rds_files)) {
+    if (!all(c("count_norm.rds") %in% rds_files)) {
         stop(paste("Gene expression must be saved in", rds_path))
     }
     # output----
@@ -209,7 +209,7 @@ FtClassifier <- function(
     rc <- readRDS(file = paste0(rds_ft_path, "/rc.rds"))
     event <- readRDS(file = paste0(rds_ft_path, "/event.rds"))
     # expr input
-    expr <- readRDS(file = paste0(rds_path, "/TPM.rds"))
+    expr <- readRDS(file = paste0(rds_path, "/count_norm.rds"))
     cell_id <- Reduce(intersect, list(colnames(expr), colnames(psi), colnames(rc)))
     psi <- psi[, cell_id, drop = F]
     rc <- rc[, cell_id, drop = F]

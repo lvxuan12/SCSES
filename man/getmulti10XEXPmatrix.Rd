@@ -2,16 +2,8 @@
 % Please edit documentation in R/getGeneExpression.R
 \name{getmulti10XEXPmatrix}
 \alias{getmulti10XEXPmatrix}
-\title{Get gene expression matrix from Cell Ranger}
+\title{Get gene expression matrix from Cell Ranger of multiple samples}
 \usage{
-getmulti10XEXPmatrix(
-  paras,
-  expr_path,
-  filter.mt = paras$Basic$filter_sc$filter.mt,
-  filter.rp = paras$Basic$filter_sc$filter.rp,
-  sample_name
-)
-
 getmulti10XEXPmatrix(
   paras,
   expr_path,
@@ -38,13 +30,8 @@ expr_path directory, named after the sample_name.}
 }
 \value{
 gene expression matrix path
-
-gene expression matrix path
 }
 \description{
-Read count matrix from 10X CellRanger hdf5 file
-save raw and normalized UMI counts sparse matrix to work_path/rds/
-
 Read count matrix from 10X CellRanger hdf5 file
 save raw and normalized UMI counts sparse matrix to work_path/rds/
 }
