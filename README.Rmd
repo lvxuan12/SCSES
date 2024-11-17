@@ -204,6 +204,7 @@ The other input data required for SCSES for the test data can be downloaded from
 Move test bam files to directory `bam/`. Move other input data to directory `refgenome/`.
 
 ```{bash}
+# Example:
 ls /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/bam/
 ls /disk/lvxuan/Single-Splicing/result/cell_line/scses_test/refgenome/
 ```
@@ -226,8 +227,8 @@ For real dataset, users can modify this file to fit their input and software env
 library(SCSES)
 #paras_file: path to configure file generated in the previous step
 print(system.file("analysis", package = "SCSES"))
-# paras = readSCSESconfig(paste0(system.file("analysis", package = "SCSES"),'/cell_line.json'))
-paras = readSCSESconfig("/disk/lvxuan/Single-Splicing/src/package/SCSES/analysis/cell_line.json")
+paras = readSCSESconfig(paste0(system.file("analysis", package = "SCSES"),'/cell_line.json'))
+#paras = readSCSESconfig("/disk/lvxuan/Single-Splicing/src/package/SCSES/analysis/cell_line.json")
 names(paras)
 print(paras$DataSet)
 print(paras$Basic$bam_path)
