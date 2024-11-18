@@ -20,6 +20,7 @@ majiq_env=$7
 conda_binpath=$8
 license_file=$9
 
+source ~/.bashrc
 source $conda_binpath/activate $majiq_env
 
 export MAJIQ_LICENSE_FILE=$license_file
