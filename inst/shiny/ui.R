@@ -50,7 +50,7 @@ body <- dashboardBody(
                                           h3("SCSES Program Essential"),
                                           textInput(inputId = "conda_envname", label = "conda environment", placeholder = "Input the name of conda env for SCSES",value='base'),
                                           fluidRow(
-                                                 createTextFile(id = "condabin_path", label = "Conda bin Path", type = "shinyDirButton",value="/software/miniconda3/bin/conda"),
+                                                 createTextFile(id = "condabin_path", label = "Conda bin Path", type = "shinyDirButton",value="/software/miniconda3/bin/"),
                                                  createTextFile(id = "python_path", label = "Python Path", type = "shinyFilesButton"),
                                                  createTextFile(id = "JAVA_path", label = "JAVA Path", type = "shinyFilesButton"),
                                                  createTextFile(id = "MCR_path", label = "MCR Path", type = "shinyDirButton",value='/opt/mcr/R2022b/')
