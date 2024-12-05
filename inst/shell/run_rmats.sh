@@ -18,6 +18,9 @@ core=$6
 rMATS_path=$7
 rMATS_env=$8
 conda_binpath=$9
+
+source $conda_binpath/activate $rMATS_env
+
 mkdir -p $workpath
 
 ls $bampath/*bam > $workpath/rMats.list
