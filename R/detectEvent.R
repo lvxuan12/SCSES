@@ -106,7 +106,8 @@ detectEvents <- function(paras,star_ref_path=NULL) {
     filename <- "run_rmats.sh"
     script_rmats <- file.path(dir_shell, filename)
     rmats_path <- paras$Basic$rMATS_path
-    py_path <- paras$Basic$python_path
+    condabin_path <- paras$Basic$conda_binpath
+    rmats_env <- paras$Basic$rMATS_env
     res <- getSEevent(
       rmats.work.path, bam_path, gtf, paired, readlength,
       rmats_path, py_path, script_rmats, core, log_file
