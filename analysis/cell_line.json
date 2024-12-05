@@ -15,7 +15,8 @@
     "STAR_path": "/usr/local/bin/STAR",
     "samtools_path": "/disk/software/samtools/bin/samtools",
     "featureCounts_path": "/disk/software/subread-2.0.6-source/bin/featureCounts",
-    "rMATS_path": "/disk/lvxuan/software/SCSES_test3/rmats_turbo_v4_3_0/rmats.py",
+    "rMATS_path": "/disk/lvxuan/software/SCSES_test3/rmats_turbo_v4_3_0/run_rmats",
+    "rMATS_env": "/disk/lvxuan/software/SCSES_test3/rmats_turbo_v4_3_0/conda_envs/rmats",
     "IRFinder_path": "/disk/lvxuan/software/IRFinder-2.0.1/bin/IRFinder",
     "MAJIQ_env": "MAJIQ",
     "refgenome": {
