@@ -472,11 +472,11 @@ getEventSimilarity <- function(
     print(msg)
     msg = paste0("[", Sys.time(), "] ", "step1 Creating BSgenome for ", pkg, "=======", "")
     print(msg)
-    if (!requireNamespace(pkg, quietly = TRUE)) {
-      createBSgenome(ref_path = ref_path,
-                     out_path = output_path, pkg = pkg
-      )
-    }
+    # if (!requireNamespace(pkg, quietly = TRUE)) {
+    #   createBSgenome(ref_path = ref_path,
+    #                  out_path = output_path, pkg = pkg
+    #   )
+    # }
     library(pkg, character.only = T, quietly = T)
     bs.genome = get(pkg)
     msg = paste0("[", Sys.time(), "] ", "step2 Extracting features =======")
