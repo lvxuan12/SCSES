@@ -110,7 +110,7 @@ detectEvents <- function(paras,star_ref_path=NULL) {
     rmats_env <- paras$Basic$rMATS_env
     res <- getSEevent(
       rmats.work.path, bam_path, gtf, paired, readlength,
-      rmats_path, py_path, script_rmats, core, log_file
+      rmats_path, rmats_env, condabin_path, script_rmats, core, log_file
     )
   }
   event_num_list <- lapply(event_types, function(type) {
@@ -265,7 +265,7 @@ getEvent <- function(paras, event_type) {
 #'
 #' @export
 
-getSEevent <- function(work_path, bam_path, gtf, paired, readlength, rmats_path, py_path, script_rmats, core, log_file) {
+getSEevent <- function(work_path, bam_path, gtf, paired, readlength, rmats_path, rmats_env, condabin_path, script_rmats, core, log_file) {
   cmd <- paste(
     "bash", script_rmats,
     work_path,
@@ -275,7 +275,8 @@ getSEevent <- function(work_path, bam_path, gtf, paired, readlength, rmats_path,
     readlength,
     core,
     rmats_path,
-    py_path, ">>", log_file, "2>&1"
+    rmats_env,
+    condabin_path, ">>", log_file, "2>&1"
   )
   msg <- paste0("[", Sys.time(), "] ", "Run rMats: ", cmd)
   print(msg)
