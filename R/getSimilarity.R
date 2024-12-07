@@ -388,7 +388,7 @@ getCellSimilarity <- function(
 #' @import parallel
 #' @importFrom reticulate source_python py_module_available use_python
 #' @import rtracklayer
-#' @importFrom stats rbinom
+#' @importFrom stats rbinom var
 #' @import BSgenome
 #' @import Biostrings
 #' @import R.matlab
