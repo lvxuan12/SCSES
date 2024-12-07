@@ -677,7 +677,7 @@ getEventSimilarity <- function(
                     ae.para[[type]]$epoch,
                     log_file
                 )
-                vars <- apply(auto.feature, 2, var)
+                vars <- apply(auto.feature, 2, stats::var)
                 valid <- which(vars != 0)
                 auto.feature <- auto.feature[, valid]
                 flag <- length(valid) <= 1
@@ -699,7 +699,7 @@ getEventSimilarity <- function(
         stop("rbp must be a path or character string")
     }
     rbp <- intersect(rbp, rownames(expr))
-    rbp.var = apply(X = expr[rbp, ], MARGIN = 1, FUN = var)
+    rbp.var = apply(X = expr[rbp, ], MARGIN = 1, FUN = stats::var)
     rbp = rbp[which(rbp.var != 0)]
     if (length(rbp) < 3) {
         print("It is unreliable to calculate event similarity based on less than 3 rbps.")
