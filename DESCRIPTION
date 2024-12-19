@@ -1,7 +1,7 @@
 Package: SCSES
 Type: Package
 Title: Single-cell Splicing Estimation based on Network Diffusion
-Version: 0.1.0
+Version: 1.0.0
 Author: Xiao Wen, Xuan Lv, Zhaoqi Liu
 Maintainer: Xuan Lv <lvxuan@big.ac.cn>
 Description: Alternative splicing (AS) significantly contributes to cellular 
