@@ -22,9 +22,7 @@ mkdir -p $workpath
 ls $bampath/*bam > $workpath/rMats.list
 sed -i ':t;N;s/\n/,/;b t' $workpath/rMats.list
 
-bash
-conda activate SCSES
-python ${rMATS_path} --b1 $workpath/rMats.list --gtf $gtf -t $pair --variable-read-length \
+${python_path} ${rMATS_path} --b1 $workpath/rMats.list --gtf $gtf -t $pair --variable-read-length \
         --readLength $readlength --nthread $core --od $workpath/output --tmp $workpath/tmp
 rm -r $workpath/tmp
 rm -r $workpath/output/tmp
