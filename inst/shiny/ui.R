@@ -48,16 +48,16 @@ body <- dashboardBody(
                                    tabPanel(
                                           "Tools Info",
                                           h3("SCSES Program Essential"),
-                                          textInput(inputId = "conda_envname", label = "conda environment", placeholder = "Input the name of conda env for SCSES",value='base'),
+                                          textInput(inputId = "conda_envname", label = "conda environment", placeholder = "Input the name of conda env for SCSES",value='SCSES',),
                                           fluidRow(
                                                  createTextFile(id = "condabin_path", label = "Conda bin Path", type = "shinyDirButton",value="/software/miniconda3/bin/"),
-                                                 createTextFile(id = "python_path", label = "Python Path", type = "shinyFilesButton"),
+                                                 createTextFile(id = "python_path", label = "Python Path", type = "shinyFilesButton",value='/software/miniconda3/envs/SCSES/bin/python'),
                                                  createTextFile(id = "JAVA_path", label = "JAVA Path", type = "shinyFilesButton"),
                                                  createTextFile(id = "MCR_path", label = "MCR Path", type = "shinyDirButton",value='/opt/mcr/R2022b/')
                                           ),
                                           fluidRow(
                                                  createTextFile(id = "Samtools_path", label = "Samtools Path", type = "shinyFilesButton"),
-                                                 createTextFile(id = "featurecounts_path", label = "FeatureCounts Path", type = "shinyFilesButton")
+                                                 createTextFile(id = "featurecounts_path", label = "FeatureCounts Path", type = "shinyFilesButton",)
                                           ),
                                           hr(),
                                           h3("Splicing Event Detection Essential"),
