@@ -57,6 +57,28 @@ This package is supported for Linux. The package has been tested on
 Debian-11.21.
 
 ## Installation
+### Installation with docker file
+SCSES provides a Docker-based installation method to simplify the setup of all dependencies and requirements. Please follow the steps below to build the Docker image and start a container to use SCSES:
+#### 1. Install Docker Client: 
+Users should first install the [Docker client](https://www.docker.com/products/docker-desktop) on their host machine.
+#### 2. Download Dockerfile
+The Dockerfile of SCSES can be downloaded from: https://github.com/lvxuan12/SCSES/blob/main/SCSES.dockerfile.
+#### 3.	Build Docker Image
+Users can build the SCSES Docker image using the command:
+``` bash
+docker build -t scses -f SCSES.dockerfile .
+```
+#### 4. Create Docker Container
+After building the image, users can create a Docker container with the following command:
+``` bash
+docker run -d -p [exported port]:8787 -e PASSWORD=[user password] -v [local directory]:/data --name test scses
+```
+``[exported port]``: The port on the host machine to access the container.
+``[user password]``: A user-defined password for logging into the RStudio server.
+``[local directory]``: A local directory mapped to the container for data storage and sharing.
+#### 5.	Access RStudio Server
+Users can access the RStudio server by opening a web browser and navigating to ``[host IP]:[exported port]``. Use the default username “rstudio” and the user-defined password to log in.
+In this pre-configured RStudio server environment, SCSES and all its dependencies are correctly installed and ready for use.
 
 ### Installation of dependencies and requirements
 
