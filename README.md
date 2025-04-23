@@ -6,6 +6,7 @@ Menu
   - [Software requirements](#software-requirements)
     - [OS Requirements](#os-requirements)
   - [Installation](#installation)
+    - [Installation with docker file](#Installation-with-docker-file)
     - [Installation of dependencies and
       requirements](#installation-of-dependencies-and-requirements)
       - [1. python module](#1-python-module)
