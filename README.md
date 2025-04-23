@@ -80,7 +80,7 @@ docker run -d -p [exported port]:8787 -e PASSWORD=[user password] -v [local dire
 #### 5.	Access RStudio Server
 Now, you can access the RStudio server by opening a web browser and navigating to ``[host IP]:[exported port]``. Use the default username ``rstudio`` and the user-defined password to log in.  
 In this pre-configured RStudio server environment, SCSES and all its dependencies are correctly installed and ready for use.  
-Enjoy!
+Please refer to [Getting started][#getting-started] to start the first experience with SCSES. Enjoy!
 ### Installation of dependencies and requirements
 
 We recommend a new **conda** environment to install SCSES:
@@ -881,19 +881,19 @@ eventnet.path = getEventSimilarity(paras)
 #> [1] "[2024-11-17 15:14:50] Parsing SE features Finished"
 #> [1] "[2024-11-17 15:14:50] step4 Encoding events feature ======="
 #> [1] "[2024-11-17 15:14:50] A3SS event encoding..."
-#> 1/4 [======>.......................] - ETA: 0s4/4 [==============================] - 0s 1ms/step
+#> 1/4 [======>.......................] - ETA: 0s 4/4 [==============================] - 0s 1ms/step
 #> [1] "[2024-11-17 15:15:00] A3SS event encoding Finish."
 #> [1] "[2024-11-17 15:15:00] A5SS event encoding..."
-#> 1/4 [======>.......................] - ETA: 0s4/4 [==============================] - 0s 1ms/step
+#> 1/4 [======>.......................] - ETA: 0s 4/4 [==============================] - 0s 1ms/step
 #> [1] "[2024-11-17 15:15:08] A5SS event encoding Finish."
 #> [1] "[2024-11-17 15:15:08] MXE event encoding..."
-#> 1/2 [==============>...............] - ETA: 0s2/2 [==============================] - 0s 2ms/step
+#> 1/2 [==============>...............] - ETA: 0s 2/2 [==============================] - 0s 2ms/step
 #> [1] "[2024-11-17 15:15:16] MXE event encoding Finish."
 #> [1] "[2024-11-17 15:15:16] RI event encoding..."
-#>  1/12 [=>............................] - ETA: 0s12/12 [==============================] - 0s 1ms/step
+#>  1/12 [=>............................] - ETA: 0s 12/12 [==============================] - 0s 1ms/step
 #> [1] "[2024-11-17 15:15:24] RI event encoding Finish."
 #> [1] "[2024-11-17 15:15:24] SE event encoding..."
-#>  1/61 [..............................] - ETA: 4s50/61 [=======================>......] - ETA: 0s61/61 [==============================] - 0s 1ms/step
+#>  1/61 [..............................] - ETA: 4s 50/61 [=======================>......] - ETA: 0s 61/61 [==============================] - 0s 1ms/step
 #> [1] "[2024-11-17 15:15:34] SE event encoding Finish."
 #> [1] "[2024-11-17 15:15:34] step5 Calculate splicing regulation distance and Combine distance ======="
 #> [1] "384 rbps are used to calculate splicing regulation information"
