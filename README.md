@@ -65,9 +65,13 @@ Please install the [Docker client](https://www.docker.com/products/docker-deskto
 #### 2. Download Dockerfile
 The Dockerfile of SCSES can be downloaded from: https://github.com/lvxuan12/SCSES/blob/main/SCSES.dockerfile.
 #### 3.	Build Docker Image
-Build the SCSES Docker image using the command:
+You can build the SCSES Docker image using the command:
 ``` bash
 docker build -t scses -f SCSES.dockerfile .
+```
+Or pull down the docker image from dockerhub:
+``` bash
+docker pull william07010/scses
 ```
 #### 4. Create Docker Container
 After building the image, create a Docker container with the following command:
