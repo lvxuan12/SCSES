@@ -69,10 +69,10 @@ You can build the SCSES Docker image using the command:
 ``` bash
 docker build -t scses -f SCSES.dockerfile .
 ```
-Or pull down the docker image from dockerhub:
-``` bash
-docker pull william07010/scses
-```
+#Or pull down the docker image from dockerhub:
+#``` bash
+#docker pull william07010/scses
+#```
 #### 4. Create Docker Container
 After building the image, create a Docker container with the following command:
 ``` bash
