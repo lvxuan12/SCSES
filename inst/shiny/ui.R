@@ -92,11 +92,11 @@ body <- dashboardBody(
                                           fluidRow(
                                                  column(
                                                         width = 4,
-                                                        numericInput(inputId = "exon.intron.read", label = "Minimal Read Count on Exon-Intron Boundary", value = 150, min = 0)
+                                                        numericInput(inputId = "exon.intron.read", label = "Minimal Read Count on Exon-Intron Boundary", value = 50, min = 0)
                                                  ),
                                                  column(
                                                         width = 4,
-                                                        numericInput(inputId = "junction.read", label = "Minimal Read Count on Junction", value = 150, min = 0)
+                                                        numericInput(inputId = "junction.read", label = "Minimal Read Count on Junction", value = 50, min = 0)
                                                  )
                                           ),
                                           hr(),
@@ -114,7 +114,7 @@ body <- dashboardBody(
                                           fluidRow(
                                                  column(
                                                         width = 4,
-                                                        numericInput(inputId = "cell.read", label = "Minimal Read Count", value = 1000, min = 0)
+                                                        numericInput(inputId = "cell.read", label = "Minimal Read Count", value = 1, min = 0)
                                                  ),
                                                  column(
                                                         width = 4,
@@ -122,7 +122,7 @@ body <- dashboardBody(
                                                  ),
                                                  column(
                                                         width = 4,
-                                                        numericInput(inputId = "cell.mt.pct", label = "Maximal Ratio of Expressed MT-Genes", value = 0.5, min = 0, max = 1, step = 0.01)
+                                                        numericInput(inputId = "cell.mt.pct", label = "Maximal Ratio of Expressed MT-Genes", value = 1, min = 0, max = 1, step = 0.01)
                                                  )
                                           ),
                                           fluidRow(
@@ -132,7 +132,7 @@ body <- dashboardBody(
                                                  ),
                                                  column(
                                                         width = 4,
-                                                        numericInput(inputId = "minCell", label = "Minimal Cell Count Containing an Event", value = 20, min = 0)
+                                                        numericInput(inputId = "minCell", label = "Minimal Cell Count Containing an Event", value = 10, min = 0)
                                                  )
                                           ),
                                           fluidRow(
@@ -195,11 +195,11 @@ body <- dashboardBody(
                                           fluidRow(
                                                  column(
                                                         width = 5,
-                                                        switchInput(inputId = "remove_chr", label = "<b>Remove chromosome prefix</b>", value = T, onLabel = "TRUE", offLabel = "FALSE", labelWidth = "180px")
+                                                        switchInput(inputId = "remove_chr", label = "<b>Remove chromosome prefix</b>", value = T, onLabel = "FALSE", offLabel = "TRUE", labelWidth = "180px")
                                                  ),
                                                  column(
                                                    width = 5,
-                                                   switchInput(inputId = "chr_prefix", label = "<b>Add chr prefix when extracting conservation scores</b>", value = T, onLabel = "TRUE", offLabel = "FALSE", labelWidth = "180px")
+                                                   switchInput(inputId = "chr_prefix", label = "<b>Add chr prefix when extracting conservation scores</b>", value = T, onLabel = "FALSE", offLabel = "TRUE", labelWidth = "180px")
                                                  )
                                           ),
                                           #textInput(inputId = "chr_prefix", label = "Add chromosome prefix", placeholder = paste("Add chr prefix when extracting conservation scores")),
@@ -311,7 +311,7 @@ body <- dashboardBody(
                                                  ),
                                                  column(
                                                         width = 3,
-                                                        numericInput(inputId = "cell.kmax", label = "Max K cell", value = 20, min = 0, step = 1)
+                                                        numericInput(inputId = "cell.kmax", label = "Max K cell", value = 50, min = 0, step = 1)
                                                  ),
                                                  column(
                                                         width = 3,
@@ -326,7 +326,7 @@ body <- dashboardBody(
                                           fluidRow(
                                                  column(
                                                         width = 3,
-                                                        numericInput(inputId = "event.k", label = "K Neighbor Event", value = 5, min = 0, step = 1)
+                                                        numericInput(inputId = "event.k", label = "K Neighbor Event", value = 10, min = 0, step = 1)
                                                  ),
                                                  column(
                                                         width = 3,
