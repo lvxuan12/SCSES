@@ -184,7 +184,7 @@ body <- dashboardBody(
                                                         width = 12,
                                                         checkboxGroupButtons(
                                                                inputId = "event.types", label = "Event Types",
-                                                               choices = c("SE" = "SE", "RI" = "RI", "A3SS" = "A3SS", "A5SS" = "A5SS", "MXE" = "MXE", "AL" = "AL"), selected = c("SE", "RI", "A3SS", "A5SS", "MXE"),
+                                                               choices = c("SE" = "SE", "RI" = "RI", "A3SS" = "A3SS", "A5SS" = "A5SS", "MXE" = "MXE"), selected = c("SE", "RI", "A3SS", "A5SS", "MXE"),
                                                                checkIcon = list(yes = icon("ok", lib = "glyphicon"), no = icon("remove", lib = "glyphicon"))
                                                         )
                                                  )
@@ -269,20 +269,20 @@ body <- dashboardBody(
                                                        textInput(inputId = "MXE.layer", label = "Layers", value = "256,128")
                                                      )
                                                    )
-                                                 ),
-                                                 column(
-                                                        width = 2,
-                                                        tags$fieldset(
-                                                               style = "border: 1px solid;border-color:#C0C0C0",
-                                                               tags$legend("AL", style = "border: 1px #C0C0C0 solid;background-color:#fff;color:#000;width:50px;text-align='center';", align = "center"),
-                                                               div(
-                                                                      style = "margin-left:1rem;margin-right:1rem",
-                                                                      numericInput(inputId = "AL.epoch", label = "Epoch", value = 100, min = 50),
-                                                                      numericInput(inputId = "AL.embedding", label = "Embedding Dim", value = 32, min = 50),
-                                                                      textInput(inputId = "AL.layer", label = "Layers", value = "256,128")
-                                                               )
-                                                        )
-                                                 )
+                                                 )#,
+                                                 # column(
+                                                 #        width = 2,
+                                                 #        tags$fieldset(
+                                                 #               style = "border: 1px solid;border-color:#C0C0C0",
+                                                 #               tags$legend("AL", style = "border: 1px #C0C0C0 solid;background-color:#fff;color:#000;width:50px;text-align='center';", align = "center"),
+                                                 #               div(
+                                                 #                      style = "margin-left:1rem;margin-right:1rem",
+                                                 #                      numericInput(inputId = "AL.epoch", label = "Epoch", value = 100, min = 50),
+                                                 #                      numericInput(inputId = "AL.embedding", label = "Embedding Dim", value = 32, min = 50),
+                                                 #                      textInput(inputId = "AL.layer", label = "Layers", value = "256,128")
+                                                 #               )
+                                                 #        )
+                                                 # )
                                           ),
                                           hr(),
                                           h3("Network Fusion Parameters"),
