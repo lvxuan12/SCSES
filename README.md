@@ -960,7 +960,7 @@ at least on from EXP_RBP, RC, and PSI.
 
 `distance_method`: method used to calculate distance.
 
-`alpha_cell`: restart probability for random walk.
+`alpha_cell`: random walk probability (1-restart probability).
 
 `decay_cell`: threshold of change in the similarity matrix.
 
@@ -979,7 +979,7 @@ correlations.
 
 `kevent`: the number of neighbors
 
-`alpha_event`: restart probability for random walk
+`alpha_event`: random walk probability (1-restart probability)
 
 `decay_event`: threshold of change in the similarity matrix
 
