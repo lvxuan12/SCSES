@@ -44,7 +44,7 @@ Task/impute/KNN: parameters of KNN graph construction for events and cells
 Task/impute/KNN/cell/distance_method: method used to calculate cell distance, default = "euclidean"
 Task/impute/KNN/cell/kmax: maximum number of dynamic cell neighbors, default = 50
 Task/impute/KNN/cell/kmin: minimum number of dynamic cell neighbors, default = 5
-Task/impute/KNN/cell/alpha: andom walk probability (1-restart probability), default = 0.8
+Task/impute/KNN/cell/alpha: random walk probability (1-restart probability), default = 0.8
 Task/impute/KNN/cell/decay: threshold of change in the similarity matrix, default = 0.05
 
 Task/impute/KNN/event/k: number of event neighbors, default = 10
