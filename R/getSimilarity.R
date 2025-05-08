@@ -198,7 +198,7 @@ getCellSimilarity <- function(
     print(paste0("Output: ", output_path))
 
     # validate parameters
-    feature_num <- check.int.or.null(x = feature_num, default = 2000)
+    feature_num <- check.int.or.null(x = feature_num, default = 1000)
     print(paste0("feature_num=", feature_num, "  checked"))
     cell_similarity_data <- unlist(strsplit(cell_similarity_data, ";"))
     cell_similarity_data <- check.valid(x = cell_similarity_data, select = c("EXP_RBP", "RC", "PSI"))
@@ -207,7 +207,7 @@ getCellSimilarity <- function(
     print(paste0("distance_method=", paste(distance_method, collapse = ";"), "  checked"))
     alpha_cell <- check.double.or.null(x = alpha_cell, default = 0.8)
     print(paste0("alpha_cell=", paste(alpha_cell, collapse = ";"), "  checked"))
-    kcell_max <- check.int.or.null(x = kcell_max, default = 30)
+    kcell_max <- check.int.or.null(x = kcell_max, default = 50)
     print(paste0("kcell_max=", paste(kcell_max, collapse = ";"), "  checked"))
     kcell_min <- check.int.or.null(x = kcell_min, default = 5)
     print(paste0("kcell_min=", paste(kcell_min, collapse = ";"), "  checked"))
