@@ -294,17 +294,17 @@ body <- dashboardBody(
                                           ),
                                           h4("Cell Similarity Network"),
                                           fluidRow(
-                                                 column(
-                                                        width = 3,
-                                                        radioGroupButtons(
-                                                               inputId = "similar.method", label = "Similarity Type",
-                                                               choices = c("Euclidean" = "euclidean", "Cosine" = "cosine"), selected = "euclidean", status = "default", individual = T,
-                                                               checkIcon = list(
-                                                                      yes = tags$i(class = "fa fa-circle", style = "color: steelblue"),
-                                                                      no = tags$i(class = "fa fa-circle-o", style = "color: steelblue")
-                                                               )
-                                                        )
-                                                 ),
+                                                 # column(
+                                                 #        width = 3,
+                                                 #        radioGroupButtons(
+                                                 #               inputId = "similar.method", label = "Similarity Type",
+                                                 #               choices = c("Euclidean" = "euclidean", "Cosine" = "cosine"), selected = "euclidean", status = "default", individual = T,
+                                                 #               checkIcon = list(
+                                                 #                      yes = tags$i(class = "fa fa-circle", style = "color: steelblue"),
+                                                 #                      no = tags$i(class = "fa fa-circle-o", style = "color: steelblue")
+                                                 #               )
+                                                 #        )
+                                                 # ),
                                                  column(
                                                         width = 3,
                                                         numericInput(inputId = "cell.kmin", label = "Min K cell", value = 5, min = 0, step = 1)
