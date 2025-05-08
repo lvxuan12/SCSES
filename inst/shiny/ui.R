@@ -24,7 +24,7 @@ body <- dashboardBody(
                                           h3("Data Information"),
                                           textInput(inputId = "dataset", label = "Dataset", placeholder = "Input the dataset name"),
                                           fluidRow(
-                                                 createTextFile(id = "bam_path", label = "Bam File Path", type = "shinyDirButton"),
+                                                 createTextFile(id = "bam_path", label = "Directory containing Bam files", type = "shinyDirButton"),
                                                  column(
                                                         width = 2,
                                                         numericInput(inputId = "readlength", label = "Read Length", value = 125, min = 0)
@@ -92,11 +92,11 @@ body <- dashboardBody(
                                           fluidRow(
                                                  column(
                                                         width = 4,
-                                                        numericInput(inputId = "exon.intron.read", label = "Minimal Read Count on Exon-Intron Boundary", value = 150, min = 0)
+                                                        numericInput(inputId = "exon.intron.read", label = "Minimal Read Count on Exon-Intron Boundary", value = 50, min = 0)
                                                  ),
                                                  column(
                                                         width = 4,
-                                                        numericInput(inputId = "junction.read", label = "Minimal Read Count on Junction", value = 150, min = 0)
+                                                        numericInput(inputId = "junction.read", label = "Minimal Read Count on Junction", value = 50, min = 0)
                                                  )
                                           ),
                                           hr(),
@@ -114,7 +114,7 @@ body <- dashboardBody(
                                           fluidRow(
                                                  column(
                                                         width = 4,
-                                                        numericInput(inputId = "cell.read", label = "Minimal Read Count", value = 1000, min = 0)
+                                                        numericInput(inputId = "cell.read", label = "Minimal Read Count", value = 1, min = 0)
                                                  ),
                                                  column(
                                                         width = 4,
@@ -122,7 +122,7 @@ body <- dashboardBody(
                                                  ),
                                                  column(
                                                         width = 4,
-                                                        numericInput(inputId = "cell.mt.pct", label = "Maximal Ratio of Expressed MT-Genes", value = 0.5, min = 0, max = 1, step = 0.01)
+                                                        numericInput(inputId = "cell.mt.pct", label = "Maximal Ratio of Expressed MT-Genes", value = 1, min = 0, max = 1, step = 0.01)
                                                  )
                                           ),
                                           fluidRow(
@@ -132,7 +132,7 @@ body <- dashboardBody(
                                                  ),
                                                  column(
                                                         width = 4,
-                                                        numericInput(inputId = "minCell", label = "Minimal Cell Count Containing an Event", value = 20, min = 0)
+                                                        numericInput(inputId = "minCell", label = "Minimal Cell Count Containing an Event", value = 10, min = 0)
                                                  )
                                           ),
                                           fluidRow(
@@ -184,7 +184,7 @@ body <- dashboardBody(
                                                         width = 12,
                                                         checkboxGroupButtons(
                                                                inputId = "event.types", label = "Event Types",
-                                                               choices = c("SE" = "SE", "RI" = "RI", "A3SS" = "A3SS", "A5SS" = "A5SS", "MXE" = "MXE", "AL" = "AL"), selected = c("SE", "RI", "A3SS", "A5SS", "MXE"),
+                                                               choices = c("SE" = "SE", "RI" = "RI", "A3SS" = "A3SS", "A5SS" = "A5SS", "MXE" = "MXE"), selected = c("SE", "RI", "A3SS", "A5SS", "MXE"),
                                                                checkIcon = list(yes = icon("ok", lib = "glyphicon"), no = icon("remove", lib = "glyphicon"))
                                                         )
                                                  )
@@ -195,11 +195,11 @@ body <- dashboardBody(
                                           fluidRow(
                                                  column(
                                                         width = 5,
-                                                        switchInput(inputId = "remove_chr", label = "<b>Remove chromosome prefix</b>", value = T, onLabel = "TRUE", offLabel = "FALSE", labelWidth = "180px")
+                                                        switchInput(inputId = "remove_chr", label = "<b>Remove chromosome prefix</b>", value = T, onLabel = "FALSE", offLabel = "TRUE", labelWidth = "180px")
                                                  ),
                                                  column(
                                                    width = 5,
-                                                   switchInput(inputId = "chr_prefix", label = "<b>Add chr prefix when extracting conservation scores</b>", value = T, onLabel = "TRUE", offLabel = "FALSE", labelWidth = "180px")
+                                                   switchInput(inputId = "chr_prefix", label = "<b>Add chr prefix when extracting conservation scores</b>", value = T, onLabel = "FALSE", offLabel = "TRUE", labelWidth = "180px")
                                                  )
                                           ),
                                           #textInput(inputId = "chr_prefix", label = "Add chromosome prefix", placeholder = paste("Add chr prefix when extracting conservation scores")),
@@ -269,20 +269,20 @@ body <- dashboardBody(
                                                        textInput(inputId = "MXE.layer", label = "Layers", value = "256,128")
                                                      )
                                                    )
-                                                 ),
-                                                 column(
-                                                        width = 2,
-                                                        tags$fieldset(
-                                                               style = "border: 1px solid;border-color:#C0C0C0",
-                                                               tags$legend("AL", style = "border: 1px #C0C0C0 solid;background-color:#fff;color:#000;width:50px;text-align='center';", align = "center"),
-                                                               div(
-                                                                      style = "margin-left:1rem;margin-right:1rem",
-                                                                      numericInput(inputId = "AL.epoch", label = "Epoch", value = 100, min = 50),
-                                                                      numericInput(inputId = "AL.embedding", label = "Embedding Dim", value = 32, min = 50),
-                                                                      textInput(inputId = "AL.layer", label = "Layers", value = "256,128")
-                                                               )
-                                                        )
-                                                 )
+                                                 )#,
+                                                 # column(
+                                                 #        width = 2,
+                                                 #        tags$fieldset(
+                                                 #               style = "border: 1px solid;border-color:#C0C0C0",
+                                                 #               tags$legend("AL", style = "border: 1px #C0C0C0 solid;background-color:#fff;color:#000;width:50px;text-align='center';", align = "center"),
+                                                 #               div(
+                                                 #                      style = "margin-left:1rem;margin-right:1rem",
+                                                 #                      numericInput(inputId = "AL.epoch", label = "Epoch", value = 100, min = 50),
+                                                 #                      numericInput(inputId = "AL.embedding", label = "Embedding Dim", value = 32, min = 50),
+                                                 #                      textInput(inputId = "AL.layer", label = "Layers", value = "256,128")
+                                                 #               )
+                                                 #        )
+                                                 # )
                                           ),
                                           hr(),
                                           h3("Network Fusion Parameters"),
@@ -294,28 +294,28 @@ body <- dashboardBody(
                                           ),
                                           h4("Cell Similarity Network"),
                                           fluidRow(
-                                                 column(
-                                                        width = 3,
-                                                        radioGroupButtons(
-                                                               inputId = "similar.method", label = "Similarity Type",
-                                                               choices = c("Euclidean" = "euclidean", "Cosine" = "cosine"), selected = "euclidean", status = "default", individual = T,
-                                                               checkIcon = list(
-                                                                      yes = tags$i(class = "fa fa-circle", style = "color: steelblue"),
-                                                                      no = tags$i(class = "fa fa-circle-o", style = "color: steelblue")
-                                                               )
-                                                        )
-                                                 ),
+                                                 # column(
+                                                 #        width = 3,
+                                                 #        radioGroupButtons(
+                                                 #               inputId = "similar.method", label = "Similarity Type",
+                                                 #               choices = c("Euclidean" = "euclidean", "Cosine" = "cosine"), selected = "euclidean", status = "default", individual = T,
+                                                 #               checkIcon = list(
+                                                 #                      yes = tags$i(class = "fa fa-circle", style = "color: steelblue"),
+                                                 #                      no = tags$i(class = "fa fa-circle-o", style = "color: steelblue")
+                                                 #               )
+                                                 #        )
+                                                 # ),
                                                  column(
                                                         width = 3,
                                                         numericInput(inputId = "cell.kmin", label = "Min K cell", value = 5, min = 0, step = 1)
                                                  ),
                                                  column(
                                                         width = 3,
-                                                        numericInput(inputId = "cell.kmax", label = "Max K cell", value = 20, min = 0, step = 1)
+                                                        numericInput(inputId = "cell.kmax", label = "Max K cell", value = 50, min = 0, step = 1)
                                                  ),
                                                  column(
                                                         width = 3,
-                                                        numericInput(inputId = "cell.alpha", label = "Cell Alpha", value = 0.8, min = 0, max = 1, step = 0.1)
+                                                        numericInput(inputId = "cell.alpha", label = "Random walk probability (Non restart)", value = 0.8, min = 0, max = 1, step = 0.1)
                                                  ),
                                                  column(
                                                         width = 3,
@@ -326,11 +326,11 @@ body <- dashboardBody(
                                           fluidRow(
                                                  column(
                                                         width = 3,
-                                                        numericInput(inputId = "event.k", label = "K Neighbor Event", value = 5, min = 0, step = 1)
+                                                        numericInput(inputId = "event.k", label = "K Neighbor Event", value = 10, min = 0, step = 1)
                                                  ),
                                                  column(
                                                         width = 3,
-                                                        numericInput(inputId = "event.alpha", label = "Cell Alpha", value = 0.8, min = 0, max = 1, step = 0.1)
+                                                        numericInput(inputId = "event.alpha", label = "Random walk probability (Non restart)", value = 0.8, min = 0, max = 1, step = 0.1)
                                                  ),
                                                  column(
                                                         width = 3,

@@ -41,7 +41,7 @@ PSI means psi value of splicing events,  default: rds_processed/psi.rds}
 \item{distance_method}{method used to calculate distance,
 euclidean or cosine}
 
-\item{alpha_cell}{restart probability for random walk}
+\item{alpha_cell}{1-restart probability for random walk}
 
 \item{decay_cell}{threshold of change in the similarity matrix}
 

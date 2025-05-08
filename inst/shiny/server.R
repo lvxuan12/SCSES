@@ -267,7 +267,7 @@ server=function(input,output,session){
                                                 )
     }
     config[["Task"]][["impute"]][["KNN"]][["cell"]] = list(
-      distance_method = input$similar.method,
+      distance_method = 'euclidean',
       kmax = input$cell.kmax,
       kmin = input$cell.kmin,
       alpha = input$cell.alpha,

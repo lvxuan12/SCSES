@@ -16,48 +16,48 @@ ImputationAll(
 )
 }
 \arguments{
-\item{paras}{list readSCSESconfig(paras_file)
-Default decay_impute from paras}
+\item{paras}{list, using readSCSESconfig(paras_file).
+Default decay_impute will be read from the paras.}
 
-\item{output_path}{path to event similarity}
+\item{output_path}{path to event similarity.}
 
-\item{decay_impute}{threshold of change in the similarity matrix}
+\item{decay_impute}{threshold of change in the similarity matrix.}
 
 \item{rc}{matrix of normalized splicing events associated read counts or path
-to a rds file, default: rds_processed/rc.rds}
+to a rds file, default: rds_processed/rc.rds.}
 
 \item{psi}{matrix of psi value or path to a rds file,
-default: rds_processed/psi.rds}
+default: rds_processed/psi.rds.}
 
 \item{event.info}{list of events information or path to a rds file,
-default: rds_processed/event.info.list.rds}
+default: rds_processed/event.info.list.rds.}
 
 \item{cell_similarity}{a list of different types of cell similarity named by the data
 type (EXP_RBP, RC, and PSI) or path to a rds file,
-default: imputation/cell_similarity/cell.similars.rds}
+default: imputation/cell_similarity/cell.similars.rds.}
 
 \item{event_similarity}{a list of event similarity named by different types of
 splicing events or path to a rds file,
-default: imputation/event_similarity/event.similars.rds}
+default: imputation/event_similarity/event.similars.rds.}
 }
 \value{
-path to the result of three imputation strategies
-save a list of three imputation strategies result to
+Return path to the imputation results of three imputation strategies,
+which contains a list of three imputation strategies result. Default is
 work_path/imputation/Imputed_seperated_*.rds.
 The result contains two lists, each of which contains multiple imputation results.
 Different event types are combined.
 The first list is the result of strategy1 and strategy2, where the name of each matrix
-is divided by _, the first half represents different cell similarities, and the second
-half represents PSI for strategy1 and RC for strategy2;
+is divided by "_", the first half represents different cell similarities, and the second
+half represents Strategy 1 and Strategy 2, where PSI represents strategy1 and RC represents strategy2;
 The second list is the result of strategy3, again where the names of each matrix are
-divided by _, with the first half representing different cell similarities
+divided by "_", with the first half representing different cell similarities.
 }
 \description{
-run three PSI imputation strategies used
-All types of cell similarity and splicing events are used
-first: strategy1 impute the raw PSI with cell similarities
-second: strategy2 first impute raw read counts with cell similarities
-and calculate the imputed PSI
-third: strategy3 first impute the PSI using strategy 2, then further impute
- the results using event similarities
+Run three PSI imputation strategies using
+all types of cell similarity features and splicing events.
+The first strategy: strategy1 impute the raw PSI with cell similarities;
+The second strategy: strategy2 first impute raw read counts with cell similarities
+and calculate the imputed PSI;
+The third strategy: strategy3 first impute the PSI using strategy 2, then further impute
+ the results using event similarities;
 }

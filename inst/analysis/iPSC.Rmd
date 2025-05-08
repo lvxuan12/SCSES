@@ -1,16 +1,14 @@
 ---
-title: "SCSES cell line Tutorial"
-output:
-  pdf_document: default
-  html_document: default
-date: "2024-10-17"
+title: "SCSES iPSC Tutorial"
+output: html_document
+date: "2024-10-12"
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# SCSES cell line Tutorial
+# SCSES iPSC Tutorial
 
 ## Installation
 
@@ -24,7 +22,7 @@ library(SCSES)
 
 ## Loading data
 
-In this tutorial, we will analyse scRNA-seq data of three cell line (HCT1954, HepG2, and HL-60). You can run this tutorial by downloading bam files at <https://doi.org/10.5281/zenodo.13943076>.
+In this tutorial, we will analyse induced human pluripotent stem cells (iPSC), as described in Song et al., 2017. You can run this tutorial by downloading bam files at .
 
 ## Prepare data
 
@@ -40,6 +38,7 @@ wget http://hgdownload.cse.ucsc.edu/goldenPath/hg19/phastCons100way/hg19.100way.
 
 # download genome FASTA file
 wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_19/GRCh37.p13.genome.fa.gz
+
 ```
 
 ```{r}
@@ -52,7 +51,7 @@ createConfigshiny(host="127.0.0.1",port = 9999,launch.browser=T)
 ```{r}
 library(SCSES)
 #paras_file: path to configure file generated in the previous step
-paras_file = "/disk/lvxuan/Single-Splicing/result/cell_line/scses_test/cell_line.json"
+paras_file = "/disk/lvxuan/Single-Splicing/result/GSE85908/scses_test/GSE85908.json"
 paras = readSCSESconfig(paras_file)
 ```
 
@@ -104,7 +103,7 @@ A list of three imputation strategies result will be saved to `work_path/imputat
 
 ```{r}
 #rds_imputed_file: path to the list of three imputation strategies results generated in the previous step
-Imputed.data.path = Estimation(paras,rds_imputed_file="/disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation/Imputed_seperated_499999153.rds")
+Imputed.data.path = Estimation(paras,rds_imputed_file="/disk/lvxuan/Single-Splicing/result/GSE85908/scses_test/imputation/Imputed_seperated_500007276.rds")
 ```
 
 ##### Fine-tune the model
@@ -114,7 +113,7 @@ ftrc.path = getFtRawRC(paras)
 ftpsi.path = getFtRawPSI(paras)
 ftrds.path = mergeFtSplicingValue(paras)
 ftmodel.path = FtClassifier(paras)
-Imputed.data.path = Estimation(paras,rds_imputed_file="/disk/lvxuan/Single-Splicing/result/cell_line/scses_test/imputation/Imputed_seperated_499999153.rds")
+Imputed.data.path = Estimation(paras,rds_imputed_file="/disk/lvxuan/Single-Splicing/result/GSE85908/scses_test/imputation/Imputed_seperated_500007276.rds")
 ```
 
 A list of final imputation of PSI values will be saved to `work_path/imputation/`.

@@ -4,7 +4,7 @@ Title: Single-cell Splicing Estimation based on Network Diffusion
 Version: 1.0.0
 Author: Xiao Wen, Xuan Lv, Zhaoqi Liu
 Maintainer: Xuan Lv <lvxuan@big.ac.cn>
-Description: lternative splicing (AS) significantly contributes to cellular 
+Description: Alternative splicing (AS) significantly contributes to cellular 
     transcriptomic heterogeneity, and single-cell RNA-Seq is commonly employed to 
     delineate this heterogeneity. However, due to high dropout rates, inevitable 
     noise, and limited coverage, accurately characterizing splicing changes at 

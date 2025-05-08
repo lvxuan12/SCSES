@@ -340,7 +340,7 @@ getRIevent <- function(
       recursive = TRUE, full.names = TRUE
     )
     print(res.file)
-    if(file.exists(res.file)){
+    if(length(res.file)!=0){
       msg <- paste0("[", Sys.time(), "] ", "Run IRFinder Finish.")
       print(msg)
     } else{

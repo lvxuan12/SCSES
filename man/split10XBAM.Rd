@@ -9,7 +9,7 @@ to single cell bam based bam tag "CB:"}
 split10XBAM(CellRanger_path, out_path, core, times = 50)
 }
 \arguments{
-\item{CellRanger_path}{directory to CellRanger output}
+\item{CellRanger_path}{directory to CellRanger output for one sample}
 
 \item{out_path}{directory to save single cell bam}
 

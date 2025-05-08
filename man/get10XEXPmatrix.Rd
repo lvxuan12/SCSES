@@ -7,10 +7,8 @@
 get10XEXPmatrix(
   paras,
   expr_path,
-  dataset = paras$DataSet,
   filter.mt = paras$Basic$filter_sc$filter.mt,
-  filter.rp = paras$Basic$filter_sc$filter.rp,
-  sample_name
+  filter.rp = paras$Basic$filter_sc$filter.rp
 )
 }
 \arguments{
@@ -19,16 +17,9 @@ Default dataset, filter.mt, filter.rp from paras}
 
 \item{expr_path}{directory to the cellranger output}
 
-\item{dataset}{the name of dataset}
-
 \item{filter.mt}{filter out mitochondrial genes}
 
 \item{filter.rp}{filter out ribosomal genes}
-
-\item{sample_name}{the name of samples in the dataset
-If the dataset contains multiple samples, the Cell Ranger outputs for
-different samples need to be placed in different folders under the
-expr_path directory, named after the sample_name.}
 }
 \value{
 gene expression matrix path
