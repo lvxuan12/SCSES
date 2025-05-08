@@ -16,30 +16,39 @@ Basic/refgenome/gtf_path: path to the gene annotation in gtf format
 Basic/refgenome/gff_path: path to the gene annotation in gff3 format
 Basic/refgenome/ref_path: path to the fasta file
 Basic/refgenome/genome_name: Genome name required by MAJIQ (hg19/hg38/mm10) and the name of path to splicing events used for fine-tuning the model and the name of package used for getting sequence feature
-Basic/filter_merged_bam/ExonToIntronReads: The minimum number of reads spanning exon and intron regions required to support splicing events
-Basic/filter_merged_bam/junctionReads: The minimum number of junction reads required to support splicing events
-Basic/filter_sc/minCell: the minimum number of cells that are required to have at least min.RC reads.
-Basic/filter_sc/minRC: the minimum number of reads required on at least min.Cell cells for a junction.
-Basic/filter_sc/min.percentCells.gene: the minimum percentage of cells that are required to have at least 1 reads for a gene
-Basic/filter_sc/min.percentCells.event: the minimum percentage of cells that are required to have psi=0/psi=1/psi=NA for a event
-Basic/filter_sc/min.nFeatures: the minimum number of features detected in a cell.
-Basic/filter_sc/min.nCount: the minimum number of counts detected in a cell.
-Basic/filter_sc/max.percentMT: the maximum percentage of all the counts belonging to a subset of mitochondrial genes in a cell.
-Basic/filter_sc/filter.mt: if filter out mitochondrial genes or not
-Basic/filter_sc/filter.rp: if filter out ribosomal genes or not
+Basic/filter_merged_bam/ExonToIntronReads: The minimum number of reads spanning exon and intron regions required to support splicing events, default = 50
+Basic/filter_merged_bam/junctionReads: The minimum number of junction reads required to support splicing events, default = 50
+Basic/filter_sc/minCell: the minimum number of cells that are required to have at least min.RC reads, default = 10
+Basic/filter_sc/minRC: the minimum number of reads required on at least min.Cell cells for a junction, default = 5
+Basic/filter_sc/min.percentCells.gene: the minimum percentage of cells that are required to have at least 1 reads for a gene, default = 0.9
+Basic/filter_sc/min.percentCells.event: the minimum percentage of cells that are required to have psi=0/psi=1/psi=NA for a event, default = 0.9
+Basic/filter_sc/min.nFeatures: the minimum number of features detected in a cell, default = 1
+Basic/filter_sc/min.nCount: the minimum number of counts detected in a cell, default = 1
+Basic/filter_sc/max.percentMT: the maximum percentage of all the counts belonging to a subset of mitochondrial genes in a cell, default = 1
+Basic/filter_sc/filter.mt: if filter out mitochondrial genes or not, default = "true"
+Basic/filter_sc/filter.rp: if filter out ribosomal genes or not, default = "true"
 
-Task/event/remove_chr: Whether to remove "chr" from chromosome numbers.
+Task/event/remove_chr: Whether to remove "chr" from chromosome numbers, default = "false"
 Task/event/event_type: splicing event types, seperated by ";"
 Task/event/majiq_license_file: MAJIQ license file path
 
 Task/impute/rbp: path to rbp file, used for cell similarity and RBP regulatory features
 Task/impute/cell_similarity_data: The features used to calculate cell similarity
 
-Task/impute/feature_num: the number of high variable features for PCA
+Task/impute/feature_num: the number of high variable features for PCA, default = 1000
 Task/impute/event_features/phast_path: path to phastCons.bw file
-Task/impute/event_features/chr_prefix: prefix added to chromosome id, "chr" or ""
+Task/impute/event_features/chr_prefix: prefix added to chromosome id, "chr" or "", default = ""
 add: chromosome id in bam files and splicing events id should be same
 Task/impute/AE: parameters of encoding sequence features
 Task/impute/KNN: parameters of KNN graph construction for events and cells
+Task/impute/KNN/cell/distance_method: method used to calculate cell distance, default = "euclidean"
+Task/impute/KNN/cell/kmax: maximum number of dynamic cell neighbors, default = 50
+Task/impute/KNN/cell/kmin: minimum number of dynamic cell neighbors, default = 5
+Task/impute/KNN/cell/alpha: andom walk probability (1-restart probability), default = 0.8
+Task/impute/KNN/cell/decay: threshold of change in the similarity matrix, default = 0.05
+
+Task/impute/KNN/event/k: number of event neighbors, default = 10
+Task/impute/KNN/event/alpha: andom walk probability (1-restart probability), default = 0.8
+Task/impute/KNN/event/decay: threshold of change in the similarity matrix, default = 0.05
 
 
