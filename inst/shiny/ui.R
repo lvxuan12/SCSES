@@ -315,7 +315,7 @@ body <- dashboardBody(
                                                  ),
                                                  column(
                                                         width = 3,
-                                                        numericInput(inputId = "cell.alpha", label = "Restart Probabily", value = 0.2, min = 0, max = 1, step = 0.1)
+                                                        numericInput(inputId = "cell.alpha", label = "Cell Alpha", value = 0.8, min = 0, max = 1, step = 0.1)
                                                  ),
                                                  column(
                                                         width = 3,
@@ -330,7 +330,7 @@ body <- dashboardBody(
                                                  ),
                                                  column(
                                                         width = 3,
-                                                        numericInput(inputId = "event.alpha", label = "Restart Probabily", value = 0.2, min = 0, max = 1, step = 0.1)
+                                                        numericInput(inputId = "event.alpha", label = "Cell Alpha", value = 0.8, min = 0, max = 1, step = 0.1)
                                                  ),
                                                  column(
                                                         width = 3,

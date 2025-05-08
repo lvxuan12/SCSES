@@ -270,12 +270,12 @@ server=function(input,output,session){
       distance_method = 'euclidean',
       kmax = input$cell.kmax,
       kmin = input$cell.kmin,
-      alpha = 1-input$cell.alpha,
+      alpha = input$cell.alpha,
       decay = input$cell.decay
     )
     config[["Task"]][["impute"]][["KNN"]][["event"]] = list(
       k = input$event.k,
-      alpha = 1-input$event.alpha,
+      alpha = input$event.alpha,
       decay = input$event.decay
     )
     config[["Task"]][["impute"]][["decay_impute"]] = input$all.decay
