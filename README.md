@@ -1,4 +1,4 @@
-![alt text](https://github.com/lvxuan12/SCSES/blob/main/png/SCSES_logo.png)
+![SCSES](https://github.com/lvxuan12/SCSES/blob/main/png/SCSES_logo.png)
 Menu
 ================
 - [SCSES](#scses)
