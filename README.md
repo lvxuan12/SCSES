@@ -1,6 +1,6 @@
 Menu
 ================
-
+![alt text](https://github.com/lvxuan12/SCSES/blob/main/png/SCSES_logo.png)
 - [SCSES](#scses)
   - [Hardware requirements](#hardware-requirements)
   - [Software requirements](#software-requirements)
