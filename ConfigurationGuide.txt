@@ -20,8 +20,8 @@ Basic/filter_merged_bam/ExonToIntronReads: The minimum number of reads spanning 
 Basic/filter_merged_bam/junctionReads: The minimum number of junction reads required to support splicing events, default = 50
 Basic/filter_sc/minCell: the minimum number of cells that are required to have at least min.RC reads, default = 10
 Basic/filter_sc/minRC: the minimum number of reads required on at least min.Cell cells for a junction, default = 5
-Basic/filter_sc/min.percentCells.gene: the minimum percentage of cells that are required to have at least 1 reads for a gene, default = 0.9
-Basic/filter_sc/min.percentCells.event: the minimum percentage of cells that are required to have psi=0/psi=1/psi=NA for a event, default = 0.9
+Basic/filter_sc/min.percentCells.gene: the maximal percentage of dropout for a gene, default = 0.9
+Basic/filter_sc/min.percentCells.event: the maximal percentage of dropout (psi=0/psi=1/psi=NA) for a event, default = 0.9
 Basic/filter_sc/min.nFeatures: the minimum number of features detected in a cell, default = 1
 Basic/filter_sc/min.nCount: the minimum number of counts detected in a cell, default = 1
 Basic/filter_sc/max.percentMT: the maximum percentage of all the counts belonging to a subset of mitochondrial genes in a cell, default = 1
