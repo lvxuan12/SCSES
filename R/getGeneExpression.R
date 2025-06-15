@@ -1,17 +1,34 @@
 #' @title Get gene expression by featureCounts
-#' @description save featureCounts output to work_path/expr
 #'
-#' @param paras list readSCSESconfig(paras_file)
-#' Default bam_path, gtf, ref, script, featureCounts_path,
-#' dataset, and core from paras
-#' @param bam_path directory to single cell bam file
-#' @param gtf the gene annotation in gtf format
-#' @param ref fasta file
-#' @param dataset the name of dataset
-#' @param pair type of read: either "paired" for paired-end or "single" for single-end
-#' @param core the number of threads
-
-#' @return featureCounts output path
+#' @description  This function runs featureCounts to quantify gene 
+#' expression from BAM files using a shell script. It processes 
+#' single-cell RNA-seq BAM files against a reference genome annotation 
+#' to generate count matrices, and saves the featureCounts output 
+#' to the specified working directory.
+#'
+#' @param paras paras A list object parsed from SCSES JSON parameter file using 
+#'   \code{readSCSESconfig()}.
+#' @param bam_path Character string specifying the directory path containing 
+#'   single-cell BAM files. Default is taken from \code{paras$Basic$bam_path}.
+#' @param gtf Character string specifying the path to the gene annotation 
+#'   file in GTF format. Default is taken from 
+#'   \code{paras$Basic$refgenome$gtf_path}.
+#' @param ref Character string specifying the path to the reference genome 
+#'   FASTA file. Default is taken from \code{paras$Basic$refgenome$ref_path}.
+#' @param dataset Character string specifying the dataset name, used in 
+#'   output file naming. Default is taken from \code{paras$DataSet}.
+#' @param pair Character string indicating the sequencing type. Should be 
+#'   either "paired" for paired-end reads or "single" for single-end reads. 
+#'   Default is taken from \code{paras$Basic$paired}.
+#' @param core Integer specifying the number of CPU threads to use for 
+#'   parallel processing. Default is taken from \code{paras$Basic$core}.
+#'
+#' @return Character string of the featureCounts output directory path 
+#'   (\code{work_path/expr/}) where the count files are saved.
+#'
+#' The output from this function can be used as input for \code{\link{getEXPmatrix}} 
+#' to generate processed expression matrices.
+#'
 #' @export
 
 getGeneExpression <- function(
@@ -53,18 +70,38 @@ getGeneExpression <- function(
     }
 }
 
-#' @title Get gene expression matrix
-#' @description save gene expression count and TPM matrix to work_path/rds/
+#' @title Get gene expression matrix from featureCounts output
+#' @description This function reads gene expression count data 
+#' from featureCounts output file, performs optional gene filtering 
+#' (mitochondrial and ribosomal genes), calculates TPM (Transcripts 
+#' Per Million) normalization, applies log2 transformation, and saves 
+#' both raw count and normalized TPM matrices to the specified output directory.
 #'
+#' @param paras paras A list object parsed from SCSES JSON parameter file using 
+#'   \code{readSCSESconfig()}.
+#' @param expr_path Character string specifying the directory path to the 
+#'   featureCounts output files. Default is constructed from 
+#'   \code{paras$Basic$work_path/expr/}.
+#' @param dataset Character string specifying the dataset name, used to 
+#'   construct the input filename as \code{dataset_count.txt}. 
+#'   Default is taken from \code{paras$DataSet}.
+#' @param filter.mt Logical value indicating whether to filter out 
+#'   mitochondrial genes (genes with names starting with "MT-" or "mt-"). 
+#'   Default is taken from \code{paras$Basic$filter_sc$filter.mt}.
+#' @param filter.rp Logical value indicating whether to filter out 
+#'   ribosomal genes (genes with names starting with "RPS", "RPL", "Rps", 
+#'   or "Rpl"). Default is taken from \code{paras$Basic$filter_sc$filter.rp}.
 #'
-#' @param paras list readSCSESconfig(paras_file)
-#' Default dataset, filter.mt, filter.rp from paras
-#' @param expr_path directory to the featureCounts output
-#' @param dataset the name of dataset
-#' @param filter.mt filter out mitochondrial genes
-#' @param filter.rp filter out ribosomal genes
-
-#' @return gene expression matrix path
+#' @return Character string of the output directory path where the RDS files 
+#'   are saved. The directory contains two files: \code{count.rds} (raw counts) 
+#'   and \code{count_norm.rds} (log2-transformed TPM values).
+#' @note 
+#' The input file should be a standard featureCounts output with tab-separated 
+#' values containing columns: Geneid, Chr, Start, End, Strand, Length, followed 
+#' by sample count columns. The required input files can be generated using 
+#' \code{\link{getGeneExpression}} function. The output directory \code{rds/} 
+#' is created in \code{paras$Basic$work_path} if it doesn't exist.
+#'
 #' @export
 #'
 #' @importFrom stats median
@@ -75,7 +112,7 @@ getEXPmatrix <- function(
     filter.mt = paras$Basic$filter_sc$filter.mt,
     filter.rp = paras$Basic$filter_sc$filter.rp) {
     fea_file <- paste0(expr_path, "/", dataset, "_count.txt")
-    output_path <- paste0(dirname(expr_path), "/rds/")
+    output_path <- paste0(paras$Basic$work_path, "/rds/")
     if (!dir.exists(output_path)) {
         dir.create(output_path)
     }
@@ -108,17 +145,29 @@ getEXPmatrix <- function(
 
 
 #' @title Get gene expression matrix from Cell Ranger
-#' @description Read count matrix from 10X CellRanger hdf5 file
-#' save raw and normalized UMI counts sparse matrix to work_path/rds/
+#' @description This function reads count matrix from 10X CellRanger HDF5 file, performs 
+#' optional gene filtering (mitochondrial and ribosomal genes), applies median 
+#' normalization and log2 transformation, then saves both raw and normalized 
+#' UMI count sparse matrices to the specified output directory.
 #'
+#' @param paras A list object parsed from SCSES JSON parameter file using 
+#'   \code{readSCSESconfig()}.
+#' @param expr_path Character string specifying the directory path to the 
+#'   Cell Ranger output folder containing the HDF5 file.
+#' @param filter.mt Logical value indicating whether to filter out 
+#'   mitochondrial genes (genes with names starting with "MT-" or "mt-"). 
+#'   Default is taken from \code{paras$Basic$filter_sc$filter.mt}.
+#' @param filter.rp Logical value indicating whether to filter out 
+#'   ribosomal genes (genes with names starting with "RPS", "RPL", "Rps", 
+#'   or "Rpl"). Default is taken from \code{paras$Basic$filter_sc$filter.rp}.
 #'
-#' @param paras list fromJSON(paras_file)
-#' Default dataset, filter.mt, filter.rp from paras
-#' @param expr_path directory to the cellranger output
-#' @param filter.mt filter out mitochondrial genes
-#' @param filter.rp filter out ribosomal genes
-
-#' @return gene expression matrix path
+#' @return Character string of the output directory path where the RDS files 
+#'   are saved. The directory contains two files: \code{count.rds} (raw counts) 
+#'   and \code{count_norm.rds} (normalized and log2-transformed counts).
+#'
+#' @note 
+#' This function requires the Seurat package to be installed. The output 
+#' directory \code{rds/} is created in the \code{paras$Basic$work_path}
 #' @export
 #'
 #' @importFrom stats median
@@ -140,7 +189,7 @@ get10XEXPmatrix <- function(
   }
   expr = Seurat::Read10X_h5(file_name)
   # output
-  output_path <- paste0(dirname(expr_path), "/rds/")
+  output_path <- paste0(paras$Basic$work_path, "/rds/")
   if (!dir.exists(output_path)) {
     dir.create(output_path)
   }
