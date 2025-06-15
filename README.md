@@ -413,12 +413,17 @@ After this step, directories `expr` and `rds` will be created.
 #### Normalized UMI count matrix (for UMI dataset)
 
 You can use `get10XEXPmatrix` to generate Normalized UMI count matrix
-from 10X CellRanger hdf5 file, which will save normalized UMI count to
+from 10X CellRanger HDF5 file, which will save normalized UMI count to
 `work_path/rds/`.
 
 ``` r
 # install.packages('Seurat')
-rds.path = get10XEXPmatrix(paras,expr_path)
+# Process Cell Ranger output
+expr_path <- "/path/to/cellranger/output"
+rds.path <- get10XEXPmatrix(paras, expr_path)
+# Load processed data
+raw_counts <- readRDS(paste0(rds.path, "/count.rds"))
+norm_counts <- readRDS(paste0(rds.path, "/count_norm.rds"))
 ```
 
 ### Step3. Detect splicing events
