@@ -15,40 +15,40 @@ getGeneExpression(
 )
 }
 \arguments{
-\item{paras}{paras A list object parsed from SCSES JSON parameter file using 
+\item{paras}{paras A list object parsed from SCSES JSON parameter file using
 \code{readSCSESconfig()}.}
 
-\item{bam_path}{Character string specifying the directory path containing 
+\item{bam_path}{Character string specifying the directory path containing
 single-cell BAM files. Default is taken from \code{paras$Basic$bam_path}.}
 
-\item{gtf}{Character string specifying the path to the gene annotation 
-file in GTF format. Default is taken from 
+\item{gtf}{Character string specifying the path to the gene annotation
+file in GTF format. Default is taken from
 \code{paras$Basic$refgenome$gtf_path}.}
 
-\item{ref}{Character string specifying the path to the reference genome 
+\item{ref}{Character string specifying the path to the reference genome
 FASTA file. Default is taken from \code{paras$Basic$refgenome$ref_path}.}
 
-\item{dataset}{Character string specifying the dataset name, used in 
+\item{dataset}{Character string specifying the dataset name, used in
 output file naming. Default is taken from \code{paras$DataSet}.}
 
-\item{pair}{Character string indicating the sequencing type. Should be 
-either "paired" for paired-end reads or "single" for single-end reads. 
+\item{pair}{Character string indicating the sequencing type. Should be
+either "paired" for paired-end reads or "single" for single-end reads.
 Default is taken from \code{paras$Basic$paired}.}
 
-\item{core}{Integer specifying the number of CPU threads to use for 
+\item{core}{Integer specifying the number of CPU threads to use for
 parallel processing. Default is taken from \code{paras$Basic$core}.}
 }
 \value{
-Character string of the featureCounts output directory path 
+Character string of the featureCounts output directory path
   (\code{work_path/expr/}) where the count files are saved.
 
-The output from this function can be used as input for \code{\link{getEXPmatrix}} 
+The output from this function can be used as input for \code{\link{getEXPmatrix}}
 to generate processed expression matrices.
 }
 \description{
-This function runs featureCounts to quantify gene 
-expression from BAM files using a shell script. It processes 
-single-cell RNA-seq BAM files against a reference genome annotation 
-to generate count matrices, and saves the featureCounts output 
+This function runs featureCounts to quantify gene
+expression from BAM files using a shell script. It processes
+single-cell RNA-seq BAM files against a reference genome annotation
+to generate count matrices, and saves the featureCounts output
 to the specified working directory.
 }

@@ -13,41 +13,41 @@ getEXPmatrix(
 )
 }
 \arguments{
-\item{paras}{paras A list object parsed from SCSES JSON parameter file using 
+\item{paras}{paras A list object parsed from SCSES JSON parameter file using
 \code{readSCSESconfig()}.}
 
-\item{expr_path}{Character string specifying the directory path to the 
-featureCounts output files. Default is constructed from 
+\item{expr_path}{Character string specifying the directory path to the
+featureCounts output files. Default is constructed from
 \code{paras$Basic$work_path/expr/}.}
 
-\item{dataset}{Character string specifying the dataset name, used to 
-construct the input filename as \code{dataset_count.txt}. 
+\item{dataset}{Character string specifying the dataset name, used to
+construct the input filename as \code{dataset_count.txt}.
 Default is taken from \code{paras$DataSet}.}
 
-\item{filter.mt}{Logical value indicating whether to filter out 
-mitochondrial genes (genes with names starting with "MT-" or "mt-"). 
+\item{filter.mt}{Logical value indicating whether to filter out
+mitochondrial genes (genes with names starting with "MT-" or "mt-").
 Default is taken from \code{paras$Basic$filter_sc$filter.mt}.}
 
-\item{filter.rp}{Logical value indicating whether to filter out 
-ribosomal genes (genes with names starting with "RPS", "RPL", "Rps", 
+\item{filter.rp}{Logical value indicating whether to filter out
+ribosomal genes (genes with names starting with "RPS", "RPL", "Rps",
 or "Rpl"). Default is taken from \code{paras$Basic$filter_sc$filter.rp}.}
 }
 \value{
-Character string of the output directory path where the RDS files 
-  are saved. The directory contains two files: \code{count.rds} (raw counts) 
+Character string of the output directory path where the RDS files
+  are saved. The directory contains two files: \code{count.rds} (raw counts)
   and \code{count_norm.rds} (log2-transformed TPM values).
 }
 \description{
-This function reads gene expression count data 
-from featureCounts output file, performs optional gene filtering 
-(mitochondrial and ribosomal genes), calculates TPM (Transcripts 
-Per Million) normalization, applies log2 transformation, and saves 
+This function reads gene expression count data
+from featureCounts output file, performs optional gene filtering
+(mitochondrial and ribosomal genes), calculates TPM (Transcripts
+Per Million) normalization, applies log2 transformation, and saves
 both raw count and normalized TPM matrices to the specified output directory.
 }
 \note{
-The input file should be a standard featureCounts output with tab-separated 
-values containing columns: Geneid, Chr, Start, End, Strand, Length, followed 
-by sample count columns. The required input files can be generated using 
-\code{\link{getGeneExpression}} function. The output directory \code{rds/} 
+The input file should be a standard featureCounts output with tab-separated
+values containing columns: Geneid, Chr, Start, End, Strand, Length, followed
+by sample count columns. The required input files can be generated using
+\code{\link{getGeneExpression}} function. The output directory \code{rds/}
 is created in \code{paras$Basic$work_path} if it doesn't exist.
 }

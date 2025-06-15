@@ -8,36 +8,41 @@ get10XEXPmatrix(
   paras,
   expr_path,
   filter.mt = paras$Basic$filter_sc$filter.mt,
-  filter.rp = paras$Basic$filter_sc$filter.rp
+  filter.rp = paras$Basic$filter_sc$filter.rp,
+  cells = NULL
 )
 }
 \arguments{
-\item{paras}{A list object parsed from SCSES JSON parameter file using 
+\item{paras}{A list object parsed from SCSES JSON parameter file using
 \code{readSCSESconfig()}.}
 
-\item{expr_path}{Character string specifying the directory path to the 
+\item{expr_path}{Character string specifying the directory path to the
 Cell Ranger output folder containing the HDF5 file.}
 
-\item{filter.mt}{Logical value indicating whether to filter out 
-mitochondrial genes (genes with names starting with "MT-" or "mt-"). 
+\item{filter.mt}{Logical value indicating whether to filter out
+mitochondrial genes (genes with names starting with "MT-" or "mt-").
 Default is taken from \code{paras$Basic$filter_sc$filter.mt}.}
 
-\item{filter.rp}{Logical value indicating whether to filter out 
-ribosomal genes (genes with names starting with "RPS", "RPL", "Rps", 
+\item{filter.rp}{Logical value indicating whether to filter out
+ribosomal genes (genes with names starting with "RPS", "RPL", "Rps",
 or "Rpl"). Default is taken from \code{paras$Basic$filter_sc$filter.rp}.}
+
+\item{cells}{Character vector of cell barcodes to subset. If provided,
+only cells with barcodes present in this vector will be retained.
+If \code{NULL} (default), all cells in the matrix are kept.}
 }
 \value{
-Character string of the output directory path where the RDS files 
-  are saved. The directory contains two files: \code{count.rds} (raw counts) 
+Character string of the output directory path where the RDS files
+  are saved. The directory contains two files: \code{count.rds} (raw counts)
   and \code{count_norm.rds} (normalized and log2-transformed counts).
 }
 \description{
-This function reads count matrix from 10X CellRanger HDF5 file, performs 
-optional gene filtering (mitochondrial and ribosomal genes), applies median 
-normalization and log2 transformation, then saves both raw and normalized 
+This function reads count matrix from 10X CellRanger HDF5 file, performs
+optional gene filtering (mitochondrial and ribosomal genes), applies median
+normalization and log2 transformation, then saves both raw and normalized
 UMI count sparse matrices to the specified output directory.
 }
 \note{
-This function requires the Seurat package to be installed. The output 
+This function requires the Seurat package to be installed. The output
 directory \code{rds/} is created in the \code{paras$Basic$work_path}
 }
