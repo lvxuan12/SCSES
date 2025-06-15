@@ -124,8 +124,22 @@ createBSgenome <- function(ref_path,out_path,pkg) {
     print(msg)
 
     log_file <- paste0(out_path, "/installpkg.log")
-    cmd <- paste("R CMD INSTALL", paste0(pkg, "_1.0.0.tar.gz"),
-                 ">>", log_file, "2>&1")
+
+    if (!is.null(install_lib)) {
+      cmd <- paste("R CMD INSTALL", paste0(pkg, "_1.0.0.tar.gz"),
+                   "-l", install_lib, ">>", log_file, "2>&1")
+    } else {
+      cmd <- paste("R CMD INSTALL", paste0(pkg, "_1.0.0.tar.gz"),
+                   ">>", log_file, "2>&1")
+    }
+
+    # msg = paste0("[", Sys.time(), "] ", "Install ", pkg, " package...", "")
+    # print(msg)
+    #
+    # log_file <- paste0(out_path, "/installpkg.log")
+    # cmd <- paste("R CMD INSTALL", paste0(pkg, "_1.0.0.tar.gz"),
+    #              ">>", log_file, "2>&1")
+    
     system(command = cmd, wait = T)
     file.remove(paste0(pkg, "_1.0.0.tar.gz"))
     unlink(paste0(pkg, ".Rcheck"),recursive=TRUE)
