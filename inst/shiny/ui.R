@@ -92,11 +92,11 @@ body <- dashboardBody(
                                           fluidRow(
                                                  column(
                                                         width = 4,
-                                                        numericInput(inputId = "exon.intron.read", label = "Minimal Read Count on Exon-Intron Boundary", value = 50, min = 0)
+                                                        numericInput(inputId = "exon.intron.read", label = "Minimal Read Count on Exon-Intron Boundary", value = 25, min = 0)
                                                  ),
                                                  column(
                                                         width = 4,
-                                                        numericInput(inputId = "junction.read", label = "Minimal Read Count on Junction", value = 50, min = 0)
+                                                        numericInput(inputId = "junction.read", label = "Minimal Read Count on Junction", value = 25, min = 0)
                                                  )
                                           ),
                                           hr(),
@@ -132,7 +132,7 @@ body <- dashboardBody(
                                                  ),
                                                  column(
                                                         width = 4,
-                                                        numericInput(inputId = "minCell", label = "Minimal Cell Count Containing an Event", value = 10, min = 0)
+                                                        numericInput(inputId = "minCell", label = "Minimal Cell Count Containing an Event", value = 5, min = 0)
                                                  )
                                           ),
                                           fluidRow(
@@ -307,11 +307,11 @@ body <- dashboardBody(
                                                  # ),
                                                  column(
                                                         width = 3,
-                                                        numericInput(inputId = "cell.kmin", label = "Min K cell", value = 5, min = 0, step = 1)
+                                                        numericInput(inputId = "cell.kmin", label = "Min K cell", value = 3, min = 0, step = 1)
                                                  ),
                                                  column(
                                                         width = 3,
-                                                        numericInput(inputId = "cell.kmax", label = "Max K cell", value = 50, min = 0, step = 1)
+                                                        numericInput(inputId = "cell.kmax", label = "Max K cell", value = 8, min = 0, step = 1)
                                                  ),
                                                  column(
                                                         width = 3,
@@ -326,7 +326,7 @@ body <- dashboardBody(
                                           fluidRow(
                                                  column(
                                                         width = 3,
-                                                        numericInput(inputId = "event.k", label = "K Neighbor Event", value = 10, min = 0, step = 1)
+                                                        numericInput(inputId = "event.k", label = "K Neighbor Event", value = 5, min = 0, step = 1)
                                                  ),
                                                  column(
                                                         width = 3,
