@@ -31,7 +31,7 @@ do
       echo "${name}=${name}" >> $workpath/majiq_build_config.ini
 done
 majiq build $gff -c $workpath/majiq_build_config.ini -j$core -o $workpath/build --disable-ir --minreads $junctionReads
-find $workpath/build -name *majiq > $workpath/majiq_path.txt
+find $workpath/build -name "*majiq" > $workpath/majiq_path.txt
 for i in `cat $workpath/majiq_path.txt`
 do
       name=${i##*/}
