@@ -160,6 +160,9 @@ getEXPmatrix <- function(
 #' @param filter.rp Logical value indicating whether to filter out 
 #'   ribosomal genes (genes with names starting with "RPS", "RPL", "Rps", 
 #'   or "Rpl"). Default is taken from \code{paras$Basic$filter_sc$filter.rp}.
+#' @param cells Character vector of cell barcodes to subset. If provided,
+#'   only cells with barcodes present in this vector will be retained.
+#'   If \code{NULL} (default), all cells in the matrix are kept.
 #'
 #' @return Character string of the output directory path where the RDS files 
 #'   are saved. The directory contains two files: \code{count.rds} (raw counts) 
@@ -175,7 +178,8 @@ getEXPmatrix <- function(
 get10XEXPmatrix <- function(
     paras, expr_path,
     filter.mt = paras$Basic$filter_sc$filter.mt,
-    filter.rp = paras$Basic$filter_sc$filter.rp) {
+    filter.rp = paras$Basic$filter_sc$filter.rp,
+    cells = NULL) {
   if (!requireNamespace("Seurat", quietly = TRUE)) {
     stop("Please install Seurat to read files")
   }
@@ -185,9 +189,12 @@ get10XEXPmatrix <- function(
                          recursive = TRUE, full.names = TRUE
   )
   if (length(file_name)==0) {
-    stop("File not found")
+    stop("filtered_feature_bc_matrix.h5 File not found")
   }
   expr = Seurat::Read10X_h5(file_name)
+  if(!is.null(cells)){
+    expr=expr[,which(colnames(expr)%in%cells)]
+  }
   # output
   output_path <- paste0(paras$Basic$work_path, "/rds/")
   if (!dir.exists(output_path)) {
@@ -209,6 +216,7 @@ get10XEXPmatrix <- function(
   saveRDS(expr_norm, paste0(output_path, "/count_norm.rds"))
   return(output_path)
 }
+
 
 
 
