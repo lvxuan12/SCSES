@@ -2,10 +2,7 @@
 % Please edit documentation in R/createConfig.R
 \name{createConfigshiny}
 \alias{createConfigshiny}
-\title{Launch SCSES Configuration Shiny Application
-This function starts a Shiny web application that provides an interactive
-interface for configuring SCSES parameters. The application runs on a
-local web server and can be accessed through a web browser.}
+\title{Launch SCSES Configuration Shiny Application}
 \usage{
 createConfigshiny(host = "127.0.0.1", port = 9999, launch.browser = F, ...)
 }
@@ -25,7 +22,6 @@ Returns \code{NULL} invisibly. The function is called for its side
   effect of launching the Shiny application.
 }
 \description{
-Launch SCSES Configuration Shiny Application
 This function starts a Shiny web application that provides an interactive
 interface for configuring SCSES parameters. The application runs on a
 local web server and can be accessed through a web browser.
