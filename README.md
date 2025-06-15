@@ -418,8 +418,7 @@ from 10X CellRanger hdf5 file, which will save normalized UMI count to
 
 ``` r
 # install.packages('Seurat')
-# In expr_path, there are different subdirectories, each named after a sample name.
-rds.path = get10XEXPmatrix(paras,expr_path,sample_name)
+rds.path = get10XEXPmatrix(paras,expr_path)
 ```
 
 ### Step3. Detect splicing events
