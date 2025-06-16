@@ -487,8 +487,9 @@ getEventSimilarity <- function(
     msg = paste0("[", Sys.time(), "] ", "step1 Creating BSgenome for ", pkg, "=======", "")
     print(msg)
     if (!requireNamespace(pkg, quietly = TRUE)) {
+      conda_lib <- file.path(Sys.getenv("CONDA_PREFIX"), "lib", "R", "library")
       createBSgenome(ref_path = ref_path,
-                     out_path = output_path, pkg = pkg
+                     out_path = output_path, pkg = pkg, install_lib = conda_lib
       )
     }
     library(pkg, character.only = T, quietly = T)
