@@ -87,7 +87,13 @@ getClassifierFeature <- function(
     gene <- unlist(lapply(row.names(psi), function(x) {
         unlist(strsplit(x, "\\|"))[3]
     }))
-    expr2 <- expr[gene, ]
+    # expr2 <- expr[gene, ]
+    expr2 <- rbind(expr[intersect(gene, rownames(expr)), , drop = FALSE],
+                   matrix(0,
+                          nrow = length(setdiff(gene, rownames(expr))),
+                          ncol = ncol(expr),
+                          dimnames = list(setdiff(gene, rownames(expr)),
+                                          colnames(expr))))[gene, ]
     feature_df <- data.frame(
         knn_vc = unlist(as.vector(knn_vc)),
         rc_knn = unlist(as.vector(rc_knn)),
