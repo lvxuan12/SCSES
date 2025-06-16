@@ -352,6 +352,9 @@ The `cell_line.json` file is an example configuration file for test data
 which can be downloaded from <https://doi.org/10.5281/zenodo.13951695> or load from SCSES package
 [here](https://github.com/lvxuan12/SCSES/blob/main/analysis/cell_line.json).
 
+**Note:** We strongly recommend using the parameters from the example configuration file when working with test data. 
+Default parameters may not be suitable for the small-scale test dataset and could lead to unexpected issues.
+
 For real dataset, users can modify this file to fit their input and
 software environment or use `createConfigshiny` function to create a new
 configuration file.
