@@ -68,7 +68,7 @@ PCA_D_reduct_sparse <- function(data, id_select) {
 #' @importFrom Biostrings readDNAStringSet writeXStringSet
 #' @importFrom BSgenome forgeBSgenomeDataPkg
 #'
-createBSgenome <- function(ref_path,out_path,pkg,install_lib) {
+createBSgenome <- function(ref_path,out_path,pkg,install_lib = NULL) {
     out_path = paste0(out_path, "/", pkg, "/")
     dir.create(out_path, recursive = T)
     # 0. Create seperated reference sequence file----
