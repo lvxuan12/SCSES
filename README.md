@@ -222,13 +222,13 @@ A configure file is required to run SCSES. You can use
 
 ``` r
 library(SCSES)
-createConfigshiny(host, port) 
+createConfigshiny(host, port, launch.browser=FALSE) 
 ```
-
+Setting launch.browser = TRUE may cause errors in headless environments (servers without GUI) or when no default browser is configured
 After running this command, a interactive window will popup which allow
-you to fill some parameters, such as Bam File Path, and Work Path. For a
-detailed explanation of the configuration file, please refer to the
-`config_anno.txt`.
+you to fill some parameters, such as Bam File Path, and Work Path. 
+For a detailed explanation of the configuration file, please refer to the
+`ConfigurationGuide.txt`.
 
 Finally, you can click “Create Config” button and a json file will be
 generated in the `work_path` you provided if successful.
