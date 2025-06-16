@@ -226,12 +226,14 @@ createConfigshiny(host, port, launch.browser=FALSE)
 ```
 Setting launch.browser = TRUE may cause errors in headless environments (servers without GUI) or when no default browser is configured
 For server environments, it is recommended to:
-###### 1. Set the host to the server's IP address
-###### 2. Set launch.browser = FALSE to avoid browser launch errors
-###### 3. Manually access the application URL shown in the console
+##### 3.1. Set the host to the server's IP address
+##### 3.2. Set launch.browser = FALSE to avoid browser launch errors
+##### 3.3. Manually access the application URL shown in the console
 After running `createConfigshiny`, you will see console output similar to:
 Listening on http://123.678.112.78:9999
+
 Copy this URL and paste it into your web browser to access the application.
+
 After that, a interactive window will popup which allow
 you to fill some parameters, such as Bam File Path, and Work Path. 
 
