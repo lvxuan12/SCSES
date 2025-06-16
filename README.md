@@ -229,8 +229,7 @@ For server environments, it is recommended to:
 ##### 3.1. Set the host to the server's IP address
 ##### 3.2. Set launch.browser = FALSE to avoid browser launch errors
 ##### 3.3. Manually access the application URL shown in the console
-After running `createConfigshiny`, you will see console output similar to:
-Listening on http://123.678.112.78:9999
+After running `createConfigshiny`, you will see a URL appear in the console
 
 Copy this URL and paste it into your web browser to access the application.
 
