@@ -195,11 +195,11 @@ body <- dashboardBody(
                                           fluidRow(
                                                  column(
                                                         width = 5,
-                                                        switchInput(inputId = "remove_chr", label = "<b>Remove chromosome prefix</b>", value = T, onLabel = "FALSE", offLabel = "TRUE", labelWidth = "180px")
+                                                        switchInput(inputId = "remove_chr", label = "<b>Remove chromosome prefix</b>", value = F, onLabel = "FALSE", offLabel = "TRUE", labelWidth = "180px")
                                                  ),
                                                  column(
                                                    width = 5,
-                                                   switchInput(inputId = "chr_prefix", label = "<b>Add chr prefix when extracting conservation scores</b>", value = T, onLabel = "FALSE", offLabel = "TRUE", labelWidth = "180px")
+                                                   switchInput(inputId = "chr_prefix", label = "<b>Add chr prefix when extracting conservation scores</b>", value = F, onLabel = "FALSE", offLabel = "TRUE", labelWidth = "180px")
                                                  )
                                           ),
                                           #textInput(inputId = "chr_prefix", label = "Add chromosome prefix", placeholder = paste("Add chr prefix when extracting conservation scores")),
