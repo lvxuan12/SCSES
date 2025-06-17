@@ -225,7 +225,10 @@ library(SCSES)
 createConfigshiny(host, port, launch.browser=FALSE) 
 ```
 Setting launch.browser = TRUE may cause errors in headless environments (servers without GUI) or when no default browser is configured
-For server environments, it is recommended to:
+
+If you used the Docker-based installation method, set launch.browser = TRUE.
+
+For command line environment, it is recommended to:
 ##### 3.1. Set the host to the server's IP address
 ##### 3.2. Set launch.browser = FALSE to avoid browser launch errors
 ##### 3.3. Manually access the application URL shown in the console
