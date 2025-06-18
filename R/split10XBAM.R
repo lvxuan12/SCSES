@@ -16,7 +16,6 @@ split10XBAM <- function(CellRanger_path,out_path,java_path,core,times=50) {
     options("scipen" = 100)
     # script
     jar_path <- system.file("java", package = "SCSES")
-    java_path <- paras$Basic$java_path
     dir_shell <- system.file("shell", package = "SCSES")
     script_split <- paste0(dir_shell, "/split_10XBAM.sh")
     # input
