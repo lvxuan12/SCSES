@@ -4,6 +4,7 @@
 #'
 #' @param CellRanger_path directory to CellRanger output for one sample
 #' @param out_path directory to save single cell bam
+#' @param java_path directory to java
 #' @param core the number of threads
 #' @param times Process the cells in times iterations, default: 50
 
@@ -11,11 +12,10 @@
 #'
 #' @export
 
-split10XBAM <- function(CellRanger_path,out_path,core,times=50) {
+split10XBAM <- function(CellRanger_path,out_path,java_path,core,times=50) {
     options("scipen" = 100)
     # script
     jar_path <- system.file("java", package = "SCSES")
-    java_path <- paras$Basic$java_path
     dir_shell <- system.file("shell", package = "SCSES")
     script_split <- paste0(dir_shell, "/split_10XBAM.sh")
     # input
