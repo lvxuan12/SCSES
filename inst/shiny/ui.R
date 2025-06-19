@@ -4,6 +4,7 @@ library(shinyWidgets)
 library(shinyFiles)
 library(parallel)
 library(prompter)
+library(dplyr)
 source("www/R/uiFunction.R")
 
 header <- dashboardHeader(title = "SCSES")
