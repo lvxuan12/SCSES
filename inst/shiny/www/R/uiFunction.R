@@ -3,7 +3,7 @@ createTextFile=function(id,label,type='shinyFilesButton',msg="help",...)
 {
   ui=list(
     div(class="col-sm-2",style="padding-right:0",
-        textInput(inputId = gsub(pattern = '_',replacement = "",x = id),label = label)%>%
+        textInput(inputId = gsub(pattern = '_',replacement = "",x = id),label = label,...)%>%
           add_prompt(position = 'bottom',message = msg,type = 'info',size='large'),
     ),
     div(class='col-sm-1',style='padding-left:0',
