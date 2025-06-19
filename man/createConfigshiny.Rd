@@ -2,17 +2,53 @@
 % Please edit documentation in R/createConfig.R
 \name{createConfigshiny}
 \alias{createConfigshiny}
-\title{Create configure file}
+\title{Launch SCSES Configuration Shiny Application}
 \usage{
 createConfigshiny(host = "127.0.0.1", port = 9999, launch.browser = F, ...)
 }
 \arguments{
-\item{host}{The IPv4 address that the application should listen on, default: 127.0.0.1}
+\item{host}{A character string specifying the IPv4 address that the
+application should listen on. Default is "127.0.0.1" (localhost only).}
 
-\item{port}{The TCP port that the application should listen on, default: 9999}
+\item{port}{An integer specifying the TCP port that the application should
+listen on. Must be between 1 and 65535. Default is 9999.}
 
-\item{launch.browser}{If true, the system's default web browser will be launched automatically after the app is started.}
+\item{launch.browser}{A logical value indicating whether to automatically
+launch the system's default web browser to open the application.
+Default is FALSE.}
+}
+\value{
+Returns \code{NULL} invisibly. The function is called for its side
+  effect of launching the Shiny application.
 }
 \description{
-Create configure file
+This function starts a Shiny web application that provides an interactive
+interface for configuring SCSES parameters. The application runs on a
+local web server and can be accessed through a web browser.
+}
+\details{
+The function locates the Shiny application directory within the SCSES package
+and launches it using \code{shiny::runApp()}. The application will continue
+running until manually stopped (Ctrl+C in R console).
+
+\strong{Important Notes:}
+\itemize{
+  \item Setting \code{launch.browser = TRUE} may cause errors in headless
+        environments (servers without GUI) or when no default browser is configured
+  \item Ensure the specified port is not already in use by another application
+}
+
+\strong{Server Environment Usage:}
+
+For server environments, it is recommended to:
+\enumerate{
+  \item Set the host to the server's IP address
+  \item Set \code{launch.browser = FALSE} to avoid browser launch errors
+  \item Manually access the application URL shown in the console
+}
+
+After starting the application, you will see console output similar to:
+\preformatted{Listening on http://123.678.112.78:9999}
+
+Copy this URL and paste it into your web browser to access the application.
 }

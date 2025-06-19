@@ -1,6 +1,6 @@
+![SCSES](https://github.com/lvxuan12/SCSES/blob/main/png/SCSES_logo.png)
 Menu
 ================
-
 - [SCSES](#scses)
   - [Hardware requirements](#hardware-requirements)
   - [Software requirements](#software-requirements)
@@ -222,13 +222,25 @@ A configure file is required to run SCSES. You can use
 
 ``` r
 library(SCSES)
-createConfigshiny(host, port) 
+createConfigshiny(host, port, launch.browser=FALSE) 
 ```
+Setting launch.browser = TRUE may cause errors in headless environments (servers without GUI) or when no default browser is configured
 
-After running this command, a interactive window will popup which allow
-you to fill some parameters, such as Bam File Path, and Work Path. For a
-detailed explanation of the configuration file, please refer to the
-`config_anno.txt`.
+If you used the Docker-based installation method, set launch.browser = TRUE.
+
+For command line environment, it is recommended to:
+##### 3.1. Set the host to the server's IP address
+##### 3.2. Set launch.browser = FALSE to avoid browser launch errors
+##### 3.3. Manually access the application URL shown in the console
+After running `createConfigshiny`, you will see a URL appear in the console
+
+Copy this URL and paste it into your web browser to access the application.
+
+After that, a interactive window will popup which allow
+you to fill some parameters, such as Bam File Path, and Work Path. 
+
+For a detailed explanation of the configuration file, please refer to the
+[ConfigurationGuide.txt](https://github.com/lvxuan12/SCSES/blob/main/ConfigurationGuide.txt).
 
 Finally, you can click “Create Config” button and a json file will be
 generated in the `work_path` you provided if successful.
@@ -340,8 +352,11 @@ paras = readSCSESconfig(paras_file)
 ```
 
 The `cell_line.json` file is an example configuration file for test data
-which can be downloaded previously or load from SCSES package
+which can be downloaded from <https://doi.org/10.5281/zenodo.13951695> or load from SCSES package
 [here](https://github.com/lvxuan12/SCSES/blob/main/analysis/cell_line.json).
+
+**Note:** We strongly recommend using the parameters from the example configuration file when working with test data. 
+Default parameters may not be suitable for the small-scale test dataset and could lead to unexpected issues.
 
 For real dataset, users can modify this file to fit their input and
 software environment or use `createConfigshiny` function to create a new
@@ -413,13 +428,17 @@ After this step, directories `expr` and `rds` will be created.
 #### Normalized UMI count matrix (for UMI dataset)
 
 You can use `get10XEXPmatrix` to generate Normalized UMI count matrix
-from 10X CellRanger hdf5 file, which will save normalized UMI count to
+from 10X CellRanger HDF5 file, which will save normalized UMI count to
 `work_path/rds/`.
 
 ``` r
 # install.packages('Seurat')
-# In expr_path, there are different subdirectories, each named after a sample name.
-rds.path = get10XEXPmatrix(paras,expr_path,sample_name)
+# Process Cell Ranger output
+expr_path <- "/path/to/cellranger/output"
+rds.path <- get10XEXPmatrix(paras, expr_path)
+# Load processed data
+raw_counts <- readRDS(paste0(rds.path, "/count.rds"))
+norm_counts <- readRDS(paste0(rds.path, "/count_norm.rds"))
 ```
 
 ### Step3. Detect splicing events

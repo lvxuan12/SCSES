@@ -68,7 +68,7 @@ PCA_D_reduct_sparse <- function(data, id_select) {
 #' @importFrom Biostrings readDNAStringSet writeXStringSet
 #' @importFrom BSgenome forgeBSgenomeDataPkg
 #'
-createBSgenome <- function(ref_path,out_path,pkg) {
+createBSgenome <- function(ref_path,out_path,pkg,install_lib = NULL) {
     out_path = paste0(out_path, "/", pkg, "/")
     dir.create(out_path, recursive = T)
     # 0. Create seperated reference sequence file----
@@ -124,8 +124,22 @@ createBSgenome <- function(ref_path,out_path,pkg) {
     print(msg)
 
     log_file <- paste0(out_path, "/installpkg.log")
-    cmd <- paste("R CMD INSTALL", paste0(pkg, "_1.0.0.tar.gz"),
-                 ">>", log_file, "2>&1")
+
+    if (!is.null(install_lib)) {
+      cmd <- paste("R CMD INSTALL", paste0(pkg, "_1.0.0.tar.gz"),
+                   "-l", install_lib, ">>", log_file, "2>&1")
+    } else {
+      cmd <- paste("R CMD INSTALL", paste0(pkg, "_1.0.0.tar.gz"),
+                   ">>", log_file, "2>&1")
+    }
+
+    # msg = paste0("[", Sys.time(), "] ", "Install ", pkg, " package...", "")
+    # print(msg)
+    #
+    # log_file <- paste0(out_path, "/installpkg.log")
+    # cmd <- paste("R CMD INSTALL", paste0(pkg, "_1.0.0.tar.gz"),
+    #              ">>", log_file, "2>&1")
+    
     system(command = cmd, wait = T)
     file.remove(paste0(pkg, "_1.0.0.tar.gz"))
     unlink(paste0(pkg, ".Rcheck"),recursive=TRUE)
@@ -473,8 +487,9 @@ getEventSimilarity <- function(
     msg = paste0("[", Sys.time(), "] ", "step1 Creating BSgenome for ", pkg, "=======", "")
     print(msg)
     if (!requireNamespace(pkg, quietly = TRUE)) {
+      conda_lib <- file.path(Sys.getenv("CONDA_PREFIX"), "lib", "R", "library")
       createBSgenome(ref_path = ref_path,
-                     out_path = output_path, pkg = pkg
+                     out_path = output_path, pkg = pkg, install_lib = conda_lib
       )
     }
     library(pkg, character.only = T, quietly = T)
