@@ -41,6 +41,7 @@ RUN echo "" >/etc/apt/sources.list.d/ubuntu.sources && \
     apt-get install -y gcc-multilib && \
 	ln /lib/x86_64-linux-gnu/libboost_iostreams.so.1.83.0 /lib/x86_64-linux-gnu/libboost_iostreams.so.1.71.0 && \
     apt-get install -y bedtools && \
+    apt-get install -y libglpk40 libglpk-dev && \
     cp /bin/python3 /bin/python && \
     #pip install python3-pandas python3-numpy python3-scipy python3-scikit-learn && \
     #pip install Cython && \

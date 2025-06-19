@@ -47,7 +47,8 @@ Imports:
     glmnet,
     caret,
     prompter,
-    dplyr
+    dplyr,
+    Seurat (=4.4.0)
 Remotes:
   url::https://github.com/dipterix/threeBrain/archive/refs/tags/1.0.1.tar.gz,
   url::https://github.com/jonclayden/RNifti/archive/refs/tags/v1.7.0.tar.gz,
