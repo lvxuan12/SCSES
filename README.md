@@ -294,11 +294,11 @@ library(SCSES)
 createConfigshiny(host, port, launch.browser=FALSE) 
 ```
 
-#### 3.1. Set the host to the server’s IP address
+step 1. Set the host to the server’s IP address
 
-#### 3.2. Set launch.browser = FALSE to avoid browser launch errors
+step 2. Set launch.browser = FALSE to avoid browser launch errors
 
-#### 3.3. Manually access the application URL shown in the console
+step 3. Manually access the application URL shown in the console
 
 After running `createConfigshiny`, you will see a URL appear in the
 console
