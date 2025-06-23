@@ -300,7 +300,7 @@ the application.
 
 step 5. After that, a interactive window will popup which allow you to
 fill some parameters, such as Bam File Path, and Work Path. Finally, you
-can click “Create Config” button and a json file will be generated in
+can click `Create Config` button and a json file will be generated in
 the `work_path` you provided if successful.
 
 If you are using **test data**, you should use `createDemoConfigshiny`
