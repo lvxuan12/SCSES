@@ -224,6 +224,7 @@ To install SCSES, type the following command in **R**:
 install.packages("remotes")
 remotes::install_version("Matrix", version = "1.6-5")
 install.packages("curl",config.vars='LIB_DIR=/usr/lib/x86_64-linux-gnu/pkgconfig/')
+options(download.file.method = "wget", times=100)
 remotes::install_github("lvxuan12/SCSES")
 ```
 
