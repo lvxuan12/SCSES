@@ -288,23 +288,20 @@ library(SCSES)
 createConfigshiny(host, port, launch.browser=FALSE) 
 ```
 
-step 1. Set the host to the server’s IP address
+step 1. Set the host to the server's IP address
 
 step 2. Set launch.browser = FALSE to avoid browser launch errors
 
 step 3. Manually access the application URL shown in the console
 
-After running `createConfigshiny`, you will see a URL appear in the
-console
+step 4. After running `createConfigshiny`, you will see a URL appear in
+the console. Copy this URL and paste it into your web browser to access
+the application.
 
-Copy this URL and paste it into your web browser to access the
-application.
-
-After that, a interactive window will popup which allow you to fill some
-parameters, such as Bam File Path, and Work Path.
-
-Finally, you can click “Create Config” button and a json file will be
-generated in the `work_path` you provided if successful.
+step 5. After that, a interactive window will popup which allow you to
+fill some parameters, such as Bam File Path, and Work Path. Finally, you
+can click “Create Config” button and a json file will be generated in
+the `work_path` you provided if successful.
 
 If you are using **test data**, you should use `createDemoConfigshiny`
 function instead to build the configuration file:
