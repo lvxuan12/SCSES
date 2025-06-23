@@ -312,6 +312,20 @@ parameters, such as Bam File Path, and Work Path.
 Finally, you can click “Create Config” button and a json file will be
 generated in the `work_path` you provided if successful.
 
+If you are using **test data**, you should use `createDemoConfigshiny`
+function instead to build the configuration file:
+
+``` r
+library(SCSES)
+createDemoConfigshiny(host = "localhost", launch.browser=TRUE) 
+```
+
+**Note:** The test data contains fewer cells and chromosomes for faster
+execution, so the default parameters are not suitable. The
+`createDemoConfigshiny` function will generate a configuration file with
+parameters fitting the test data.
+
+
 For a detailed explanation of the configuration file, please refer to
 the
 [ConfigurationGuide.txt](https://github.com/lvxuan12/SCSES/blob/main/ConfigurationGuide.txt).
