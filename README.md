@@ -287,7 +287,7 @@ createConfigshiny(host = "localhost",launch.browser=TRUE)
 For command line environment, it is recommended to:
 
 Setting launch.browser = TRUE may cause errors in headless environments
-(servers without GUI) or when no default browser is configd
+(servers without GUI) or when no default browser is configured
 
 ``` r
 library(SCSES)
