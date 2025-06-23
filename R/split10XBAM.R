@@ -1,6 +1,6 @@
 #' @title get single cell bam file from 10X CellRanger output
-#' this function will split possorted_genome_bam.bam from 10X CellRanger output
-#' to single cell bam based bam tag "CB:"
+#' @description this function will split possorted_genome_bam.bam
+#' from 10X CellRanger output to single cell bam based bam tag "CB:"
 #'
 #' @param CellRanger_path directory to CellRanger output for one sample
 #' @param out_path directory to save single cell bam
