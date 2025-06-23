@@ -11,7 +11,7 @@ bam_sc=$out_dir/bam/
 
 n_row=$(wc -l $cell_info | awk '{print $1}')
 n_row_split=$(echo $n_row| awk '{print int($1/"'$times'")}')
-for i in $(seq 1 1 50)
+for i in $(seq 1 1 $times)
 do
     row_from=$(echo $i | awk '{print ($1-1)*"'${n_row_split}'"+1}')
     row_to=$(echo $i | awk '{print $1*"'${n_row_split}'"}')
