@@ -102,6 +102,7 @@ getRawRC <- function(
           if (i > (progress_rate * length(files))) {
             print(paste("Reading RJC File Progress:", paste0(progress_rate * 100, "%")))
             progress_rate <- round(i / length(files), digits = 1)
+            progress_rate <- progress_rate + 0.1
           }
           tmp <- read.table(file = paste0(outpath_per_cell, "/", f), header = F, sep = "\t")
           rownames(tmp) <- tmp$V1
