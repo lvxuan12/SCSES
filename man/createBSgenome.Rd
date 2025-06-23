@@ -4,7 +4,7 @@
 \alias{createBSgenome}
 \title{Create R package for a reference sequence file}
 \usage{
-createBSgenome(ref_path, out_path, pkg)
+createBSgenome(ref_path, out_path, pkg, install_lib = NULL)
 }
 \arguments{
 \item{ref_path}{reference fasta file}
@@ -12,6 +12,8 @@ createBSgenome(ref_path, out_path, pkg)
 \item{out_path}{path to save the package}
 
 \item{pkg}{the name of pkg}
+
+\item{install_lib}{library path that save the package}
 }
 \value{
 package path

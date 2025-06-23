@@ -2,16 +2,16 @@
 % Please edit documentation in R/split10XBAM.R
 \name{split10XBAM}
 \alias{split10XBAM}
-\title{get single cell bam file from 10X CellRanger output
-this function will split possorted_genome_bam.bam from 10X CellRanger output
-to single cell bam based bam tag "CB:"}
+\title{get single cell bam file from 10X CellRanger output}
 \usage{
-split10XBAM(CellRanger_path, out_path, core, times = 50)
+split10XBAM(CellRanger_path, out_path, java_path, core, times = 50)
 }
 \arguments{
 \item{CellRanger_path}{directory to CellRanger output for one sample}
 
 \item{out_path}{directory to save single cell bam}
+
+\item{java_path}{directory to java}
 
 \item{core}{the number of threads}
 
@@ -21,7 +21,6 @@ split10XBAM(CellRanger_path, out_path, core, times = 50)
 single cell bam directory
 }
 \description{
-get single cell bam file from 10X CellRanger output
-this function will split possorted_genome_bam.bam from 10X CellRanger output
-to single cell bam based bam tag "CB:"
+this function will split possorted_genome_bam.bam
+from 10X CellRanger output to single cell bam based bam tag "CB:"
 }
