@@ -272,39 +272,37 @@ SCSES requires five essential input files:
 SCSES requires a json-based configuration file to set all parameters in the algorithm. Here is a [demo](https://github.com/lvxuan12/SCSES/blob/main/inst/analysis/cell_line.json) of the configure file.
 For a detailed explanation of the configuration file, please refer to the [ConfigurationGuide.txt](https://github.com/lvxuan12/SCSES/blob/main/ConfigurationGuide.txt).
 
-You can use `createConfigshiny` command to generate a config file:
+SCSES provides a shiny app to help you to generate the confugre file. You can start the app by `createConfigshiny` function.
 
-If you used the Docker-based installation method:
+If you use it in the SCSES docker container, the command should be :
 
 ``` r
 library(SCSES)
 createConfigshiny(host = "localhost",launch.browser=TRUE) 
 ```
 
-For command line environment, it is recommended to:
-
-Setting launch.browser = TRUE may cause errors in headless environments
-(servers without GUI) or when no default browser is configured
-
+For non-docker users, the full command should be:
 ``` r
 library(SCSES)
 createConfigshiny(host, port, launch.browser=FALSE) 
 ```
+You should set the following parameters:
 
-step 1. Set the host to the server's IP address
+(1). host: the server's IP address, for local access, you can set as "localhost" or "127.0.0.1"
 
-step 2. Set launch.browser = FALSE to avoid browser launch errors
+(2). port: The TCP port that the application should listen on. If the port is not specified, and the shiny.port option is set (with options(shiny.port = XX)), then that port will be used. Otherwise, use a random port between 3000:8000, excluding ports that are blocked by Google Chrome for being considered unsafe: 3659, 4045, 5060, 5061, 6000, 6566, 6665:6669 and 6697. Up to twenty random ports will be tried.
 
-step 3. Manually access the application URL shown in the console
+(3). launch.borwser: if launch the app in the default web browser automatically, default is FALSE. Setting launch.browser = TRUE may cause errors in headless environments (servers without GUI) or when no default browser is configured
+(servers without GUI) or when no default browser is configured
 
-step 4. After running `createConfigshiny`, you will see a URL appear in
+After running `createConfigshiny`, you will see a URL appear in
 the console. Copy this URL and paste it into your web browser to access
 the application.
 
-step 5. After that, a interactive window will popup which allow you to
-fill some parameters, such as Bam File Path, and Work Path. Finally, you
-can click `Create Config` button and a json file will be generated in
-the `work_path` you provided if successful.
+An interactive window will popup, which allow you to
+fill some parameters, such as Bam File Path, and Work Path. The meaning of each parameter can be found by hovering the mouse over the widget.
+
+Finally, you can click `Create Config` button and a json file will be generated in the `work_path` you provided if successful.
 
 If you are using **test data**, you should use `createDemoConfigshiny`
 function instead to build the configuration file:
