@@ -288,11 +288,11 @@ createConfigshiny(host, port, launch.browser=FALSE)
 ```
 You should set the following parameters:
 
-(1). host: the server's IP address, for local access, you can set as "localhost" or "127.0.0.1"
+- host: the server's IP address, for local access, you can set as "localhost" or "127.0.0.1"
 
-(2). port: The TCP port that the application should listen on. If the port is not specified, and the shiny.port option is set (with options(shiny.port = XX)), then that port will be used. Otherwise, use a random port between 3000:8000, excluding ports that are blocked by Google Chrome for being considered unsafe: 3659, 4045, 5060, 5061, 6000, 6566, 6665:6669 and 6697. Up to twenty random ports will be tried.
+- port: The TCP port that the application should listen on. If the port is not specified, and the shiny.port option is set (with options(shiny.port = XX)), then that port will be used. Otherwise, use a random port between 3000:8000, excluding ports that are blocked by Google Chrome for being considered unsafe: 3659, 4045, 5060, 5061, 6000, 6566, 6665:6669 and 6697. Up to twenty random ports will be tried.
 
-(3). launch.borwser: if launch the app in the default web browser automatically, default is FALSE. Setting launch.browser = TRUE may cause errors in headless environments (servers without GUI) or when no default browser is configured
+- launch.borwser: if launch the app in the default web browser automatically, default is FALSE. Setting launch.browser = TRUE may cause errors in headless environments (servers without GUI) or when no default browser is configured
 (servers without GUI) or when no default browser is configured
 
 After running `createConfigshiny`, you will see a URL appear in
@@ -304,7 +304,7 @@ fill some parameters, such as Bam File Path, and Work Path. The meaning of each 
 
 Finally, you can click `Create Config` button and a json file will be generated in the `work_path` you provided if successful.
 
-If you are using **test data**, you should use `createDemoConfigshiny`
+If you are using **test data** in this tuitual, you should use `createDemoConfigshiny`
 function instead to build the configuration file:
 
 ``` r
@@ -312,10 +312,9 @@ library(SCSES)
 createDemoConfigshiny(host = "localhost", launch.browser=TRUE) 
 ```
 
-**Note:** The test data contains fewer cells and chromosomes for faster
-execution, so the default parameters are not suitable. The
-`createDemoConfigshiny` function will generate a configuration file with
-parameters fitting the test data.
+**Note**: The test dataset includes fewer cells and chromosomes to ensure faster completation of the tuitual. 
+Therefore, the default parameters in `createConfigshiny` are not suitable. Please use the `createDemoConfigshiny` function instead, 
+which provides default values optimized for the test dataset.
 
 
 ### 4. Phast conservation file in bigWig format
@@ -460,6 +459,14 @@ ls /disk/share/lvxuan/SCSES_test/refgenome/
 ```
 
 ### Step-by-Step Analysis
+
+#### Step 0. Get the cofigure file
+The paramteter configuration for test dataset is the *cell_line.json* in the downloaded files. 
+
+Alternatively, you can create the configuration file using the Shiny app.
+**Note**: The test dataset includes fewer cells and chromosomes to ensure faster completation of the tuitual. 
+Therefore, the default parameters in `createConfigshiny` are not suitable. Please use the `createDemoConfigshiny` function instead, 
+which provides default values optimized for the test dataset.
 
 #### Step 1. Read config file
 
