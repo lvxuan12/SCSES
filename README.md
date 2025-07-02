@@ -96,7 +96,9 @@ command:
 docker run -d -p [exported port]:8787 -e PASSWORD=[user password] -v [local directory]:/data --name test scses
 ```
 
-`[exported port]`: The port on the host machine to access the container.
+`[exported port]`: An **unused** port on the host machine to access the container. To show all **used** ports on the host machine, 
+input the following command in linux terminal `netstat -tuwanp 2|awk '{print $4}'|cut -d ":" -f 2|sort|uniq -c` 
+or ` Get-NetTCPConnection | Where-Object { $_.State -eq "Listen" } | Select-Object -ExpandProperty LocalPort|Sort-Object | Group-Object | Select-Object -Property Count, Name` in Windows Powershell.
 
 `[user password]`: A user-defined password for logging into the RStudio
 server.
@@ -107,8 +109,8 @@ storage and sharing.
 #### 5. Access RStudio Server
 
 Now, you can access the RStudio server by opening a web browser and
-navigating to `[host IP]:[exported port]`. Use the default username
-`rstudio` and the user-defined password to log in.
+navigating to `[host IP]:[exported port]`. The username to log in Rstudio server is
+**`rstudio`** and the password is use-defined in the `docker run` command.
 
 In this pre-configd RStudio server environment, SCSES and all its
 dependencies are correctly installed and ready for use.
@@ -267,7 +269,8 @@ SCSES requires five essential input files:
 
 ### 3. Configuration File
 
-A config file is required to run SCSES.
+SCSES requires a json-based configuration file to set all parameters in the algorithm. Here is a [demo](https://github.com/lvxuan12/SCSES/blob/main/inst/analysis/cell_line.json) of the configure file.
+For a detailed explanation of the configuration file, please refer to the [ConfigurationGuide.txt](https://github.com/lvxuan12/SCSES/blob/main/ConfigurationGuide.txt).
 
 You can use `createConfigshiny` command to generate a config file:
 
@@ -316,10 +319,6 @@ execution, so the default parameters are not suitable. The
 `createDemoConfigshiny` function will generate a configuration file with
 parameters fitting the test data.
 
-
-For a detailed explanation of the configuration file, please refer to
-the
-[ConfigurationGuide.txt](https://github.com/lvxuan12/SCSES/blob/main/ConfigurationGuide.txt).
 
 ### 4. Phast conservation file in bigWig format
 
