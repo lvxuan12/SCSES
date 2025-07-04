@@ -649,9 +649,10 @@ UMI-based dataset using CellRanger for data process, the function
 ``` r
 # CellRanger_path: directory to CellRanger output
 # out_path: directory to save single cell bam
+# java_path: directory to java
 # core: the number of threads
 
-splitbam.path = split10XBAM(CellRanger_path,out_path,core)
+splitbam.path = split10XBAM(CellRanger_path,out_path,java_path,core)
 
 # path to single cell bam files should be added to bam_path in config file
 paras$Basic$bam_path = splitbam.path
