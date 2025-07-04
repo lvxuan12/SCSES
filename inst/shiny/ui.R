@@ -67,12 +67,12 @@ body <- dashboardBody(
                                           ),
                                           fluidRow(
                                                  createTextFile(id = "Samtools_path", label = "Samtools Path", type = "shinyFilesButton",msg='Full path of "samtools" program. It will be filled by the result of "which samtools" automatically. Refer to "Basic/samtools" in configure file.'),
-                                                 createTextFile(id = "featurecounts_path", label = "FeatureCounts Path", type = "shinyFilesButton",msg='Full path of "featureCounts" program. It will be filled by the result of "which featureCounts" automatically. Refer to "Basic/featureCounts_path" in configure file.)
+                                                 createTextFile(id = "featurecounts_path", label = "FeatureCounts Path", type = "shinyFilesButton",msg='Full path of "featureCounts" program. It will be filled by the result of "which featureCounts" automatically. Refer to "Basic/featureCounts_path" in configure file.')
                                           ),
                                           hr(),
                                           h3("Splicing Event Detection Essential"),
                                           fluidRow(
-                                                 createTextFile(id = "rmats_path", label = "rMats Path", type = "shinyFilesButton",value='/software/rmats_turbo_v4_3_0/rmats.py'，,msg = 'Full path of "rMATS" program. It will be filled by the result of "which rmats" automatically. Refer to "Basic/rMATS_path" in configure file.')
+                                                 createTextFile(id = "rmats_path", label = "rMats Path", type = "shinyFilesButton",value='/software/rmats_turbo_v4_3_0/rmats.py',msg = 'Full path of "rMATS" program. It will be filled by the result of "which rmats" automatically. Refer to "Basic/rMATS_path" in configure file.')
                                           ),
                                           textInput(inputId = "MAJIQ_env", label = "MAJIQ conda environment", placeholder = "Input the name of conda env for MAJIQ",value = 'MAJIQ')%>%
                                             add_prompt(position = 'bottom',message = 'The conda environment name for running MAJIQ. Refer to "Basic/MAJIQ_env" in configure file.',type = 'info',size='large'),
