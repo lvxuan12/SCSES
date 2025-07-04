@@ -61,6 +61,7 @@ PCA_D_reduct_sparse <- function(data, id_select) {
 #' @param ref_path reference fasta file
 #' @param out_path path to save the package
 #' @param pkg the name of pkg
+#' @param install_lib library path that save the package
 #'
 #' @return package path
 #'
@@ -68,7 +69,7 @@ PCA_D_reduct_sparse <- function(data, id_select) {
 #' @importFrom Biostrings readDNAStringSet writeXStringSet
 #' @importFrom BSgenome forgeBSgenomeDataPkg
 #'
-createBSgenome <- function(ref_path,out_path,pkg,install_lib = NULL) {
+createBSgenome <- function(ref_path,out_path,pkg, install_lib = NULL) {
     out_path = paste0(out_path, "/", pkg, "/")
     dir.create(out_path, recursive = T)
     # 0. Create seperated reference sequence file----
@@ -139,7 +140,6 @@ createBSgenome <- function(ref_path,out_path,pkg,install_lib = NULL) {
     # log_file <- paste0(out_path, "/installpkg.log")
     # cmd <- paste("R CMD INSTALL", paste0(pkg, "_1.0.0.tar.gz"),
     #              ">>", log_file, "2>&1")
-    
     system(command = cmd, wait = T)
     file.remove(paste0(pkg, "_1.0.0.tar.gz"))
     unlink(paste0(pkg, ".Rcheck"),recursive=TRUE)
@@ -489,7 +489,7 @@ getEventSimilarity <- function(
     if (!requireNamespace(pkg, quietly = TRUE)) {
       conda_lib <- file.path(Sys.getenv("CONDA_PREFIX"), "lib", "R", "library")
       createBSgenome(ref_path = ref_path,
-                     out_path = output_path, pkg = pkg, install_lib = conda_lib
+                     out_path = output_path, pkg = pkg,install_lib = conda_lib
       )
     }
     library(pkg, character.only = T, quietly = T)
@@ -718,7 +718,6 @@ getEventSimilarity <- function(
     rbp = rbp[which(rbp.var != 0)]
     if (length(rbp) < 3) {
         print("It is unreliable to calculate event similarity based on less than 3 rbps.")
-        print("Only sequence features are used to calculate the event similarity.")
     } else {
         print(paste(
             length(rbp), "rbps are used to calculate splicing regulation information"
@@ -771,34 +770,33 @@ getEventSimilarity <- function(
             event_similar = matrix(1)
             dimnames(event_similar) = list(events$event, events$event)
         }else{
-            if (kevent >= nrow(events)) {
-                stop("The number of events is less than K event!")
-            } else {
-                token <- paste(Sys.getpid(), rbinom(1, size = 1000000000, prob = 0.5), sep = "-")
-                inpath <- paste0(dirname(output_path), "/knn_data_", token, ".h5")
-                outpath <- paste0(dirname(output_path), "/knn_result_", token, ".mat")
-                paras <- list()
-                paras[["k"]] <- kevent
-                paras[["alpha"]] <- alpha_event
-                paras[["decay"]] <- decay_event
+          if (nrow(events) < kevent) {
+            print("The number of events is smaller than K-event!")
+          }
+          token <- paste(Sys.getpid(), rbinom(1, size = 1000000000, prob = 0.5), sep = "-")
+          inpath <- paste0(dirname(output_path), "/knn_data_", token, ".h5")
+          outpath <- paste0(dirname(output_path), "/knn_result_", token, ".mat")
+          paras <- list()
+          paras[["k"]] <- ifelse(kevent>=nrow(events),nrow(events)-1,kevent)
+          paras[["alpha"]] <- alpha_event
+          paras[["decay"]] <- decay_event
 
-                h5createFile(inpath)
-                h5write(obj = distance_path, inpath, "dist_path")
-                h5write(obj = type, inpath, "type")
-                h5write(paras, inpath, "paras")
+          h5createFile(inpath)
+          h5write(obj = distance_path, inpath, "dist_path")
+          h5write(obj = type, inpath, "type")
+          h5write(paras, inpath, "paras")
 
-                cmd <- paste(
-                    "bash", mat_knn_similarity,
-                    mcr_path, inpath, outpath, ">>", log_file, "2>&1"
-                )
-                system(command = cmd, wait = T)
+          cmd <- paste(
+            "bash", mat_knn_similarity,
+            mcr_path, inpath, outpath, ">>", log_file, "2>&1"
+          )
+          system(command = cmd, wait = T)
 
-                similar <- read_mat(outpath)$similar
-                event_ids <- h5read(distance_path, paste0("/event_names/", type))
-                rownames(similar) <- event_ids
-                colnames(similar) <- event_ids
-                file.remove(inpath, outpath)
-            }
+          similar <- read_mat(outpath)$similar
+          event_ids <- h5read(distance_path, paste0("/event_names/", type))
+          rownames(similar) <- event_ids
+          colnames(similar) <- event_ids
+          file.remove(inpath, outpath)
         }
         msg <- paste(paste0("[", Sys.time(), "]"), "Calculate", type, "event Similarity Finished")
         print(msg)
