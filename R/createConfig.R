@@ -1,43 +1,47 @@
 #' @title Launch SCSES Configuration Shiny Application
 #' @description This function starts a Shiny web application that provides an interactive
 #' interface for configuring SCSES parameters. The application runs on a
-#' local web server and can be accessed through a web browser.
+#' local web server and can be accessed through a web browser to generate
+#' configuration JSON files.
 #'
 #' @param host A character string specifying the IPv4 address that the
 #'   application should listen on. Default is "127.0.0.1" (localhost only).
 #' @param port An integer specifying the TCP port that the application should
-#'   listen on. Must be between 1 and 65535. Default is 9999.
+#'   listen on. Default is 9999. Choose an available port if the default is occupied.
 #' @param launch.browser A logical value indicating whether to automatically
 #'   launch the system's default web browser to open the application.
-#'   Default is FALSE.
+#'   Default is \code{FALSE}. Setting \code{launch.browser = TRUE} may cause
+#'   errors in headless environments (servers without GUI) or when no default
+#'   browser is configured.
 #'
 #' @return Returns \code{NULL} invisibly. The function is called for its side
 #'   effect of launching the Shiny application.
-#' @details
-#' The function locates the Shiny application directory within the SCSES package
-#' and launches it using \code{shiny::runApp()}. The application will continue
-#' running until manually stopped (Ctrl+C in R console).
 #'
-#' \strong{Important Notes:}
-#' \itemize{
-#'   \item Setting \code{launch.browser = TRUE} may cause errors in headless
-#'         environments (servers without GUI) or when no default browser is configured
-#'   \item Ensure the specified port is not already in use by another application
+#' @section Usage Scenarios:
+#'
+#' \strong{SCSES Docker Container:}
+#'
+#' If running within the SCSES docker container:
+#' \preformatted{
+#' createConfigshiny(host = "localhost", launch.browser = TRUE)
 #' }
 #'
-#' \strong{Server Environment Usage:}
+#' \strong{Non-Docker Environment:}
 #'
-#' For server environments, it is recommended to:
+#' \preformatted{
+#' createConfigshiny(host, port, launch.browser = FALSE)
+#' }
+#'
+#' @section Workflow:
 #' \enumerate{
-#'   \item Set the host to the server's IP address
-#'   \item Set \code{launch.browser = FALSE} to avoid browser launch errors
-#'   \item Manually access the application URL shown in the console
+#'   \item Run the function to start the Shiny server
+#'   \item Copy the displayed URL and open it in your web browser (if \code{launch.browser = FALSE})
+#'   \item Fill in the required parameters using the interactive interface
+#'   \item Hover over widgets to see parameter descriptions
+#'   \item Click "Create Config" to generate the JSON configuration file
+#'   \item The configuration file will be saved to your specified work path
 #' }
 #'
-#' After starting the application, you will see console output similar to:
-#' \preformatted{Listening on http://123.678.112.78:9999}
-#'
-#' Copy this URL and paste it into your web browser to access the application.
 #'
 #' @export
 #' @importFrom shiny runApp
@@ -63,38 +67,37 @@ createConfigshiny <-function(host="127.0.0.1",port = 9999,launch.browser=F,...){
 #' @param host A character string specifying the IPv4 address that the
 #'   application should listen on. Default is "127.0.0.1" (localhost only).
 #' @param port An integer specifying the TCP port that the application should
-#'   listen on. Must be between 1 and 65535. Default is 9999.
+#'   listen on. Default is 9999.
 #' @param launch.browser A logical value indicating whether to automatically
 #'   launch the system's default web browser to open the application.
-#'   Default is FALSE.
+#'   Default is FALSE. Setting launch.browser = TRUE may cause errors in headless
+#'   environments (servers without GUI) or when no default browser is configured
 #'
 #' @return Returns \code{NULL} invisibly. The function is called for its side
 #'   effect of launching the Shiny application.
-#' @details
-#' The function locates the Shiny application directory within the SCSES package
-#' and launches it using \code{shiny::runApp()}. The application will continue
-#' running until manually stopped (Ctrl+C in R console).
 #'
-#' \strong{Important Notes:}
-#' \itemize{
-#'   \item Setting \code{launch.browser = TRUE} may cause errors in headless
-#'         environments (servers without GUI) or when no default browser is configured
-#'   \item Ensure the specified port is not already in use by another application
-#' }
+#' \strong{SCSES docker container Usage:}
 #'
-#' \strong{Server Environment Usage:}
+#' If you use it in the SCSES docker container, the command should be :
 #'
-#' For server environments, it is recommended to:
-#' \enumerate{
-#'   \item Set the host to the server's IP address
-#'   \item Set \code{launch.browser = FALSE} to avoid browser launch errors
-#'   \item Manually access the application URL shown in the console
-#' }
+#' \code{createConfigshiny(host = "localhost",launch.browser=TRUE)}
 #'
-#' After starting the application, you will see console output similar to:
-#' \preformatted{Listening on http://123.678.112.78:9999}
+#' \strong{non-docker Usage:}
+#'
+#' For non-docker users, the full command should be:
+#'
+#' \code{createConfigshiny(host, port, launch.browser=FALSE)}
+#'
+#' After running \code{createConfigshiny}, you will see a URL appear in the console.
 #'
 #' Copy this URL and paste it into your web browser to access the application.
+#' An interactive window will popup, which allow you to fill some parameters,
+#' such as Bam File Path, and Work Path.
+#'
+#' The meaning of each parameter can be found by hovering the mouse over the widget.
+#'
+#' Finally, you can click Create Config button and a json file will be generated
+#' in the work_path you provided if successful.
 #'
 #' @export
 #' @importFrom shiny runApp
@@ -114,7 +117,6 @@ createDemoConfigshiny <-function(host="127.0.0.1",port = 9999,launch.browser=F,.
 
 #' @title read configure
 #' @param paras_file path to configure file
-
 #' @return list of parameters
 #' @export
 #' @importFrom jsonlite fromJSON toJSON

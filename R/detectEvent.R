@@ -1,15 +1,19 @@
 #' @include utilities.R
-#' @title Detect splicing events and generate event id
-#' @description Detect splicing events based on Pseudobulk bam
-#' in work_path/data and generate event id saved to work_path/events
-
+#' @title Detect Splicing Events and Generate Event IDs
 #'
-#' @param paras list readSCSESconfig(paras_file)
-#' @param star_ref_path path to STAR reference.
-#' Default: NULL, the STAR reference will be generated.
-#' Providing STAR reference can speed up the function.
-
-#' @return Splicing event directory
+#' @description This function detects various types of splicing events
+#'   from pseudobulk BAM files and generates standardized event IDs. It integrates
+#'   multiple splicing detection tools including MAJIQ, IRFinder, and rMATS to
+#'   comprehensively identify splicing events.
+#'
+#' @param paras A list object containing SCSES configuration parameters, typically
+#'   loaded using \code{readSCSESconfig(paras_file)}.
+#' @param star_ref_path Character string specifying the path to pre-built STAR
+#'   reference directory. Default is \code{NULL}, which will trigger automatic
+#'   STAR reference generation. Providing a pre-built reference speeds up the analysis.
+#'
+#' @return Character string specifying the path to the events directory
+#'   (\code{work_path/events/}) where all splicing event files are stored.
 #' @export
 
 detectEvents <- function(paras,star_ref_path=NULL) {
@@ -155,14 +159,19 @@ detectEvents <- function(paras,star_ref_path=NULL) {
 }
 
 
-#' @title Detect a specific type of splicing events
-#' @description Detect a specific type of splicing events based on Pseudobulk
-#' bam in work_path/data and generate event id saved to work_path/events
-
-#' @param paras list readSCSESconfig(paras_file)
-#' @param event_type splicing event type (A3SS,A5SS,AL,SE,MXE,RI)
-
-#' @return Splicing event directory
+#' @title Detect a Specific Type of Splicing Event
+#' @description This function detects a single specified type of splicing
+#'   event from pseudobulk BAM files and generates standardized event IDs.
+#'
+#' @param paras A list object containing SCSES configuration parameters, typically
+#'   loaded using \code{readSCSESconfig(paras_file)}.
+#' @param event_type Character string specifying the type of splicing event to detect.
+#'   Must be one of: \code{"A3SS"}, \code{"A5SS"}, \code{"SE"},
+#'   \code{"MXE"}, or \code{"RI"}.
+#'
+#' @return Character string specifying the path to the events directory
+#'   (\code{work_path/events/}) where the splicing event files are stored.
+#'
 #' @export
 #'
 getEvent <- function(paras, event_type) {

@@ -1,18 +1,48 @@
 #' @include utilities.R
 #'
+#' @title Quantify Raw Junction Reads for Splicing Events
 #'
-#' @title Quantify raw reads for different types of splicing events
-#' @description  Quantify raw reads for events in work_path/events
-#' save to work_path/splicing_value/*_rc.rds
-
-#' @param paras list readSCSESconfig(paras_file)
-#' Default bam_path, java_path, core, and sequence from paras
-#' @param bam_path The path to save single cell bam file
-#' @param core the number of threads
-#' @param sequence full-length or UMI
-#' @param event_types splicing event types seperated by ";",default=NULL
-
-#' @return raw read path
+#' @description This function performs quantification of raw junction
+#'   reads across different types of splicing events from single-cell
+#'   RNA-seq BAM files. It extracts splice junction coverage for inclusion
+#'   and exclusion isoforms, providing the raw junction reads data required for
+#'   downstream PSI calculation. The function supports both full-length
+#'   and UMI-based sequencing protocols.
+#'
+#' @param paras A list object containing SCSES configuration parameters, typically
+#'   loaded using \code{readSCSESconfig(paras_file)}.
+#'
+#' @param bam_path Character string specifying the directory containing single-cell
+#'   BAM files. Eachcoordinate-sorted BAM file should represent one cell and
+#'   be properly indexed. Default is taken from \code{paras$Basic$bam_path}.
+#'
+#' @param core Integer specifying the number of CPU cores for parallel processing.
+#'   Default: \code{paras$Basic$core}.
+#'
+#' @param sequence Character string indicating the sequencing protocol type.
+#'   Default: \code{paras$Basic$sequence}. Accepted values:
+#'   \itemize{
+#'     \item \code{"full-length"}
+#'     \item \code{"UMI"}
+#'   }
+#'   This parameter determines which Java script is applied for read counting.
+#'
+#' @param event_types Character string specifying splicing event types to process,
+#'   separated by semicolons (e.g., "SE;MXE;A3SS"). Default: \code{NULL} (process all
+#'   available event types). Valid event types include:
+#'   \itemize{
+#'     \item \code{"SE"}: Skipped Exon events
+#'     \item \code{"MXE"}: Mutually Exclusive Exon events
+#'     \item \code{"A3SS"}: Alternative 3' Splice Site events
+#'     \item \code{"A5SS"}: Alternative 5' Splice Site events
+#'     \item \code{"RI"}: Retained Intron events
+#'   }
+#'
+#' @return Character string specifying the path to the output directory
+#'   (\code{work_path/splicing_value/}) containing event-specific read count
+#'   RDS files and intermediate junction matrices. This path serves as input
+#'   for downstream PSI calculation via \code{\link{calculatePSI}}.
+#'
 #'
 #' @export
 #' @import parallel
@@ -102,7 +132,7 @@ getRawRC <- function(
           if (i > (progress_rate * length(files))) {
             print(paste("Reading RJC File Progress:", paste0(progress_rate * 100, "%")))
             progress_rate <- round(i / length(files), digits = 1)
-            progress_rate <- progress_rate + 0.1
+	    progress_rate <- progress_rate + 0.1
           }
           tmp <- read.table(file = paste0(outpath_per_cell, "/", f), header = F, sep = "\t")
           rownames(tmp) <- tmp$V1
@@ -242,14 +272,29 @@ getRawRC <- function(
   return(rc_path)
 }
 
-#' @title Calculate PSI value for different types of splicing events
-#' @description  Save raw PSI for events in work_path/events
-#' save to work_path/splicing_value/*_psi.rds
-
-#' @param paras list readSCSESconfig(paras_file)
-#' @param event_types splicing event types seperated by ";",default=NULL
-
-#' @return raw PSI path
+#' @title Calculate PSI Values for Different Types of Splicing Events
+#'
+#' @description This function calculates PSI values for various splicing event types
+#'  from raw junction read count data.
+#'
+#' @param paras A list object containing SCSES configuration parameters, typically
+#'   loaded using \code{readSCSESconfig(paras_file)}.
+#'
+#' @param event_types Character string specifying splicing event types to process,
+#'   separated by semicolons (e.g., "SE;MXE;A3SS").
+#'   Default: \code{NULL} (process all available event types found in the events directory).
+#'   Valid event types include:
+#'   \itemize{
+#'     \item \code{"SE"}: Skipped Exon events
+#'     \item \code{"MXE"}: Mutually Exclusive Exon events
+#'     \item \code{"A3SS"}: Alternative 3' Splice Site events
+#'     \item \code{"A5SS"}: Alternative 5' Splice Site events
+#'     \item \code{"RI"}: Retained Intron events
+#'   }
+#'
+#' @return Character string specifying the path to the output directory
+#'   (\code{work_path/splicing_value/}) containing event-specific PSI value
+#'   RDS files (*_psi.rds).
 #'
 #' @export
 #'
