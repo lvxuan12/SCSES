@@ -26,11 +26,11 @@ Default is taken from \code{paras$DataSet}.}
 
 \item{filter.mt}{Logical value indicating whether to filter out
 mitochondrial genes (genes with names starting with "MT-" or "mt-").
-Default is taken from \code{paras$Basic$filter_sc$filter.mt}.}
+Default: TRUE (from \code{paras$Basic$filter_sc$filter.mt}).}
 
 \item{filter.rp}{Logical value indicating whether to filter out
 ribosomal genes (genes with names starting with "RPS", "RPL", "Rps",
-or "Rpl"). Default is taken from \code{paras$Basic$filter_sc$filter.rp}.}
+or "Rpl"). Default: TRUE (from \code{paras$Basic$filter_sc$filter.rp}).}
 }
 \value{
 Character string of the output directory path where the RDS files

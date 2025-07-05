@@ -2,17 +2,23 @@
 % Please edit documentation in R/getFtSplicingValue.R
 \name{getFtRawPSI}
 \alias{getFtRawPSI}
-\title{Calculate PSI value of splicing events for classifer fine tune}
+\title{Calculate PSI Values of Splicing Events for Classifier Fine-Tuning}
 \usage{
 getFtRawPSI(paras)
 }
 \arguments{
-\item{paras}{list readSCSESconfig(paras_file)}
+\item{paras}{A list object containing SCSES configuration parameters, typically
+loaded using \code{readSCSESconfig(paras_file)}.}
 }
 \value{
-raw PSI path
+Character string specifying the path to the output directory
+  (\code{work_path/splicing_value_ft/}) containing PSI RDS files.
+  This path can be used as input for \code{\link{FtClassifier}}
 }
 \description{
-Save raw PSI for events in ft_event_path
-save to work_path/splicing_value_ft/*_psi.rds
+This function computes PSI values from raw
+  read counts for predefined splicing events used in classifier fine-tuning.
+  The function processes read count data generated
+  by \code{\link{getFtRawRC}} and applies event-specific PSI calculation formulas
+  to produce training-ready splicing quantification data.
 }

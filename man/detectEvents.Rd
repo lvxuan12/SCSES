@@ -2,21 +2,25 @@
 % Please edit documentation in R/detectEvent.R
 \name{detectEvents}
 \alias{detectEvents}
-\title{Detect splicing events and generate event id}
+\title{Detect Splicing Events and Generate Event IDs}
 \usage{
 detectEvents(paras, star_ref_path = NULL)
 }
 \arguments{
-\item{paras}{list readSCSESconfig(paras_file)}
+\item{paras}{A list object containing SCSES configuration parameters, typically
+loaded using \code{readSCSESconfig(paras_file)}.}
 
-\item{star_ref_path}{path to STAR reference.
-Default: NULL, the STAR reference will be generated.
-Providing STAR reference can speed up the function.}
+\item{star_ref_path}{Character string specifying the path to pre-built STAR
+reference directory. Default is \code{NULL}, which will trigger automatic
+STAR reference generation. Providing a pre-built reference speeds up the analysis.}
 }
 \value{
-Splicing event directory
+Character string specifying the path to the events directory
+  (\code{work_path/events/}) where all splicing event files are stored.
 }
 \description{
-Detect splicing events based on Pseudobulk bam
-in work_path/data and generate event id saved to work_path/events
+This function detects various types of splicing events
+  from pseudobulk BAM files and generates standardized event IDs. It integrates
+  multiple splicing detection tools including MAJIQ, IRFinder, and rMATS to
+  comprehensively identify splicing events.
 }

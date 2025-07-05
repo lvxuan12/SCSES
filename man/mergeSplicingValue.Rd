@@ -7,7 +7,8 @@
 mergeSplicingValue(paras)
 }
 \arguments{
-\item{paras}{list readSCSESconfig(paras_file)}
+\item{paras}{A list object containing SCSES configuration parameters, typically
+loaded using \code{readSCSESconfig(paras_file)}.}
 }
 \value{
 Merged splicing value path

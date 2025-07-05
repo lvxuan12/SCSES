@@ -2,7 +2,7 @@
 % Please edit documentation in R/Imputation.R
 \name{Imputation}
 \alias{Imputation}
-\title{Perform SCSES imputation}
+\title{Perform SCSES Imputation for Specific Cell Similarity Type}
 \usage{
 Imputation(
   paras,
@@ -17,41 +17,65 @@ Imputation(
 )
 }
 \arguments{
-\item{paras}{list readSCSESconfig(paras_file)
-Default decay_impute from paras}
+\item{paras}{A list containing configuration parameters, typically loaded via
+\code{readSCSESconfig(paras_file)}.}
 
-\item{output_path}{path to event similarity}
+\item{output_path}{Character string specifying the output directory path.
+If \code{NULL}, defaults to \code{work_path/imputation/}.}
 
-\item{decay_impute}{threshold of change in the similarity matrix}
+\item{decay_impute}{Numeric value (0-1) representing the convergence threshold for
+imputation iterations. The algorithm stops when changes between consecutive
+iterations fall below this threshold. Default: 0.05 (from \code{paras$Task$impute$decay_impute}).}
 
-\item{rc}{matrix of normalized splicing events associated read counts or path
-to a rds file, default: rds_processed/rc.rds}
+\item{rc}{Matrix of normalized splicing event-associated read counts, or path to
+an RDS file. Default: \code{rds_processed/rc.rds}.}
 
-\item{psi}{matrix of psi value or path to a rds file,
-default: rds_processed/psi.rds}
+\item{psi}{Matrix of PSI values, or path to an RDS file.
+Default: \code{rds_processed/psi.rds}.}
 
-\item{event.info}{list of events information or path to a rds file,
-default: rds_processed/event.info.list.rds}
+\item{event.info}{List containing splicing event information, or path to an RDS file.
+Default: \code{rds_processed/event.info.list.rds}.}
 
-\item{cell_similarity}{a list of different types of cell similarity named by the data
-type (EXP_RBP, RC, and PSI) or path to a rds file,
-default: imputation/cell_similarity/cell.similars.rds}
+\item{cell_similarity}{Named list of cell similarity matrices for different features
+(EXP_RBP, RC, PSI), or path to an RDS file.
+Default: \code{imputation/cell_similarity/cell.similars.rds}.}
 
-\item{event_similarity}{a list of event similarity named by different types of
-splicing events or path to a rds file,
-default: imputation/event_similarity/event.similars.rds}
+\item{event_similarity}{Named list of event similarity matrices for different splicing
+event types, or path to an RDS file.
+Default: \code{imputation/event_similarity/event.similars.rds}.}
 
-\item{cell_similarity_type}{one data type used to calculate cell similarity (EXP_RBP, RC, PSI)}
+\item{cell_similarity_type}{Character string specifying the single cell similarity
+type to use for imputation. Must be one of: \code{"EXP_RBP"}, \code{"RC"}, or \code{"PSI"}.}
 }
 \value{
-Return path to the result of three imputation strategies
-save a list of result of three imputation strategies to
-work_path/imputation/Imputed_seperated_event_${cell_similarity_type}_*.rds
-The result contains two lists, each of which contains multiple imputation results.
-The first list is the result of strategy1 and strategy2,
-The second list is the result of strategy3
+Character string containing the file path to the saved imputation results
+(\code{work_path/imputation/Imputed_seperated_*.rds}). The saved object contains
+a list with two main components:
+\describe{
+  \item{\code{cell}}{Results from Strategy 1 and Strategy 2. Matrix names follow
+    the pattern \code{[cell_similarity_type]_[Strategy]}, where:
+    \itemize{
+      \item Cell similarity types: EXP_RBP, RC, PSI
+      \item Strategy indicators: PSI (Strategy 1), RC (Strategy 2)
+    }
+  }
+  \item{\code{cell_event}}{Results from Strategy 3. Matrix names follow the pattern
+    \code{[cell_similarity_type]_PSI}, representing the results after event similarity
+    imputation
+  }
+}
 }
 \description{
-run three PSI imputation strategies
-for a sepcific type of cell similarity
+Executes three PSI imputation strategies using a single
+specified type of cell similarity feature. This function provides
+imputation analysis for one cell similarity type at a time.
+
+The three imputation strategies are:
+\itemize{
+  \item \strong{Strategy 1}: Direct imputation of raw PSI values using cell similarities
+  \item \strong{Strategy 2}: Imputation of raw read counts using cell similarities,
+        followed by PSI calculation from imputed counts
+  \item \strong{Strategy 3}: Sequential imputation combining Strategy 2 results with
+        event similarity-based imputation
+}
 }

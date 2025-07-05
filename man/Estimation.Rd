@@ -2,7 +2,7 @@
 % Please edit documentation in R/Estimation.R
 \name{Estimation}
 \alias{Estimation}
-\title{Combining different imputation strategies}
+\title{Combine Multiple Imputation Strategies Using Probabilistic Weighting}
 \usage{
 Estimation(
   paras,
@@ -17,41 +17,47 @@ Estimation(
 )
 }
 \arguments{
-\item{paras}{list readSCSESconfig(paras_file)}
+\item{paras}{A list object containing SCSES configuration parameters, typically
+loaded using \code{readSCSESconfig(paras_file)}.}
 
-\item{rds_imputed_file}{path to the list of three imputation strategies results
-named by the strategies}
+\item{rds_imputed_file}{Character string specifying the path to RDS file containing
+imputation results from multiple strategies. This should be the output file path
+returned by the \code{\link{ImputationAll}} function.}
 
-\item{output_path}{path to save the final imputation of PSI values}
+\item{output_path}{Character string specifying the output directory for final
+combined imputation results. Default: \code{work_path/imputation/}.}
 
-\item{cell_similarity}{a list of cell similarity named by the data
-type (EXP_RBP, RC, and PSI) or path to a rds file
-default: imputation/cell_similarity/cell.similars.rds}
+\item{cell_similarity}{Either a list of cell similarity matrices named by data
+types (EXP_RBP, RC, PSI) or a character string path to an RDS file.
+Default: \code{imputation/cell_similarity/cell.similars.rds}.}
 
-\item{dyk_cell}{a list of Neighbor number named by the data
-type (EXP_RBP, RC, and PSI) or path to a rds file
-default: imputation/cell_similarity/dyk.cell.rds}
+\item{dyk_cell}{Either a list of neighbor numbers named by data types
+(EXP_RBP, RC, PSI) or a character string path to an RDS file.
+Default: \code{imputation/cell_similarity/dyk.cell.rds}.}
 
-\item{rc}{matrix of normalized splicing events associated read counts or path
-to a rds file, default: rds_processed/rc.rds}
+\item{rc}{Either a matrix of normalized splicing event read counts or a
+character string path to an RDS file. Default: \code{rds_processed/rc.rds}.}
 
-\item{psi}{matrix of psi value or path to a rds file,
-default: rds_processed/psi.rds}
+\item{psi}{Either a matrix of PSI values or a character string path to an
+RDS file. Default: \code{rds_processed/psi.rds}.}
 
-\item{expr}{matrix of gene expression or path to a rds file, TPM for full-length protocols
-and normalized UMI counts for droplet-based protocols
-default: rds_processed/expr.rds}
+\item{expr}{Either a matrix of gene expression (TPM for full-length protocols,
+normalized UMI counts for droplet-based protocols) or a character string
+path to an RDS file. Default: \code{rds_processed/expr.rds}.}
 
-\item{event}{data.frame of events information or path to a rds file,
-default: rds_processed/event.rds}
+\item{event}{Either a data.frame of event information or a character string
+path to an RDS file. Default: \code{rds_processed/event.rds}.}
 }
 \value{
-path to save the final imputation of PSI values
-The names of the lists represent different cell similarities
+Character string specifying the path to the RDS file containing
+  the final combined imputation results. The returned list is named by
+  similarity types, with each element containing the combined PSI matrix
+  for that similarity approach.
 }
 \description{
-strategy1 for pairs in ND,
-strategy2 for pairs in BD and TD+Info, and strategy3 for pairs in T0-Info.
-For each event-cell pair, the different imputation results are combined with
-the probabilities of different groups as the coefficients.
+This function combines results from different imputation strategies
+  using a probabilistic weighting scheme based on event-cell pair classifications.
+  Strategy 1 is applied to pairs in ND, Strategy 2 to pairs in BD and TD+Info,
+  and Strategy 3 to pairs in TD-Info. The final imputation combines these strategies
+  weighted by classification probabilities.
 }

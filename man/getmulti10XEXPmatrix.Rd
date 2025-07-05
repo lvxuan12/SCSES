@@ -13,14 +13,19 @@ getmulti10XEXPmatrix(
 )
 }
 \arguments{
-\item{paras}{list fromJSON(paras_file)
-Default dataset, filter.mt, filter.rp from paras}
+\item{paras}{A list object parsed from SCSES JSON parameter file using
+\code{readSCSESconfig()}.}
 
-\item{expr_path}{directory to the cellranger output for different samples}
+\item{expr_path}{Character string specifying the directory path to the
+Cell Ranger output folder containing the HDF5 file.}
 
-\item{filter.mt}{filter out mitochondrial genes}
+\item{filter.mt}{Logical value indicating whether to filter out
+mitochondrial genes (genes with names starting with "MT-" or "mt-").
+Default: TRUE (from \code{paras$Basic$filter_sc$filter.mt}).}
 
-\item{filter.rp}{filter out ribosomal genes}
+\item{filter.rp}{Logical value indicating whether to filter out
+ribosomal genes (genes with names starting with "RPS", "RPL", "Rps",
+or "Rpl"). Default: TRUE (from \code{paras$Basic$filter_sc$filter.rp}).}
 
 \item{sample_name}{the name of directory for different samples in the expr_path,
 different samples seperated by ";"

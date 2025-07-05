@@ -11,44 +11,42 @@ createDemoConfigshiny(host = "127.0.0.1", port = 9999, launch.browser = F, ...)
 application should listen on. Default is "127.0.0.1" (localhost only).}
 
 \item{port}{An integer specifying the TCP port that the application should
-listen on. Must be between 1 and 65535. Default is 9999.}
+listen on. Default is 9999.}
 
 \item{launch.browser}{A logical value indicating whether to automatically
 launch the system's default web browser to open the application.
-Default is FALSE.}
+Default is FALSE. Setting launch.browser = TRUE may cause errors in headless
+environments (servers without GUI) or when no default browser is configured}
 }
 \value{
 Returns \code{NULL} invisibly. The function is called for its side
   effect of launching the Shiny application.
+
+\strong{SCSES docker container Usage:}
+
+If you use it in the SCSES docker container, the command should be :
+
+\code{createConfigshiny(host = "localhost",launch.browser=TRUE)}
+
+\strong{non-docker Usage:}
+
+For non-docker users, the full command should be:
+
+\code{createConfigshiny(host, port, launch.browser=FALSE)}
+
+After running \code{createConfigshiny}, you will see a URL appear in the console.
+
+Copy this URL and paste it into your web browser to access the application.
+An interactive window will popup, which allow you to fill some parameters,
+such as Bam File Path, and Work Path.
+
+The meaning of each parameter can be found by hovering the mouse over the widget.
+
+Finally, you can click Create Config button and a json file will be generated
+in the work_path you provided if successful.
 }
 \description{
 This function starts a Shiny web application that provides an interactive
 interface for configuring SCSES parameters. The application runs on a
 local web server and can be accessed through a web browser.
-}
-\details{
-The function locates the Shiny application directory within the SCSES package
-and launches it using \code{shiny::runApp()}. The application will continue
-running until manually stopped (Ctrl+C in R console).
-
-\strong{Important Notes:}
-\itemize{
-  \item Setting \code{launch.browser = TRUE} may cause errors in headless
-        environments (servers without GUI) or when no default browser is configured
-  \item Ensure the specified port is not already in use by another application
-}
-
-\strong{Server Environment Usage:}
-
-For server environments, it is recommended to:
-\enumerate{
-  \item Set the host to the server's IP address
-  \item Set \code{launch.browser = FALSE} to avoid browser launch errors
-  \item Manually access the application URL shown in the console
-}
-
-After starting the application, you will see console output similar to:
-\preformatted{Listening on http://123.678.112.78:9999}
-
-Copy this URL and paste it into your web browser to access the application.
 }

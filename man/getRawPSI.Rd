@@ -2,19 +2,32 @@
 % Please edit documentation in R/getRawSplicingValue.R
 \name{getRawPSI}
 \alias{getRawPSI}
-\title{Calculate PSI value for different types of splicing events}
+\title{Calculate PSI Values for Different Types of Splicing Events}
 \usage{
 getRawPSI(paras, event_types = NULL)
 }
 \arguments{
-\item{paras}{list readSCSESconfig(paras_file)}
+\item{paras}{A list object containing SCSES configuration parameters, typically
+loaded using \code{readSCSESconfig(paras_file)}.}
 
-\item{event_types}{splicing event types seperated by ";",default=NULL}
+\item{event_types}{Character string specifying splicing event types to process,
+separated by semicolons (e.g., "SE;MXE;A3SS").
+Default: \code{NULL} (process all available event types found in the events directory).
+Valid event types include:
+\itemize{
+  \item \code{"SE"}: Skipped Exon events
+  \item \code{"MXE"}: Mutually Exclusive Exon events
+  \item \code{"A3SS"}: Alternative 3' Splice Site events
+  \item \code{"A5SS"}: Alternative 5' Splice Site events
+  \item \code{"RI"}: Retained Intron events
+}}
 }
 \value{
-raw PSI path
+Character string specifying the path to the output directory
+  (\code{work_path/splicing_value/}) containing event-specific PSI value
+  RDS files (*_psi.rds).
 }
 \description{
-Save raw PSI for events in work_path/events
-save to work_path/splicing_value/*_psi.rds
+This function calculates PSI values for various splicing event types
+ from raw junction read count data.
 }
