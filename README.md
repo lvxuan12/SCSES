@@ -464,7 +464,7 @@ The paramteter configuration for test dataset is the *cell_line.json* in the dow
 
 Alternatively, you can create the configuration file using the Shiny app.
 **Note**: The test dataset includes fewer cells and chromosomes to ensure faster completation of the Tutorial. 
-Therefore, the default parameters in `createConfigshiny` are not suitable. Please use the `createDemoConfigshiny` function instead, 
+Therefore, the default parameters in **`createConfigshiny`** are **not suitable**. Please use the **`createDemoConfigshiny`** function instead, 
 which provides default values optimized for the test dataset.
 
 #### Step 1. Read config file
