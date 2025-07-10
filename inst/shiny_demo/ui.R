@@ -27,14 +27,14 @@ body <- dashboardBody(
                                           h3("Data Information"),
                                           textInput(inputId = "dataset", label = "Dataset", placeholder = "Input the dataset name")%>%
                                             add_prompt(position = 'bottom',message = 'Dataset name, used for naming the configuration file and the gene expression file output by featureCount.',type = 'info',size='large'),
-
+                                          
                                           fluidRow(
                                                  createTextFile(id = "bam_path", label = "Directory containing Bam files",msg='Directory to bam files. refer to "Basic/bam_path" in configure file.', type = "shinyDirButton"),
                                                  column(
                                                         width = 2,
-                                                        numericInput(inputId = "readlength", label = "Read Length", value = 100, min = 0)%>%
+                                                        numericInput(inputId = "readlength", label = "Read Length", value = 125, min = 0)%>%
                                                           add_prompt(position = 'bottom',message = 'The sequence length of cells. refer to "Baisc/readlength" in configure file.',type = 'info',size='large')
-
+                                                          
                                                  ),
                                                  column(
                                                         width = 2,
@@ -57,27 +57,27 @@ body <- dashboardBody(
                                    tabPanel(
                                           "Tools Info",
                                           h3("SCSES Program Essential"),
-                                          textInput(inputId = "conda_envname", label = "conda environment", value = 'base',placeholder = "Input the name of conda env for SCSES")%>%
+                                          textInput(inputId = "conda_envname", label = "conda environment", placeholder = "Input the name of conda env for SCSES",value='SCSES')%>%
                                             add_prompt(position = 'bottom',message = 'The conda environment used for running SCSES,default is "base". Refer to "Baisc/conda_envname" in configure file.',type = 'info',size='large'),
                                           fluidRow(
-                                                 createTextFile(id = "condabin_path", label = "Conda bin Path", type = "shinyDirButton",msg = 'Full path of "conda/bin" directory. Refer to "Basic/conda_binpath" in configure file.'),
-                                                 createTextFile(id = "python_path", label = "Python Path", type = "shinyFilesButton",msg='Full path of "python" program. It will be filled by the result of "which python" automatically. Refer to "Basic/python_path" in configure file.'),
+                                                 createTextFile(id = "condabin_path", label = "Conda bin Path", type = "shinyDirButton",value="/software/miniconda3/bin/",msg = 'Full path of "conda/bin" directory. Refer to "Basic/conda_binpath" in configure file.'),
+                                                 createTextFile(id = "python_path", label = "Python Path", type = "shinyFilesButton",value='/software/miniconda3/envs/SCSES/bin/python',msg='Full path of "python" program. It will be filled by the result of "which python" automatically. Refer to "Basic/python_path" in configure file.'),
                                                  createTextFile(id = "JAVA_path", label = "JAVA Path", type = "shinyFilesButton",msg='Full path of "JAVA" program. It will be filled by the result of "which java" automatically. Refer to "Basic/java_path" in configure file.'),
-                                                 createTextFile(id = "MCR_path", label = "MCR Path", type = "shinyDirButton",msg = 'Full path of Matlab compiler runtime. Refer to "Basic/mcr_path" in the configure file.')
+                                                 createTextFile(id = "MCR_path", label = "MCR Path", type = "shinyDirButton",value='/opt/mcr/R2022b/',msg = 'Full path of Matlab compiler runtime. Refer to "Basic/mcr_path" in the configure file.')
                                           ),
                                           fluidRow(
                                                  createTextFile(id = "Samtools_path", label = "Samtools Path", type = "shinyFilesButton",msg='Full path of "samtools" program. It will be filled by the result of "which samtools" automatically. Refer to "Basic/samtools" in configure file.'),
-                                                 createTextFile(id = "featurecounts_path", label = "FeatureCounts Path", type = "shinyFilesButton",'Full path of "featureCounts" program. It will be filled by the result of "which featureCounts" automatically. Refer to "Basic/featureCounts_path" in configure file.')
+                                                 createTextFile(id = "featurecounts_path", label = "FeatureCounts Path", type = "shinyFilesButton",msg='Full path of "featureCounts" program. It will be filled by the result of "which featureCounts" automatically. Refer to "Basic/featureCounts_path" in configure file.')
                                           ),
                                           hr(),
                                           h3("Splicing Event Detection Essential"),
                                           fluidRow(
-                                                 createTextFile(id = "rmats_path", label = "rMats Path", type = "shinyFilesButton",msg = 'Full path of "rMATS" program. It will be filled by the result of "which rmats" automatically. Refer to "Basic/rMATS_path" in configure file.')
+                                                 createTextFile(id = "rmats_path", label = "rMats Path", type = "shinyFilesButton",value='/software/rmats_turbo_v4_3_0/rmats.py',msg = 'Full path of "rMATS" program. It will be filled by the result of "which rmats" automatically. Refer to "Basic/rMATS_path" in configure file.')
                                           ),
-                                          textInput(inputId = "MAJIQ_env", label = "MAJIQ conda environment", placeholder = "Input the name of conda env for MAJIQ")%>%
+                                          textInput(inputId = "MAJIQ_env", label = "MAJIQ conda environment", placeholder = "Input the name of conda env for MAJIQ",value = 'MAJIQ')%>%
                                             add_prompt(position = 'bottom',message = 'The conda environment name for running MAJIQ. Refer to "Basic/MAJIQ_env" in configure file.',type = 'info',size='large'),
                                           fluidRow(
-                                                 createTextFile(id = "MAJIQ_license_path", label = "MAJIQ License Path", type = "shinyFilesButton",msg='The full path of MAJIQ license file. Refer to "Basic/majiq_license_file" in configure file.')
+                                                 createTextFile(id = "MAJIQ_license_path", label = "MAJIQ License Path", type = "shinyFilesButton",value='/software/majiq_license_academic_official.lic',msg='The full path of MAJIQ license file. Refer to "Basic/majiq_license_file" in configure file.')
                                           ),
                                           fluidRow(
                                                  createTextFile(id = "IRFinder_path", label = "IRFinder Path", type = "shinyFilesButton",msg='Full path of "IRFinder" program. It will be filled by the result of "which IRFinder" automatically. Refer to "Basic/IRFinder_path" in configure file.'),
@@ -104,12 +104,12 @@ body <- dashboardBody(
                                           fluidRow(
                                                  column(
                                                         width = 4,
-                                                        numericInput(inputId = "exon.intron.read", label = "Minimal Read Count on Exon-Intron Boundary", value = 25, min = 0)%>%
+                                                        numericInput(inputId = "exon.intron.read", label = "Minimal Read Count on Exon-Intron Boundary", value = 50, min = 0)%>%
                                                           add_prompt(position = 'bottom',message = 'The minimum number of total reads spanning exon and intron regions required to a RI event. Refer to "Basic/filter_merged_bam/ExonToIntronReads" in configure file.',type = 'info',size='large')
                                                  ),
                                                  column(
                                                         width = 4,
-                                                        numericInput(inputId = "junction.read", label = "Minimal Read Count on Junction", value = 25, min = 0)%>%
+                                                        numericInput(inputId = "junction.read", label = "Minimal Read Count on Junction", value = 50, min = 0)%>%
                                                           add_prompt(position = 'bottom',message = 'The minimum number of total junction reads required to support a non-RI event. Refer to "Basic/filter_merged_bam/junctionReads" in configure file.',type = 'info',size='large')
                                                  )
                                           ),
@@ -152,7 +152,7 @@ body <- dashboardBody(
                                                  ),
                                                  column(
                                                         width = 4,
-                                                        numericInput(inputId = "minCell", label = "Minimal Cell Count Containing an Event", value = 5, min = 0)%>%
+                                                        numericInput(inputId = "minCell", label = "Minimal Cell Count Containing an Event", value = 10, min = 0)%>%
                                                           add_prompt(position = 'bottom',message = 'Minimum number of cells per junction required to have at least min.RC reads. Refer to "Basic/filter_sc/minCell" in configure file.',type = 'info',size='large')
                                                  )
                                           ),
@@ -356,12 +356,12 @@ body <- dashboardBody(
                                                  # ),
                                                  column(
                                                         width = 3,
-                                                        numericInput(inputId = "cell.kmin", label = "Min K cell", value = 3, min = 0, step = 1)%>%
+                                                        numericInput(inputId = "cell.kmin", label = "Min K cell", value = 5, min = 0, step = 1)%>%
                                                           add_prompt(position = 'bottom',message = 'Minimum number of dynamic cell neighbors. Refer to "Task/impute/KNN/cell/kmin" in configure file.',type = 'info',size='large')
                                                  ),
                                                  column(
                                                         width = 3,
-                                                        numericInput(inputId = "cell.kmax", label = "Max K cell", value = 8, min = 0, step = 1)%>%
+                                                        numericInput(inputId = "cell.kmax", label = "Max K cell", value = 50, min = 0, step = 1)%>%
                                                           add_prompt(position = 'bottom',message = 'Maximal number of dynamic cell neighbors. Refer to "Task/impute/KNN/cell/kmax" in configure file.',type = 'info',size='large')
                                                  ),
                                                  column(
@@ -379,7 +379,7 @@ body <- dashboardBody(
                                           fluidRow(
                                                  column(
                                                         width = 3,
-                                                        numericInput(inputId = "event.k", label = "K Neighbor Event", value = 5, min = 0, step = 1)%>%
+                                                        numericInput(inputId = "event.k", label = "K Neighbor Event", value = 10, min = 0, step = 1)%>%
                                                           add_prompt(position = 'bottom',message = 'K value for event neighbors. Refer to "Task/impute/KNN/event/k" in configure file.',type = 'info',size='large')
                                                  ),
                                                  column(
