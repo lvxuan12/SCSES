@@ -1,43 +1,54 @@
 #' @include utilities.R
 
-#' @title Perform SCSES imputation
-#' @description Run three PSI imputation strategies using
-#' all types of cell similarity features and splicing events.
-#' The first strategy: strategy1 impute the raw PSI with cell similarities;
-#' The second strategy: strategy2 first impute raw read counts with cell similarities
-#' and calculate the imputed PSI;
-#' The third strategy: strategy3 first impute the PSI using strategy 2, then further impute
-#'  the results using event similarities;
-
+#' @title Perform SCSES Imputation
+#' @description
+#' Performs PSI imputation using three distinct strategies
+#' that leverage cell similarity and splicing event similarity:
+#' \itemize{
+#'   \item \strong{Strategy 1}: Direct imputation of raw PSI values using cell similarities
+#'   \item \strong{Strategy 2}: Imputation of raw read counts using cell similarities,
+#'         followed by PSI calculation from imputed counts
+#'   \item \strong{Strategy 3}: Sequential imputation combining Strategy 2 results with
+#'         event similarity-based imputation
+#' }
 #'
-#' @param paras list, using readSCSESconfig(paras_file).
-#' Default decay_impute will be read from the paras.
-#' @param output_path path to event similarity.
-#' @param decay_impute threshold of change in the similarity matrix.
-#' @param rc matrix of normalized splicing events associated read counts or path
-#' to a rds file, default: rds_processed/rc.rds.
-#' @param psi matrix of psi value or path to a rds file,
-#' default: rds_processed/psi.rds.
-#' @param event.info list of events information or path to a rds file,
-#' default: rds_processed/event.info.list.rds.
-#' @param cell_similarity a list of different types of cell similarity named by the data
-#' type (EXP_RBP, RC, and PSI) or path to a rds file,
-#' default: imputation/cell_similarity/cell.similars.rds.
-#' @param event_similarity a list of event similarity named by different types of
-#' splicing events or path to a rds file,
-#' default: imputation/event_similarity/event.similars.rds.
+#' @param paras A list containing configuration parameters, typically loaded via
+#'   \code{readSCSESconfig(paras_file)}.
+#' @param output_path Character string specifying the output directory path.
+#'   If \code{NULL}, defaults to \code{work_path/imputation/}.
+#' @param decay_impute Numeric value (0-1) representing the convergence threshold for
+#'   imputation iterations. The algorithm stops when changes between consecutive
+#'   iterations fall below this threshold. Default: 0.05 (from \code{paras$Task$impute$decay_impute}).
+#' @param rc Matrix of normalized splicing event-associated read counts, or path to
+#'   an RDS file. Default: \code{rds_processed/rc.rds}.
+#' @param psi Matrix of PSI values, or path to an RDS file.
+#'   Default: \code{rds_processed/psi.rds}.
+#' @param event.info List containing splicing event information, or path to an RDS file.
+#'   Default: \code{rds_processed/event.info.list.rds}.
+#' @param cell_similarity Named list of cell similarity matrices for different features
+#'   (EXP_RBP, RC, PSI), or path to an RDS file.
+#'   Default: \code{imputation/cell_similarity/cell.similars.rds}.
+#' @param event_similarity Named list of event similarity matrices for different splicing
+#'   event types, or path to an RDS file.
+#'   Default: \code{imputation/event_similarity/event.similars.rds}.
 #'
-#' @return Return path to the imputation results of three imputation strategies,
-#' which contains a list of three imputation strategies result. Default is
-#' work_path/imputation/Imputed_seperated_*.rds.
-#' The result contains two lists, each of which contains multiple imputation results.
-#' Different event types are combined.
-#' The first list is the result of strategy1 and strategy2, where the name of each matrix
-#' is divided by "_", the first half represents different cell similarities, and the second
-#' half represents Strategy 1 and Strategy 2, where PSI represents strategy1 and RC represents strategy2;
-#' The second list is the result of strategy3, again where the names of each matrix are
-#' divided by "_", with the first half representing different cell similarities.
-#'
+#' @return
+#' Character string containing the file path to the saved imputation results
+#' (\code{work_path/imputation/Imputed_seperated_*.rds}). The saved object contains
+#' a list with two main components:
+#' \describe{
+#'   \item{\code{cell}}{Results from Strategy 1 and Strategy 2. Matrix names follow
+#'     the pattern \code{[CellSimilarityType]_[Strategy]}, where:
+#'     \itemize{
+#'       \item Cell similarity types: EXP_RBP, RC, PSI
+#'       \item Strategy indicators: PSI (Strategy 1), RC (Strategy 2)
+#'     }
+#'   }
+#'   \item{\code{cell_event}}{Results from Strategy 3. Matrix names follow the pattern
+#'     \code{[CellSimilarityType]_PSI}, representing the results after event similarity
+#'     imputation
+#'   }
+#' }
 #'
 #' @export
 #' @import R.matlab
@@ -199,35 +210,62 @@ ImputationAll <- function(
     return(output_name)
 }
 
-#' @title Perform SCSES imputation
-#' @description run three PSI imputation strategies
-#' for a sepcific type of cell similarity
+#' @title Perform SCSES Imputation for Specific Cell Similarity Type
+#' @description
+#' Executes three PSI imputation strategies using a single
+#' specified type of cell similarity feature. This function provides
+#' imputation analysis for one cell similarity type at a time.
 #'
-#' @param paras list readSCSESconfig(paras_file)
-#' Default decay_impute from paras
-#' @param output_path path to event similarity
-#' @param decay_impute threshold of change in the similarity matrix
-#' @param rc matrix of normalized splicing events associated read counts or path
-#' to a rds file, default: rds_processed/rc.rds
-#' @param psi matrix of psi value or path to a rds file,
-#' default: rds_processed/psi.rds
-#' @param event.info list of events information or path to a rds file,
-#' default: rds_processed/event.info.list.rds
-#' @param cell_similarity a list of different types of cell similarity named by the data
-#' type (EXP_RBP, RC, and PSI) or path to a rds file,
-#' default: imputation/cell_similarity/cell.similars.rds
-#' @param event_similarity a list of event similarity named by different types of
-#' splicing events or path to a rds file,
-#' default: imputation/event_similarity/event.similars.rds
-#' @param cell_similarity_type one data type used to calculate cell similarity (EXP_RBP, RC, PSI)
+#' The three imputation strategies are:
+#' \itemize{
+#'   \item \strong{Strategy 1}: Direct imputation of raw PSI values using cell similarities
+#'   \item \strong{Strategy 2}: Imputation of raw read counts using cell similarities,
+#'         followed by PSI calculation from imputed counts
+#'   \item \strong{Strategy 3}: Sequential imputation combining Strategy 2 results with
+#'         event similarity-based imputation
+#' }
+#'
+#' @param paras A list containing configuration parameters, typically loaded via
+#'   \code{readSCSESconfig(paras_file)}.
+#' @param output_path Character string specifying the output directory path.
+#'   If \code{NULL}, defaults to \code{work_path/imputation/}.
+#' @param decay_impute Numeric value (0-1) representing the convergence threshold for
+#'   imputation iterations. The algorithm stops when changes between consecutive
+#'   iterations fall below this threshold. Default: 0.05 (from \code{paras$Task$impute$decay_impute}).
+#' @param rc Matrix of normalized splicing event-associated read counts, or path to
+#'   an RDS file. Default: \code{rds_processed/rc.rds}.
+#' @param psi Matrix of PSI values, or path to an RDS file.
+#'   Default: \code{rds_processed/psi.rds}.
+#' @param event.info List containing splicing event information, or path to an RDS file.
+#'   Default: \code{rds_processed/event.info.list.rds}.
+#' @param cell_similarity Named list of cell similarity matrices for different features
+#'   (EXP_RBP, RC, PSI), or path to an RDS file.
+#'   Default: \code{imputation/cell_similarity/cell.similars.rds}.
+#' @param event_similarity Named list of event similarity matrices for different splicing
+#'   event types, or path to an RDS file.
+#'   Default: \code{imputation/event_similarity/event.similars.rds}.
+#' @param cell_similarity_type Character string specifying the single cell similarity
+#'   type to use for imputation. Must be one of: \code{"EXP_RBP"}, \code{"RC"}, or \code{"PSI"}.
+#'
+#' @return
+#' Character string containing the file path to the saved imputation results
+#' (\code{work_path/imputation/Imputed_seperated_*.rds}). The saved object contains
+#' a list with two main components:
+#' \describe{
+#'   \item{\code{cell}}{Results from Strategy 1 and Strategy 2. Matrix names follow
+#'     the pattern \code{[cell_similarity_type]_[Strategy]}, where:
+#'     \itemize{
+#'       \item Cell similarity types: EXP_RBP, RC, PSI
+#'       \item Strategy indicators: PSI (Strategy 1), RC (Strategy 2)
+#'     }
+#'   }
+#'   \item{\code{cell_event}}{Results from Strategy 3. Matrix names follow the pattern
+#'     \code{[cell_similarity_type]_PSI}, representing the results after event similarity
+#'     imputation
+#'   }
+#' }
 #'
 #'
-#' @return Return path to the result of three imputation strategies
-#' save a list of result of three imputation strategies to
-#' work_path/imputation/Imputed_seperated_event_${cell_similarity_type}_*.rds
-#' The result contains two lists, each of which contains multiple imputation results.
-#' The first list is the result of strategy1 and strategy2,
-#' The second list is the result of strategy3
 #' @export
 #' @import R.matlab
 #' @import raveio

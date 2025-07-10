@@ -2,7 +2,7 @@
 % Please edit documentation in R/Estimation.R
 \name{FtClassifier}
 \alias{FtClassifier}
-\title{Fine-tune the classifer determining the groups that event-cell pairs belong to}
+\title{Fine-Tune the Classifier for Event-Cell Group Assignment}
 \usage{
 FtClassifier(
   paras,
@@ -15,23 +15,35 @@ FtClassifier(
 )
 }
 \arguments{
-\item{paras}{list readSCSESconfig(paras_file)
-Default decay_impute from paras}
+\item{paras}{A list object containing SCSES configuration parameters, typically
+loaded using \code{readSCSESconfig(paras_file)}.}
 
-\item{rds_path}{path to processed rds data}
+\item{rds_path}{Character string specifying the path to processed RDS data
+containing gene expression matrices. Default: \code{work_path/rds/}.}
 
-\item{rds_ft_path}{path to rds data of fine tune splicing events}
+\item{rds_ft_path}{Character string specifying the path to RDS data of
+fine-tuning splicing events (PSI, RC, event annotations).
+Default: \code{work_path/rds_ft/}.}
 
-\item{rds_cell_similarity_path}{path to cell similarity, list with name(EXP_RBP, RC and PSI)}
+\item{rds_cell_similarity_path}{Character string specifying the path to cell
+similarity data.
+Default: \code{work_path/imputation/cell_similarity/}.}
 
-\item{decay_impute}{threshold of change in the similarity matrix}
+\item{output_path}{Character string specifying the output directory for
+fine-tuned classifiers. Default: \code{work_path/classifer/}.}
 
-\item{genome_name}{Genome name, hg19 or hg38}
+\item{decay_impute}{Numeric value specifying the convergence threshold
+for imputation. Default: 0.05 (from \code{paras$Task$impute$decay_impute}).}
+
+\item{genome_name}{Character string specifying the genome version ("hg19" or "hg38").
+Default: from \code{paras$Basic$refgenome$genome_name}.}
 }
 \value{
-path to final classifer
+Character string specifying the path to the directory containing
+  the fine-tuned classifier models.
 }
 \description{
-Model1 is used to predict the probabilities belonging to BD and TD,
-and Model2 is used to predict probabilities belonging to TD-Info and TD+Info
+This function fine-tunes a two-stage classifier to determine
+  the groups that event-cell pairs belong to. Model1 predicts probabilities
+  for BD vs. TD, while Model2 distinguishes between TD+Info and TD-Info.
 }

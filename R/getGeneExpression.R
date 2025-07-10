@@ -87,10 +87,10 @@ getGeneExpression <- function(
 #'   Default is taken from \code{paras$DataSet}.
 #' @param filter.mt Logical value indicating whether to filter out
 #'   mitochondrial genes (genes with names starting with "MT-" or "mt-").
-#'   Default is taken from \code{paras$Basic$filter_sc$filter.mt}.
+#'   Default: TRUE (from \code{paras$Basic$filter_sc$filter.mt}).
 #' @param filter.rp Logical value indicating whether to filter out
 #'   ribosomal genes (genes with names starting with "RPS", "RPL", "Rps",
-#'   or "Rpl"). Default is taken from \code{paras$Basic$filter_sc$filter.rp}.
+#'   or "Rpl"). Default: TRUE (from \code{paras$Basic$filter_sc$filter.rp}).
 #'
 #' @return Character string of the output directory path where the RDS files
 #'   are saved. The directory contains two files: \code{count.rds} (raw counts)
@@ -156,10 +156,10 @@ getEXPmatrix <- function(
 #'   Cell Ranger output folder containing the HDF5 file.
 #' @param filter.mt Logical value indicating whether to filter out
 #'   mitochondrial genes (genes with names starting with "MT-" or "mt-").
-#'   Default is taken from \code{paras$Basic$filter_sc$filter.mt}.
+#'   Default: TRUE (from \code{paras$Basic$filter_sc$filter.mt}).
 #' @param filter.rp Logical value indicating whether to filter out
 #'   ribosomal genes (genes with names starting with "RPS", "RPL", "Rps",
-#'   or "Rpl"). Default is taken from \code{paras$Basic$filter_sc$filter.rp}.
+#'   or "Rpl"). Default: TRUE (from \code{paras$Basic$filter_sc$filter.rp}).
 #' @param cells Character vector of cell barcodes to subset. If provided,
 #'   only cells with barcodes present in this vector will be retained.
 #'   If \code{NULL} (default), all cells in the matrix are kept.
@@ -224,11 +224,16 @@ get10XEXPmatrix <- function(
 #' save raw and normalized UMI counts sparse matrix to work_path/rds/
 #'
 #'
-#' @param paras list fromJSON(paras_file)
-#' Default dataset, filter.mt, filter.rp from paras
-#' @param expr_path directory to the cellranger output for different samples
-#' @param filter.mt filter out mitochondrial genes
-#' @param filter.rp filter out ribosomal genes
+#' @param paras A list object parsed from SCSES JSON parameter file using
+#'   \code{readSCSESconfig()}.
+#' @param expr_path Character string specifying the directory path to the
+#'   Cell Ranger output folder containing the HDF5 file.
+#' @param filter.mt Logical value indicating whether to filter out
+#'   mitochondrial genes (genes with names starting with "MT-" or "mt-").
+#'   Default: TRUE (from \code{paras$Basic$filter_sc$filter.mt}).
+#' @param filter.rp Logical value indicating whether to filter out
+#'   ribosomal genes (genes with names starting with "RPS", "RPL", "Rps",
+#'   or "Rpl"). Default: TRUE (from \code{paras$Basic$filter_sc$filter.rp}).
 #' @param sample_name the name of directory for different samples in the expr_path,
 #' different samples seperated by ";"
 #' If the dataset contains multiple samples, the Cell Ranger outputs for

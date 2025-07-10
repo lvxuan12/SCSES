@@ -2,7 +2,7 @@
 % Please edit documentation in R/preprocess.R
 \name{preprocessEvent}
 \alias{preprocessEvent}
-\title{Get Filtered gene expression and splicing value data}
+\title{Filter and Process Gene Expression and Splicing Data}
 \usage{
 preprocessEvent(
   paras,
@@ -17,36 +17,64 @@ preprocessEvent(
 )
 }
 \arguments{
-\item{paras}{list readSCSESconfig(paras_file)
-Default min.percentCells.gene, min.percentCells.event, min.Cell,min.RC,
-min.nCount, min.nFeatures, max.percentMT from paras}
+\item{paras}{A list of parameters obtained from \code{readSCSESconfig(paras_file)}.}
 
-\item{min.percentCells.gene}{the minimum percentage of cells that
-are required to have at least 1 reads for a gene}
+\item{min.percentCells.gene}{Numeric value (0-1) specifying the minimum
+percentage of cells required to have at least 1 read for a gene to be retained.
+Default: 0.9 (\code{paras$Basic$filter_sc$min.percentCells.gene}).}
 
-\item{min.percentCells.event}{the minimum percentage of cells that
-are required to have psi=0/psi=1/psi=NA for a event}
+\item{min.percentCells.event}{Numeric value (0-1) specifying the maximum
+percentage of cells allowed to have extreme PSI values (0, 1, or NA)
+for an event to be retained.
+Default: 0.9 (\code{paras$Basic$filter_sc$min.percentCells.event}).}
 
-\item{min.Cell}{the minimum number of cells that are required to have
-at least min.RC reads.}
+\item{min.Cell}{Integer specifying the minimum number of cells required to have
+at least \code{min.RC} inclusion/exclusion reads for an event to be retained.
+Default: 10 (\code{paras$Basic$filter_sc$minCell}).}
 
-\item{min.RC}{the minimum number of reads required on at least min.Cell
-cells for a junction.}
+\item{min.RC}{Integer specifying the minimum number of inclusion/exclusion reads
+required in at least \code{min.Cell} cells for an event to be retained.
+Default: 5 (\code{paras$Basic$filter_sc$minRC}).}
 
-\item{min.nCount}{the minimum number of counts detected in a cell.}
+\item{min.nCount}{Integer specifying the minimum total read count required per cell.
+Cells below this threshold are filtered out.
+Default: 1 (\code{paras$Basic$filter_sc$min.nCount}).}
 
-\item{min.nFeatures}{the minimum number of features detected in a cell.}
+\item{min.nFeatures}{Integer specifying the minimum number of detected genes
+required per cell. Cells below this threshold are filtered out.
+Default: 1 (\code{paras$Basic$filter_sc$min.nFeatures}).}
 
-\item{max.percentMT}{the maximum percentage of all the counts belonging
-to a subset of mitochondrial genes in a cell.}
+\item{max.percentMT}{Numeric value (0-1) specifying the maximum percentage of
+mitochondrial gene expression allowed per cell. Cells above this threshold
+are filtered out. Default: 1 (\code{paras$Basic$filter_sc$max.percentMT}).}
 
-\item{cell.select}{cells selected for analysis, should match the name
-of single-cell bam file name excluding the .bam suffix.}
+\item{cell.select}{Character vector of cell IDs to include in analysis.
+Should match single-cell BAM file names excluding the \code{.bam} suffix.
+If \code{NULL}, all common cells across datasets are used. Default: \code{NULL}.}
 }
 \value{
-filtered data path
+Character string containing the path to the processed data directory
+(\code{work_path/rds_processed/}). The following files are saved:
+\describe{
+  \item{\code{expr.rds}}{Filtered and quality-controlled gene expression matrix}
+  \item{\code{psi.rds}}{Filtered PSI values matrix}
+  \item{\code{rc.rds}}{Normalized and log-transformed read count matrix for junctions}
+  \item{\code{event.rds}}{Filtered splicing event annotation data frame}
+  \item{\code{event.info.list.rds}}{Structured event information organized by
+        splicing type (A3SS, A5SS, SE, MXE, RI)}
+}
 }
 \description{
-process raw data in work_path/rds and
-save filtered data to work_path/rds_processed
+Performs quality control and filtering of raw single-cell RNA-seq
+and splicing events. This function processes raw data from
+\code{work_path/rds/} and saves filtered, normalized data to
+\code{work_path/rds_processed/} for downstream analysis.
+
+The preprocessing pipeline includes:
+\itemize{
+  \item Cell quality control based on library size, gene detection, and mitochondrial content
+  \item Gene filtering based on expression across cells
+  \item Splicing event filtering based on PSI value and read count support
+  \item Read count normalization and log transformation
+}
 }

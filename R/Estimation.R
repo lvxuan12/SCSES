@@ -87,7 +87,7 @@ getClassifierFeature <- function(
     gene <- unlist(lapply(row.names(psi), function(x) {
         unlist(strsplit(x, "\\|"))[3]
     }))
-    # expr2 <- expr[gene, ]
+
     expr2 <- rbind(expr[intersect(gene, rownames(expr)), , drop = FALSE],
                    matrix(0,
                           nrow = length(setdiff(gene, rownames(expr))),
@@ -134,18 +134,30 @@ getClassifierFeature <- function(
     return(feature_df)
 }
 
-#' @title Fine-tune the classifer determining the groups that event-cell pairs belong to
-#' @description Model1 is used to predict the probabilities belonging to BD and TD,
-#' and Model2 is used to predict probabilities belonging to TD-Info and TD+Info
+#' @title Fine-Tune the Classifier for Event-Cell Group Assignment
+#' @description This function fine-tunes a two-stage classifier to determine
+#'   the groups that event-cell pairs belong to. Model1 predicts probabilities
+#'   for BD vs. TD, while Model2 distinguishes between TD+Info and TD-Info.
 #'
-#' @param paras list readSCSESconfig(paras_file)
-#' Default decay_impute from paras
-#' @param rds_path path to processed rds data
-#' @param rds_ft_path path to rds data of fine tune splicing events
-#' @param rds_cell_similarity_path path to cell similarity, list with name(EXP_RBP, RC and PSI)
-#' @param decay_impute threshold of change in the similarity matrix
+#' @param paras A list object containing SCSES configuration parameters, typically
+#'   loaded using \code{readSCSESconfig(paras_file)}.
+#' @param rds_path Character string specifying the path to processed RDS data
+#'   containing gene expression matrices. Default: \code{work_path/rds/}.
+#' @param rds_ft_path Character string specifying the path to RDS data of
+#'   fine-tuning splicing events (PSI, RC, event annotations).
+#'   Default: \code{work_path/rds_ft/}.
+#' @param rds_cell_similarity_path Character string specifying the path to cell
+#'   similarity data.
+#'   Default: \code{work_path/imputation/cell_similarity/}.
+#' @param output_path Character string specifying the output directory for
+#'   fine-tuned classifiers. Default: \code{work_path/classifer/}.
+#' @param decay_impute Numeric value specifying the convergence threshold
+#' for imputation. Default: 0.05 (from \code{paras$Task$impute$decay_impute}).
+#' @param genome_name Character string specifying the genome version ("hg19" or "hg38").
+#'   Default: from \code{paras$Basic$refgenome$genome_name}.
 #'
-#' @return path to final classifer
+#' @return Character string specifying the path to the directory containing
+#'   the fine-tuned classifier models.
 #'
 #' @export
 #' @importFrom stats rbinom coef predict quantile
@@ -156,7 +168,6 @@ getClassifierFeature <- function(
 #' @import rhdf5
 #' @import hdf5r
 #'
-#' @param genome_name Genome name, hg19 or hg38
 #'
 FtClassifier <- function(
     paras, rds_path = NULL, rds_ft_path = NULL,
@@ -531,34 +542,41 @@ getPredictProb <- function(feature_df, model1, model2, psi) {
     return(list(prob_m1, prob_m2, prob_m3))
 }
 
-#' @title Combining different imputation strategies
-#' @description strategy1 for pairs in ND,
-#' strategy2 for pairs in BD and TD+Info, and strategy3 for pairs in T0-Info.
-#' For each event-cell pair, the different imputation results are combined with
-#' the probabilities of different groups as the coefficients.
+#' @title Combine Multiple Imputation Strategies Using Probabilistic Weighting
 #'
-#' @param paras list readSCSESconfig(paras_file)
-#' @param rds_imputed_file path to the list of three imputation strategies results
-#' named by the strategies
-#' @param output_path path to save the final imputation of PSI values
-#' @param cell_similarity a list of cell similarity named by the data
-#' type (EXP_RBP, RC, and PSI) or path to a rds file
-#' default: imputation/cell_similarity/cell.similars.rds
-#' @param dyk_cell a list of Neighbor number named by the data
-#' type (EXP_RBP, RC, and PSI) or path to a rds file
-#' default: imputation/cell_similarity/dyk.cell.rds
-#' @param rc matrix of normalized splicing events associated read counts or path
-#' to a rds file, default: rds_processed/rc.rds
-#' @param psi matrix of psi value or path to a rds file,
-#' default: rds_processed/psi.rds
-#' @param expr matrix of gene expression or path to a rds file, TPM for full-length protocols
-#' and normalized UMI counts for droplet-based protocols
-#' default: rds_processed/expr.rds
-#' @param event data.frame of events information or path to a rds file,
-#' default: rds_processed/event.rds
-
-#' @return path to save the final imputation of PSI values
-#' The names of the lists represent different cell similarities
+#' @description This function combines results from different imputation strategies
+#'   using a probabilistic weighting scheme based on event-cell pair classifications.
+#'   Strategy 1 is applied to pairs in ND, Strategy 2 to pairs in BD and TD+Info,
+#'   and Strategy 3 to pairs in TD-Info. The final imputation combines these strategies
+#'   weighted by classification probabilities.
+#'
+#' @param paras A list object containing SCSES configuration parameters, typically
+#'   loaded using \code{readSCSESconfig(paras_file)}.
+#' @param rds_imputed_file Character string specifying the path to RDS file containing
+#'   imputation results from multiple strategies. This should be the output file path
+#'   returned by the \code{\link{ImputationAll}} function.
+#' @param output_path Character string specifying the output directory for final
+#'   combined imputation results. Default: \code{work_path/imputation/}.
+#' @param cell_similarity Either a list of cell similarity matrices named by data
+#'   types (EXP_RBP, RC, PSI) or a character string path to an RDS file.
+#'   Default: \code{imputation/cell_similarity/cell.similars.rds}.
+#' @param dyk_cell Either a list of neighbor numbers named by data types
+#'   (EXP_RBP, RC, PSI) or a character string path to an RDS file.
+#'   Default: \code{imputation/cell_similarity/dyk.cell.rds}.
+#' @param rc Either a matrix of normalized splicing event read counts or a
+#'   character string path to an RDS file. Default: \code{rds_processed/rc.rds}.
+#' @param psi Either a matrix of PSI values or a character string path to an
+#'   RDS file. Default: \code{rds_processed/psi.rds}.
+#' @param expr Either a matrix of gene expression (TPM for full-length protocols,
+#'   normalized UMI counts for droplet-based protocols) or a character string
+#'   path to an RDS file. Default: \code{rds_processed/expr.rds}.
+#' @param event Either a data.frame of event information or a character string
+#'   path to an RDS file. Default: \code{rds_processed/event.rds}.
+#'
+#' @return Character string specifying the path to the RDS file containing
+#'   the final combined imputation results. The returned list is named by
+#'   similarity types, with each element containing the combined PSI matrix
+#'   for that similarity approach.
 #'
 #' @export
 #' @importFrom stats predict

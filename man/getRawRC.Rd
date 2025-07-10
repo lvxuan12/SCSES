@@ -2,7 +2,7 @@
 % Please edit documentation in R/getRawSplicingValue.R
 \name{getRawRC}
 \alias{getRawRC}
-\title{Quantify raw reads for different types of splicing events}
+\title{Quantify Raw Junction Reads for Splicing Events}
 \usage{
 getRawRC(
   paras,
@@ -13,21 +13,46 @@ getRawRC(
 )
 }
 \arguments{
-\item{paras}{list readSCSESconfig(paras_file)
-Default bam_path, java_path, core, and sequence from paras}
+\item{paras}{A list object containing SCSES configuration parameters, typically
+loaded using \code{readSCSESconfig(paras_file)}.}
 
-\item{bam_path}{The path to save single cell bam file}
+\item{bam_path}{Character string specifying the directory containing single-cell
+BAM files. Eachcoordinate-sorted BAM file should represent one cell and
+be properly indexed. Default is taken from \code{paras$Basic$bam_path}.}
 
-\item{core}{the number of threads}
+\item{core}{Integer specifying the number of CPU cores for parallel processing.
+Default: \code{paras$Basic$core}.}
 
-\item{sequence}{full-length or UMI}
+\item{sequence}{Character string indicating the sequencing protocol type.
+Default: \code{paras$Basic$sequence}. Accepted values:
+\itemize{
+  \item \code{"full-length"}
+  \item \code{"UMI"}
+}
+This parameter determines which Java script is applied for read counting.}
 
-\item{event_types}{splicing event types seperated by ";",default=NULL}
+\item{event_types}{Character string specifying splicing event types to process,
+separated by semicolons (e.g., "SE;MXE;A3SS"). Default: \code{NULL} (process all
+available event types). Valid event types include:
+\itemize{
+  \item \code{"SE"}: Skipped Exon events
+  \item \code{"MXE"}: Mutually Exclusive Exon events
+  \item \code{"A3SS"}: Alternative 3' Splice Site events
+  \item \code{"A5SS"}: Alternative 5' Splice Site events
+  \item \code{"RI"}: Retained Intron events
+}}
 }
 \value{
-raw read path
+Character string specifying the path to the output directory
+  (\code{work_path/splicing_value/}) containing event-specific read count
+  RDS files and intermediate junction matrices. This path serves as input
+  for downstream PSI calculation via \code{\link{calculatePSI}}.
 }
 \description{
-Quantify raw reads for events in work_path/events
-save to work_path/splicing_value/*_rc.rds
+This function performs quantification of raw junction
+  reads across different types of splicing events from single-cell
+  RNA-seq BAM files. It extracts splice junction coverage for inclusion
+  and exclusion isoforms, providing the raw junction reads data required for
+  downstream PSI calculation. The function supports both full-length
+  and UMI-based sequencing protocols.
 }

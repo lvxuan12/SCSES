@@ -2,19 +2,23 @@
 % Please edit documentation in R/detectEvent.R
 \name{getEvent}
 \alias{getEvent}
-\title{Detect a specific type of splicing events}
+\title{Detect a Specific Type of Splicing Event}
 \usage{
 getEvent(paras, event_type)
 }
 \arguments{
-\item{paras}{list readSCSESconfig(paras_file)}
+\item{paras}{A list object containing SCSES configuration parameters, typically
+loaded using \code{readSCSESconfig(paras_file)}.}
 
-\item{event_type}{splicing event type (A3SS,A5SS,AL,SE,MXE,RI)}
+\item{event_type}{Character string specifying the type of splicing event to detect.
+Must be one of: \code{"A3SS"}, \code{"A5SS"}, \code{"SE"},
+\code{"MXE"}, or \code{"RI"}.}
 }
 \value{
-Splicing event directory
+Character string specifying the path to the events directory
+  (\code{work_path/events/}) where the splicing event files are stored.
 }
 \description{
-Detect a specific type of splicing events based on Pseudobulk
-bam in work_path/data and generate event id saved to work_path/events
+This function detects a single specified type of splicing
+  event from pseudobulk BAM files and generates standardized event IDs.
 }

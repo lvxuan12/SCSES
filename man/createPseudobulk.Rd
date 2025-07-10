@@ -2,7 +2,7 @@
 % Please edit documentation in R/createPseudobulk.R
 \name{createPseudobulk}
 \alias{createPseudobulk}
-\title{Create Pseudobulk bam by merging single cell bam files and index}
+\title{Create Pseudobulk BAM by Merging Single Cell BAM Files}
 \usage{
 createPseudobulk(
   paras,
@@ -12,18 +12,24 @@ createPseudobulk(
 )
 }
 \arguments{
-\item{paras}{list fromJSON(paras_file)
-Default bam_path, samtools_path, core from paras}
+\item{paras}{A list object containing configuration parameters, typically
+loaded from \code{readSCSESconfig(paras_file)}.}
 
-\item{bam_path}{directory to single cell bam file}
+\item{bam_path}{Character string specifying the directory path containing
+single-cell BAM files. Default is extracted from \code{paras$Basic$bam_path}.}
 
-\item{core}{the number of threads}
+\item{core}{Integer specifying the number of threads to use for parallel
+processing. Default is extracted from \code{paras$Basic$core}.}
 
-\item{overwrite}{overwrite the output bam if exist}
+\item{overwrite}{Logical value indicating whether to overwrite existing
+pseudobulk BAM file if it exists. Default is \code{TRUE}.}
 }
 \value{
-Pseudobulk path
+Character string containing the path to the directory where the
+  pseudobulk BAM file and its index are created.
 }
 \description{
-Create Pseudobulk bam by merging single cell bam files and index
+This function merges multiple single-cell BAM files into a single
+pseudobulk BAM file and creates an index for downstream analysis. It uses
+samtools merge and index commands to perform the operations.
 }

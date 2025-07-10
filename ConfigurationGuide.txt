@@ -51,4 +51,4 @@ Task/impute/KNN/event/k: number of event neighbors, default = 10
 Task/impute/KNN/event/alpha: andom walk probability (1-restart probability), default = 0.8
 Task/impute/KNN/event/decay: threshold of change in the similarity matrix, default = 0.05
 
-
+Task/impute/decay_impute: Convergence threshold of imputation, default = 0.05

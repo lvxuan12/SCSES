@@ -2,7 +2,7 @@
 % Please edit documentation in R/getFtSplicingValue.R
 \name{getFtRawRC}
 \alias{getFtRawRC}
-\title{Quantify raw reads of splicing events for classifer fine tune}
+\title{Quantify Raw Reads of Splicing Events for Classifier Fine-Tuning}
 \usage{
 getFtRawRC(
   paras,
@@ -13,21 +13,31 @@ getFtRawRC(
 )
 }
 \arguments{
-\item{paras}{list readSCSESconfig(paras_file)
-Default bam_path, java_path, core, and sequence from paras}
+\item{paras}{A list object containing SCSES configuration parameters, typically
+loaded using \code{readSCSESconfig(paras_file)}.}
 
-\item{bam_path}{The path to save single cell bam file}
+\item{bam_path}{Character string specifying the directory containing single-cell
+BAM files. Each BAM file should represent one cell and be properly indexed.
+Default: \code{paras$Basic$bam_path}.}
 
-\item{core}{the number of threads}
+\item{core}{Integer specifying the number of CPU cores to use for parallel
+processing. \code{paras$Basic$core}.}
 
-\item{sequence}{full-length or UMI}
+\item{sequence}{Character string specifying the sequencing protocol type.
+Must be either "full-length" (e.g., Smart-seq2) or "UMI" (e.g., 10x Genomics).
+This determines which Java quantification tool to use.
+Default: \code{paras$Basic$sequence}.}
 
-\item{genome_name}{Genome name, hg19 or hg38}
+\item{genome_name}{Character string specifying the reference genome version.
+Must be either "hg19" or "hg38". This determines which predefined event
+set to use for quantification. Default: \code{paras$Basic$refgenome$genome_name}.}
 }
 \value{
-raw read path
+Character string specifying the path to the output directory
+  (\code{work_path/splicing_value_ft/}) containing read count
+  RDS files. This path can be used as input for \code{\link{FtClassifier}}
 }
 \description{
-Quantify raw reads for events in ft_event_path
-save to work_path/splicing_value_ft/*_rc.rds
+This function quantifies raw read counts for predefined splicing
+  events specifically selected for classifier fine-tuning.
 }

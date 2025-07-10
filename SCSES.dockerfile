@@ -63,9 +63,10 @@ RUN cd /software && \
     bzip2 -d htslib-1.21.tar.bz2 && \
     tar -xvf htslib-1.21.tar && \
     cd htslib-1.21 && \
+    ./configure --prefix=/software/htslib/ && \
     make -j 8 && \
     make install   && \  
-    rm ../htslib-1.21.tar && \
+    rm ../htslib-1.21.tar ../htslib-1.21 -rf && \
     # install featureCoutns
     cd /software && \
     wget https://sourceforge.net/projects/subread/files/subread-2.0.6/subread-2.0.6-source.tar.gz && \
@@ -91,11 +92,12 @@ RUN pip install pandas numpy scipy scikit-learn && \
     pip install cython
 # install MAJIQ in conda
 SHELL ["conda", "run", "-n", "MAJIQ", "/bin/bash", "-c"]
-RUN export HTSLIB_LIBRARY_DIR=/software/htslib-1.21 && \
-    export HTSLIB_INCLUDE_DIR=/software/htslib-1.21:/software/htslib-1.21/htslib && \
-    chmod 777 -R /software/htslib-1.21 && \
+RUN export HTSLIB_LIBRARY_DIR=/software/htslib/lib && \
+    export HTSLIB_INCLUDE_DIR=/software/htslib/include && \
+    chmod 777 -R /software/htslib && \
     cd /software && \
-    conda install -c conda-forge gcc=12.1.0 && \
+    conda install -c conda-forge gxx=12.1.0 && \
+    conda install conda-forge::zstd && \
     pip install git+https://bitbucket.org/biociphers/majiq_academic.git && \
     wget https://majiq.biociphers.org/app_download/majiq_license_academic_official.lic
 
@@ -150,5 +152,3 @@ RUN cd /software && \
     wget https://github.com/RitchieLabIGH/IRFinder/archive/refs/tags/v2.0.1.tar.gz && \
     tar -zxvf v2.0.1.tar.gz
 ENV PATH=$PATH:/usr/lib/jvm/java-8-openjdk-amd64/bin:/software/IRFinder-2.0.1/bin/:/software/samtools/bin:/software/subread-2.0.6-source/bin
-    
-

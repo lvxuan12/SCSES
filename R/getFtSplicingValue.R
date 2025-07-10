@@ -1,15 +1,25 @@
-#' @title Quantify raw reads of splicing events for classifer fine tune
-#' @description  Quantify raw reads for events in ft_event_path
-#' save to work_path/splicing_value_ft/*_rc.rds
-
-#' @param paras list readSCSESconfig(paras_file)
-#' Default bam_path, java_path, core, and sequence from paras
-#' @param bam_path The path to save single cell bam file
-#' @param core the number of threads
-#' @param sequence full-length or UMI
-#' @param genome_name Genome name, hg19 or hg38
-
-#' @return raw read path
+#' @title Quantify Raw Reads of Splicing Events for Classifier Fine-Tuning
+#' @description This function quantifies raw read counts for predefined splicing
+#'   events specifically selected for classifier fine-tuning.
+#'
+#' @param paras A list object containing SCSES configuration parameters, typically
+#'   loaded using \code{readSCSESconfig(paras_file)}.
+#' @param bam_path Character string specifying the directory containing single-cell
+#'   BAM files. Each BAM file should represent one cell and be properly indexed.
+#'   Default: \code{paras$Basic$bam_path}.
+#' @param core Integer specifying the number of CPU cores to use for parallel
+#'   processing. \code{paras$Basic$core}.
+#' @param sequence Character string specifying the sequencing protocol type.
+#'   Must be either "full-length" (e.g., Smart-seq2) or "UMI" (e.g., 10x Genomics).
+#'   This determines which Java quantification tool to use.
+#'   Default: \code{paras$Basic$sequence}.
+#' @param genome_name Character string specifying the reference genome version.
+#'   Must be either "hg19" or "hg38". This determines which predefined event
+#'   set to use for quantification. Default: \code{paras$Basic$refgenome$genome_name}.
+#'
+#' @return Character string specifying the path to the output directory
+#'   (\code{work_path/splicing_value_ft/}) containing read count
+#'   RDS files. This path can be used as input for \code{\link{FtClassifier}}
 #'
 #' @export
 #' @import parallel
@@ -224,13 +234,18 @@ getFtRawRC <- function(
     return(rc_path)
 }
 
-#' @title Calculate PSI value of splicing events for classifer fine tune
-#' @description  Save raw PSI for events in ft_event_path
-#' save to work_path/splicing_value_ft/*_psi.rds
-
-#' @param paras list readSCSESconfig(paras_file)
-
-#' @return raw PSI path
+#' @title Calculate PSI Values of Splicing Events for Classifier Fine-Tuning
+#' @description This function computes PSI values from raw
+#'   read counts for predefined splicing events used in classifier fine-tuning.
+#'   The function processes read count data generated
+#'   by \code{\link{getFtRawRC}} and applies event-specific PSI calculation formulas
+#'   to produce training-ready splicing quantification data.
+#'
+#' @param paras A list object containing SCSES configuration parameters, typically
+#'   loaded using \code{readSCSESconfig(paras_file)}.
+#' @return Character string specifying the path to the output directory
+#'   (\code{work_path/splicing_value_ft/}) containing PSI RDS files.
+#'   This path can be used as input for \code{\link{FtClassifier}}
 #'
 #' @export
 #'

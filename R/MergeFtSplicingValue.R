@@ -1,8 +1,8 @@
 #' @title Merge splicing events for classifer fine tune
 #' @description Merge different types of splicing events in
 #' work_path/splicing_value_ft, and save to work_path/rds_ft
-#' @param paras list readSCSESconfig(paras_file)
-
+#' @param paras A list object containing SCSES configuration parameters, typically
+#'   loaded using \code{readSCSESconfig(paras_file)}.
 #' @return Merged splicing value path
 #'
 #' @export
