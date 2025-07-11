@@ -312,7 +312,7 @@ cat("First 10 RBPs:", head(rbp_list, 10), sep = "\n")
 #> Sf3a1
 ```
 
-<b> 5. Configuration File </b>
+<a name='config'><b> 5. Configuration File </b></a>
 
 SCSES requires a json-based configuration file to set all parameters in the algorithm. Here is a [demo config file](https://github.com/lvxuan12/SCSES/blob/main/inst/analysis/cell_line.json) of the configure file.
 For a detailed explanation of the configuration file, please refer to the [ConfigurationGuide.txt](https://github.com/lvxuan12/SCSES/blob/main/ConfigurationGuide.txt).
@@ -384,7 +384,7 @@ The test dataset is available at https://doi.org/10.5281/zenodo.15688700. The co
 | **PhastCons** | `test_phastCons.bw` | Conservation scores | 1 |
 | **JSON** | `cell_line.json` | Parameters config file for SCSES | 1 |
 
-**Note** After download, please move all BAM files and their index to an empty directory (such as `bam`), and move other files into another directory, (such as `refgenome`).
+**Note:** After download, please move all BAM files and their index to an empty directory (such as `bam`), and move other files into another directory (such as `refgenome`).
 
 ``` bash
 # Example:
@@ -433,12 +433,14 @@ ls /disk/share/lvxuan/SCSES_test/refgenome/
 ## Step-by-Step Analysis
 
 ### Step 0. Get the cofigure file
-The paramteter configuration for test dataset is the *cell_line.json* in the downloaded files. 
+You can create the configuration file using the Shiny app. To start the app, run `createConfigshiny` function. Details can be found in [here](#config)
 
-Alternatively, you can create the configuration file using the Shiny app.
-**Note**: The test dataset includes fewer cells and chromosomes to ensure faster completation of the Tutorial. 
+**Note1**: The test dataset includes fewer cells and chromosomes to ensure faster completation of the Tutorial. 
 Therefore, the default parameters in **`createConfigshiny`** are **not suitable**. Please use the **`createDemoConfigshiny`** function instead, 
 which provides default values optimized for the test dataset.
+
+**Note2**:The paramteter configuration for test dataset also contained in the downloaded files as  *cell_line.json*. 
+
 
 ### Step 1. Read config file
 
