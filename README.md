@@ -1,5 +1,4 @@
 ![](logo.png)
-SCSES: Single cell Splicing Estimation
 ================
 - [Hardware requirements](#hardware-requirements)
 - [Software requirements](#software-requirements)
@@ -38,12 +37,12 @@ SCSES: Single cell Splicing Estimation
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 # Requirements
-1. Hardware requirements
+<b>1. Hardware requirements</b>
 
 `SCSES` package requires only a standard computer with enough RAM to
 support the in-memory operations.
 
-2. Software requirements
+<b>2. Software requirements</b>
 
 This package is supported for Linux, and has been tested on Debian-11.21.
 
