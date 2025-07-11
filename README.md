@@ -1,39 +1,41 @@
 ![](logo.png)
 ================
-- [Hardware requirements](#hardware-requirements)
-- [Software requirements](#software-requirements)
-  - [OS Requirements](#os-requirements)
+[TOC]- [](#)
+- [](#)
+- [Requirements](#requirements)
 - [Installation](#installation)
-  - [Installation with docker file](#installation-with-docker-file)
-    - [1. Install Docker Client:](#1-install-docker-client)
-    - [2. Download Dockerfile](#2-download-dockerfile)
-     - [3. Build Docker Image](#3-build-docker-image)
-     - [4. Create Docker Container](#4-create-docker-container)
-     - [5. Access RStudio Server](#5-access-rstudio-server)
-  - [Installation with conda](#installation-with-conda)
-     - [Step 1: Environment Setup](#step-1-environment-setup)
-     - [Step 2: Install Python Dependencies](#step-2-install-python-dependencies)
-     - [Step 3: Install Tools](#step-3-install-tools)
-     - [Step 4: Install SCSES R Package](#step-4-install-scses-r-package)
-     - [Tips for some Installation errors](#tips-for-some-installation-errors)
-- [SCSES input](#scses-input)
-  - [1. BAM Files](#1-bam-files)
-  - [2. Reference Genome Files](#2-reference-genome-files)
-  - [3. Configuration File](#3-configuration-file)
-  - [4. Phast conservation file in bigWig format](#4-phast-conservation-file-in-bigwig-format)
-  - [5. RBP](#5-rbp)
-- [Getting started](#getting-started)
+  - [Directly Installation](#directly-installation)
+    - [Step 1: Environment Setup](#step-1-environment-setup)
+    - [Step 2: Install Python Dependencies](#step-2-install-python-dependencies)
+    - [Step 3: Install splicing event detection tools](#step-3-install-splicing-event-detection-tools)
+    - [Step 4: Install SCSES R Package](#step-4-install-scses-r-package)
+    - [Tips for potential errors](#tips-for-potential-errors)
+  - [Docker-based Installation](#docker-based-installation)
+    - [Step 1. Install Docker Client:](#step-1-install-docker-client)
+    - [Step 2. Download Dockerfile](#step-2-download-dockerfile)
+    - [Step 3. Build Docker Image](#step-3-build-docker-image)
+    - [Step 4. Create Docker Container](#step-4-create-docker-container)
+    - [Step 5. Access RStudio Server](#step-5-access-rstudio-server)
+- [Get started](#get-started)
+  - [Data preparation](#data-preparation)
   - [Download Test Data](#download-test-data)
-    - [Setup](#setup)
   - [Step-by-Step Analysis](#step-by-step-analysis)
+    - [Step 0. Get the cofigure file](#step-0-get-the-cofigure-file)
     - [Step 1. Read config file](#step-1-read-config-file)
     - [Step 2. Get gene expression](#step-2-get-gene-expression)
+      - [TPM matrix (for smart-seq2 dataset)](#tpm-matrix-for-smart-seq2-dataset)
+      - [Normalized UMI count matrix (for UMI-based dataset)](#normalized-umi-count-matrix-for-umi-based-dataset)
     - [Step 3. Detect splicing events](#step-3-detect-splicing-events)
+      - [For Smart-seq2 dataset](#for-smart-seq2-dataset)
+      - [For UMI-based dataset](#for-umi-based-dataset)
     - [Step 4. Quantify splicing events](#step-4-quantify-splicing-events)
     - [Step 5. Constructs similarity networks](#step-5-constructs-similarity-networks)
     - [Step 6. Imputation](#step-6-imputation)
     - [Step 7. Estimation](#step-7-estimation)
+      - [7.1. Estimation based on pre-trained model](#71-estimation-based-on-pre-trained-model)
+      - [7.2. Estimation based on fine-tuned model](#72-estimation-based-on-fine-tuned-model)
     - [Step 8. Cell Clustering](#step-8-cell-clustering)
+
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 # Requirements
@@ -312,7 +314,7 @@ cat("First 10 RBPs:", head(rbp_list, 10), sep = "\n")
 #> Sf3a1
 ```
 
-<a name='config'><b> 5. Configuration File </b></a>
+<a name='config' style="text-decoration: none;"><b> 5. Configuration File </b></a>
 
 SCSES requires a json-based configuration file to set all parameters in the algorithm. Here is a [demo config file](https://github.com/lvxuan12/SCSES/blob/main/inst/analysis/cell_line.json) of the configure file.
 For a detailed explanation of the configuration file, please refer to the [ConfigurationGuide.txt](https://github.com/lvxuan12/SCSES/blob/main/ConfigurationGuide.txt).
@@ -461,8 +463,12 @@ library(SCSES)
 #> Warning: replacing previous import 'hdf5r::values' by 'rtracklayer::values'
 #> when loading 'SCSES'
 
-# Load configuration file
+# configure file path
+## user-defined configure file
+config_file <- "/path/to/your/config/file"
+## or pre-defied configure file for test data
 config_file <- system.file("analysis/cell_line.json", package = "SCSES")
+# Load configuration file
 paras <- readSCSESconfig(config_file)
 
 # Verify configuration
@@ -521,7 +527,7 @@ tpm[1:5,1:5]
 
 After this step, directories `expr` and `rds` will be created.
 
-#### Normalized UMI count matrix (for UMI based dataset)
+#### Normalized UMI count matrix (for UMI-based dataset)
 
 You can use `get10XEXPmatrix` to generate Normalized UMI count matrix
 from 10X CellRanger hdf5 file, which will save normalized UMI count to
@@ -615,7 +621,7 @@ for(file in event_files) {
 Different types of splicing events will be saved to `work_path/events/`,
 separately.
 
-#### for UMI dataset
+#### For UMI-based dataset
 
 SCSES requires single cell bam files being saved in a directory. For
 UMI-based dataset using CellRanger for data process, the function
