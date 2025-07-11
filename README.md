@@ -243,9 +243,9 @@ experience with SCSES.
 
 Enjoy!
 
-## Getting started
+# Get started
 
-### Data preparation
+## Data preparation
 SCSES requires five essential input files:
 
 <b> 1. BAM Files </b>
@@ -365,53 +365,30 @@ createDemoConfigshiny(host = "localhost", launch.browser=TRUE)
 Therefore, the default parameters in `createConfigshiny` are not suitable. Please use the `createDemoConfigshiny` function instead, 
 which provides default values optimized for the test dataset.
 
-### Download Test Data
+## Download Test Data
 
-This dataset includes BAM files for three cell lines (HCT116, HepG2,
-HL-60), each containing five cells and other input files that are
-essential for running the SCSES package.
+The [test dataset](https://doi.org/10.5281/zenodo.15688700) includes BAM files from 15 cells across three cell lines (HCT116, HepG2, and HL-60), with five cells per cell type. It also contains all essential input files required to run the SCSES package. 
 
-**Download**: <https://doi.org/10.5281/zenodo.15688700>
+The test dataset is available at https://doi.org/10.5281/zenodo.15688700. The complete list of downloadable files is provided in the table below.
 
-| File Type | File Name | Description |
-|----|----|----|
-| **BAM** | `*.bam` | BAM files for three cell lines, each containing five cells |
-| **BAI** | `*.bam.bai` | BAM index files |
-| **TXT** | `annotation.txt` | Cell identities |
-| **FASTA** | `test.fa` | Reference genome sequence |
-| **FAI** | `test.fa.fai` | Reference genome sequence index |
-| **Annotation** | `test.gtf` | Gene annotation file |
-| **Annotation** | `test.gff3` | Gene annotation file |
-| **TXT** | `human_rbp.txt` | RNA-binding proteins list |
-| **PhastCons** | `test_phastCons.bw` | Conservation scores |
-| **JSON** | `cell_line.json` | Parameters config file |
+| File Type | File Name | Description | File counts |
+|----|----|----|----|
+| **BAM** | `*.bam` | BAM files for three cell lines, each containing five cells | 15 |
+| **BAI** | `*.bam.bai` | BAM index files | 15 |
+| **TXT** | `annotation.txt` | Cell identities | 1 |
+| **FASTA** | `test.fa` | Reference genome sequence | 1 |
+| **FAI** | `test.fa.fai` | Reference genome sequence index | 1 |
+| **Annotation** | `test.gtf` | Gene annotation file | 1 |
+| **Annotation** | `test.gff3` | Gene annotation file | 1 |
+| **TXT** | `human_rbp.txt` | RNA-binding proteins list | 1 |
+| **PhastCons** | `test_phastCons.bw` | Conservation scores | 1 |
+| **JSON** | `cell_line.json` | Parameters config file for SCSES | 1 |
 
-#### Setup
-
-After download, ensure you have:
-
-- 15 BAM files + index files
-
-- annotation.txt: cell identities
-
-- test.fa and test.fai: reference genome sequence
-
-- test.gtf and test.gff: gene annotation file
-
-- test_phastCons.bw: conservation scores
-
-- human_rbp.txt: RBP genes list
-
-- cell_line.json: parameters config file
-
-Move 15 BAM files and their index to `bam` directory.
-
-Move other input data to `refgenome` directory.
+**Note** After download, please move all BAM files and their index to an empty directory (such as `bam`), and move other files into another directory, (such as `refgenome`).
 
 ``` bash
 # Example:
 ls /disk/share/lvxuan/SCSES_test/bam/
-ls /disk/share/lvxuan/SCSES_test/refgenome/
 #> SRR11826368.bam
 #> SRR11826368.bam.bai
 #> SRR11826371.bam
@@ -442,6 +419,7 @@ ls /disk/share/lvxuan/SCSES_test/refgenome/
 #> SRR1275305.bam.bai
 #> SRR1275317.bam
 #> SRR1275317.bam.bai
+ls /disk/share/lvxuan/SCSES_test/refgenome/
 #> annotation.txt
 #> cell_line.json
 #> human_rbp.txt
@@ -452,9 +430,9 @@ ls /disk/share/lvxuan/SCSES_test/refgenome/
 #> test_phastCons.bw
 ```
 
-### Step-by-Step Analysis
+## Step-by-Step Analysis
 
-#### Step 0. Get the cofigure file
+### Step 0. Get the cofigure file
 The paramteter configuration for test dataset is the *cell_line.json* in the downloaded files. 
 
 Alternatively, you can create the configuration file using the Shiny app.
@@ -462,7 +440,7 @@ Alternatively, you can create the configuration file using the Shiny app.
 Therefore, the default parameters in **`createConfigshiny`** are **not suitable**. Please use the **`createDemoConfigshiny`** function instead, 
 which provides default values optimized for the test dataset.
 
-#### Step 1. Read config file
+### Step 1. Read config file
 
 The `cell_line.json` file was downloaded previously
 
@@ -495,9 +473,9 @@ cat("Work path:", paras$Basic$work_path, "\n")
 #> Work path: /disk/share/lvxuan/SCSES_test/
 ```
 
-#### Step 2. Get gene expression
+### Step 2. Get gene expression
 
-##### TPM matrix (for smart-seq2 dataset)
+#### TPM matrix (for smart-seq2 dataset)
 
 The TPM matrix of gene expression can be obtained by different methods.
 We used
@@ -541,7 +519,7 @@ tpm[1:5,1:5]
 
 After this step, directories `expr` and `rds` will be created.
 
-##### Normalized UMI count matrix (for UMI based dataset)
+#### Normalized UMI count matrix (for UMI based dataset)
 
 You can use `get10XEXPmatrix` to generate Normalized UMI count matrix
 from 10X CellRanger hdf5 file, which will save normalized UMI count to
@@ -553,13 +531,13 @@ from 10X CellRanger hdf5 file, which will save normalized UMI count to
 rds.path <- get10XEXPmatrix(paras, expr_path)
 ```
 
-#### Step 3. Detect splicing events
+### Step 3. Detect splicing events
 
 To define a global set of all splicing events, SCSES firstly merges all
 bam files from every single cell to construct a pseudo-bulk bam file,
 and identifies all types of splicing events by conventional algorithms.
 
-##### For Smart-seq2 dataset
+#### For Smart-seq2 dataset
 
 ``` r
 # Create pseudobulk for event detection
@@ -635,7 +613,7 @@ for(file in event_files) {
 Different types of splicing events will be saved to `work_path/events/`,
 separately.
 
-##### for UMI dataset
+#### for UMI dataset
 
 SCSES requires single cell bam files being saved in a directory. For
 UMI-based dataset using CellRanger for data process, the function
@@ -656,7 +634,7 @@ paras$Basic$bam_path = splitbam.path
 event.path = detectEvents(paras)
 ```
 
-#### Step 4. Quantify splicing events
+### Step 4. Quantify splicing events
 
 According to splicing events detected in the previous step, SCSES then
 quantify raw reads associated with these splicing events in each cell,
@@ -806,7 +784,7 @@ Then, data after quality control process will be saved to
 `work_path/rds_processed/`, which will be used for **subsequent
 calculations**.
 
-#### Step 5. Constructs similarity networks
+### Step 5. Constructs similarity networks
 
 To overcome the high dropout rate and limited read coverage of scRNA-seq
 techniques, SCSES constructs cell similarity and event similarity
@@ -1031,7 +1009,7 @@ integrating event sequence similarities.
 | `alpha_event` | 0.8     | 1 - Random walk restart probability |
 | `decay_event` | 0.05    | Convergence threshold               |
 
-#### Step 6. Imputation
+### Step 6. Imputation
 
 Based on these weighted similarity networks, SCSES next will use three
 imputation strategies to aggregate the information across similar cells
@@ -1099,9 +1077,9 @@ str(Imputed_seperated,max.level=3)
 Results of each imputation strategy will be saved
 into`work_path/imputation`.
 
-#### Step 7. Estimation
+### Step 7. Estimation
 
-##### 7.1. Estimation based on pre-trained model
+#### 7.1. Estimation based on pre-trained model
 
 We recommend different imputation strategies for four scenarios defined
 by the abundance of reads counts in the target cell and neighbor cells
@@ -1145,7 +1123,7 @@ object format (.rds) in `work_path/imputation/Imputed_combined*`, where
 **\*** is a random number representing different execution. The `.rds`
 file can be loaded in R environment by `readRDS` function.
 
-##### 7.2. Estimation based on fine-tuned model
+#### 7.2. Estimation based on fine-tuned model
 
 To improve the fitness of models for a new dataset, we also provide a
 procedure to fine-tune the model. For this analysis, we first build a
@@ -1302,7 +1280,7 @@ Imputed_combined[["EXP_RBP"]][1:3,1:3]
 #> isoform1=exon:chr1:169772310-169772450:+@junction:chr1:169772451-169773252:+@exon:chr1:169773253-169773381:+|isoform2=exon:chr1:169772310-169772450:+@junction:chr1:169772451-169773215:+@exon:chr1:169773216-169773381:+|C1orf112|A3SS       0.8639692
 ```
 
-#### Step 8. Cell Clustering
+### Step 8. Cell Clustering
 
 Here is an example of UMAP visualization based on test data:
 
