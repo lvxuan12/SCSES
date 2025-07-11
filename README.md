@@ -1,7 +1,5 @@
 ![](logo.png)
 ================
-[TOC]- [](#)
-- [](#)
 - [Requirements](#requirements)
 - [Installation](#installation)
   - [Directly Installation](#directly-installation)
