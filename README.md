@@ -1,4 +1,5 @@
-![SCSES](logo.png)
+![](logo.png)
+SCSES: Single cell Splicing Estimation
 Menu
 ================
 
