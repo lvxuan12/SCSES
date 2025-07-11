@@ -258,9 +258,63 @@ SCSES requires five essential input files:
 - **GTF**: Gene annotations
 - **GFF3**: Gene annotations
 
-<b> 3. Configuration File </b>
+<b> 3. Phast conservation file in bigWig format </b>
 
-SCSES requires a json-based configuration file to set all parameters in the algorithm. Here is a [demo](https://github.com/lvxuan12/SCSES/blob/main/inst/analysis/cell_line.json) of the configure file.
+For human and mouse, you could download it directly from UCSC browser:
+
+| Species | File | Size | Link |
+|----|----|----|----|
+| Human (hg38) | hg38.phastCons100way.bw | 5.5 GB | [Download](http://hgdownload.cse.ucsc.edu/goldenPath/hg38/phastCons100way/hg38.phastCons100way.bw) |
+| Human (hg19) | hg19.100way.phastCons.bw | 5.4 GB | [Download](http://hgdownload.cse.ucsc.edu/goldenPath/hg19/phastCons100way/hg19.100way.phastCons.bw) |
+| Mouse (mm10) | mm10.60way.phastCons.bw | 4.3 GB | [Download](http://hgdownload.cse.ucsc.edu/goldenPath/mm10/phastCons60way/mm10.60way.phastCons.bw) |
+
+<b> 4. RBP </b>
+
+Genes annotated as RBP are required to constructs similarity networks.
+The SCSES package includes predefined lists of RBPs (RNA-binding proteins) for both human and mouse. You can access the lists using the following command:
+
+``` r
+# Load human RBP list
+rbp_human <- system.file("extdata/rbp/human_rbp.txt", package = "SCSES")
+rbp_list <- readLines(rbp_human)
+cat("Total RBPs:", length(rbp_list), "\n")
+#> Total RBPs: 1456
+cat("First 10 RBPs:", head(rbp_list, 10), sep = "\n")
+#> First 10 RBPs:
+#> A1CF
+#> AC004381.6
+#> ACIN1
+#> ACO1
+#> AKAP1
+#> ALKBH8
+#> ALYREF
+#> ANKHD1
+#> ANKRD17
+#> APTX
+```
+``` r
+# Load mouse RBP list
+rbp_mouse <- system.file("extdata/rbp/mouse_rbp.txt", package = "SCSES")
+rbp_list <- readLines(rbp_mouse)
+cat("Total RBPs:", length(rbp_list), "\n")
+#> Total RBPs: 611
+cat("First 10 RBPs:", head(rbp_list, 10), sep = "\n")
+#> First 10 RBPs:
+#> Mcts1
+#> Mkrn2
+#> Hnrnpd
+#> Fmr1
+#> Snrpn
+#> Pcbp3
+#> Trmt1
+#> Supt6h
+#> Cugbp2
+#> Sf3a1
+```
+
+<b> 5. Configuration File </b>
+
+SCSES requires a json-based configuration file to set all parameters in the algorithm. Here is a [demo config file](https://github.com/lvxuan12/SCSES/blob/main/inst/analysis/cell_line.json) of the configure file.
 For a detailed explanation of the configuration file, please refer to the [ConfigurationGuide.txt](https://github.com/lvxuan12/SCSES/blob/main/ConfigurationGuide.txt).
 
 SCSES provides a shiny app to help you to generate the confugre file. You can start the app by `createConfigshiny` function.
@@ -298,66 +352,18 @@ If you are using **test data** in this Tutorial, you should use `createDemoConfi
 function instead to build the configuration file:
 
 ``` r
+# For non-docker users
+library(SCSES)
+createDemoConfigshiny(host = "localhost", launch.browser=FALSE) 
+```
+``` r
+# For docker users
 library(SCSES)
 createDemoConfigshiny(host = "localhost", launch.browser=TRUE) 
 ```
-
 **Note**: The test dataset includes fewer cells and events to ensure faster completation of the Tutorial. 
 Therefore, the default parameters in `createConfigshiny` are not suitable. Please use the `createDemoConfigshiny` function instead, 
 which provides default values optimized for the test dataset.
-
-
-<b> 4. Phast conservation file in bigWig format </b>
-
-For human and mouse, you could download it directly from UCSC browser:
-
-| Species | File | Size | Link |
-|----|----|----|----|
-| Human (hg38) | hg38.phastCons100way.bw | 5.5 GB | [Download](http://hgdownload.cse.ucsc.edu/goldenPath/hg38/phastCons100way/hg38.phastCons100way.bw) |
-| Human (hg19) | hg19.100way.phastCons.bw | 5.4 GB | [Download](http://hgdownload.cse.ucsc.edu/goldenPath/hg19/phastCons100way/hg19.100way.phastCons.bw) |
-| Mouse (mm10) | mm10.60way.phastCons.bw | 4.3 GB | [Download](http://hgdownload.cse.ucsc.edu/goldenPath/mm10/phastCons60way/mm10.60way.phastCons.bw) |
-
-<b> 5. RBP </b>
-
-Genes annotated as RBP are required to constructs similarity networks.
-For human and mouse, you could read from package:
-
-``` r
-# Load human RBP list
-rbp_human <- system.file("extdata/rbp/human_rbp.txt", package = "SCSES")
-rbp_list <- readLines(rbp_human)
-cat("Total RBPs:", length(rbp_list), "\n")
-#> Total RBPs: 1456
-cat("First 10 RBPs:", head(rbp_list, 10), sep = "\n")
-#> First 10 RBPs:
-#> A1CF
-#> AC004381.6
-#> ACIN1
-#> ACO1
-#> AKAP1
-#> ALKBH8
-#> ALYREF
-#> ANKHD1
-#> ANKRD17
-#> APTX
-# Load mouse RBP list
-rbp_mouse <- system.file("extdata/rbp/mouse_rbp.txt", package = "SCSES")
-rbp_list <- readLines(rbp_mouse)
-cat("Total RBPs:", length(rbp_list), "\n")
-#> Total RBPs: 611
-cat("First 10 RBPs:", head(rbp_list, 10), sep = "\n")
-#> First 10 RBPs:
-#> Mcts1
-#> Mkrn2
-#> Hnrnpd
-#> Fmr1
-#> Snrpn
-#> Pcbp3
-#> Trmt1
-#> Supt6h
-#> Cugbp2
-#> Sf3a1
-```
 
 ### Download Test Data
 
