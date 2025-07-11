@@ -1,77 +1,61 @@
 ![](logo.png)
 SCSES: Single cell Splicing Estimation
 ================
-Menu
-================
-
-- [SCSES](#scses)
-  - [Hardware requirements](#hardware-requirements)
-  - [Software requirements](#software-requirements)
-    - [OS Requirements](#os-requirements)
-  - [Installation](#installation)
-    - [Installation with docker file](#installation-with-docker-file)
-      - [1. Install Docker Client:](#1-install-docker-client)
-      - [2. Download Dockerfile](#2-download-dockerfile)
-      - [3. Build Docker Image](#3-build-docker-image)
-      - [4. Create Docker Container](#4-create-docker-container)
-      - [5. Access RStudio Server](#5-access-rstudio-server)
-    - [Installation with conda](#installation-with-conda)
-      - [Step 1: Environment Setup](#step-1-environment-setup)
-      - [Step 2: Install Python Dependencies](#step-2-install-python-dependencies)
-      - [Step 3: Install Tools](#step-3-install-tools)
-      - [Step 4: Install SCSES R Package](#step-4-install-scses-r-package)
-      - [Tips for some Installation errors](#tips-for-some-installation-errors)
-  - [SCSES input](#scses-input)
-    - [1. BAM Files](#1-bam-files)
-    - [2. Reference Genome Files](#2-reference-genome-files)
-    - [3. Configuration File](#3-configuration-file)
-    - [4. Phast conservation file in bigWig format](#4-phast-conservation-file-in-bigwig-format)
-    - [5. RBP](#5-rbp)
-  - [Getting started](#getting-started)
-    - [Download Test Data](#download-test-data)
-      - [Setup](#setup)
-    - [Step-by-Step Analysis](#step-by-step-analysis)
-      - [Step 1. Read config file](#step-1-read-config-file)
-      - [Step 2. Get gene expression](#step-2-get-gene-expression)
-      - [Step 3. Detect splicing events](#step-3-detect-splicing-events)
-      - [Step 4. Quantify splicing events](#step-4-quantify-splicing-events)
-      - [Step 5. Constructs similarity networks](#step-5-constructs-similarity-networks)
-      - [Step 6. Imputation](#step-6-imputation)
-      - [Step 7. Estimation](#step-7-estimation)
-      - [Step 8. Cell Clustering](#step-8-cell-clustering)
+- [Hardware requirements](#hardware-requirements)
+- [Software requirements](#software-requirements)
+  - [OS Requirements](#os-requirements)
+- [Installation](#installation)
+  - [Installation with docker file](#installation-with-docker-file)
+    - [1. Install Docker Client:](#1-install-docker-client)
+    - [2. Download Dockerfile](#2-download-dockerfile)
+     - [3. Build Docker Image](#3-build-docker-image)
+     - [4. Create Docker Container](#4-create-docker-container)
+     - [5. Access RStudio Server](#5-access-rstudio-server)
+  - [Installation with conda](#installation-with-conda)
+     - [Step 1: Environment Setup](#step-1-environment-setup)
+     - [Step 2: Install Python Dependencies](#step-2-install-python-dependencies)
+     - [Step 3: Install Tools](#step-3-install-tools)
+     - [Step 4: Install SCSES R Package](#step-4-install-scses-r-package)
+     - [Tips for some Installation errors](#tips-for-some-installation-errors)
+- [SCSES input](#scses-input)
+  - [1. BAM Files](#1-bam-files)
+  - [2. Reference Genome Files](#2-reference-genome-files)
+  - [3. Configuration File](#3-configuration-file)
+  - [4. Phast conservation file in bigWig format](#4-phast-conservation-file-in-bigwig-format)
+  - [5. RBP](#5-rbp)
+- [Getting started](#getting-started)
+  - [Download Test Data](#download-test-data)
+    - [Setup](#setup)
+  - [Step-by-Step Analysis](#step-by-step-analysis)
+    - [Step 1. Read config file](#step-1-read-config-file)
+    - [Step 2. Get gene expression](#step-2-get-gene-expression)
+    - [Step 3. Detect splicing events](#step-3-detect-splicing-events)
+    - [Step 4. Quantify splicing events](#step-4-quantify-splicing-events)
+    - [Step 5. Constructs similarity networks](#step-5-constructs-similarity-networks)
+    - [Step 6. Imputation](#step-6-imputation)
+    - [Step 7. Estimation](#step-7-estimation)
+    - [Step 8. Cell Clustering](#step-8-cell-clustering)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-
-# SCSES
-
-<!-- badges: start -->
-
-<!-- badges: end -->
-
-Single-cell Splicing Estimation based on Network Diffusion
-
-## Hardware requirements
+# Requirements
+1. Hardware requirements
 
 `SCSES` package requires only a standard computer with enough RAM to
 support the in-memory operations.
 
-## Software requirements
+2. Software requirements
 
-### OS Requirements
+This package is supported for Linux, and has been tested on Debian-11.21.
 
-This package is supported for Linux.
+# Installation
 
-The package has been tested on Debian-11.21.
-
-## Installation
-
-### Installation with docker file
+## Installation with docker file
 
 SCSES provides a Docker-based installation method to simplify the setup
 of all dependencies and requirements. Please follow the steps below to
 build the Docker image and start a container to use SCSES:
 
-#### 1. Install Docker Client:
+### 1. Install Docker Client:
 
 Please install the [Docker
 client](https://www.docker.com/products/docker-desktop) on the host
