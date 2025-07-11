@@ -47,94 +47,40 @@ support the in-memory operations.
 This package is supported for Linux, and has been tested on Debian-11.21.
 
 # Installation
+We provide two installation options for SCSES: one is a direct installation on a Linux system, and the other is a Docker-based installation, which supports both Windows and Linux platforms (MacOS not tested).
 
-## Installation with docker file
-
-SCSES provides a Docker-based installation method to simplify the setup
-of all dependencies and requirements. Please follow the steps below to
-build the Docker image and start a container to use SCSES:
-
-### 1. Install Docker Client:
-
-Please install the [Docker
-client](https://www.docker.com/products/docker-desktop) on the host
-machine.
-
-#### 2. Download Dockerfile
-
-The Dockerfile of SCSES can be downloaded from:
-<https://github.com/lvxuan12/SCSES/blob/main/SCSES.dockerfile>.
-
-#### 3. Build Docker Image
-
-You can build the SCSES Docker image using the command:
-
-``` bash
-docker build -t scses -f SCSES.dockerfile .
-```
-
-#### 4. Create Docker Container
-
-After building the image, create a Docker container with the following
-command:
-
-``` bash
-docker run -d -p [exported port]:8787 -e PASSWORD=[user password] -v [local directory]:/data --name test scses
-```
-
-`[exported port]`: An **unused** port on the host machine to access the container. To show all **used** ports on the host machine, 
-input the following command in linux terminal `netstat -tuwanp 2|awk '{print $4}'|cut -d ":" -f 2|sort|uniq -c` 
-or ` Get-NetTCPConnection | Where-Object { $_.State -eq "Listen" } | Select-Object -ExpandProperty LocalPort|Sort-Object | Group-Object | Select-Object -Property Count, Name` in Windows Powershell.
-
-`[user password]`: A user-defined password for logging into the RStudio
-server.
-
-`[local directory]`: A local directory mapped to the container for data
-storage and sharing.
-
-#### 5. Access RStudio Server
-
-Now, you can access the RStudio server by opening a web browser and
-navigating to `[host IP]:[exported port]`. The username to log in Rstudio server is
-**`rstudio`** and the password is use-defined in the `docker run` command.
-![Login Page](image.png)
-
-In this pre-configd RStudio server environment, SCSES and all its
-dependencies are correctly installed and ready for use.
-
-Please refer to [Getting started](#getting-started) to start the first
-experience with SCSES.
-
-Enjoy!
-
-### Installation with conda
+## Directly Installation
 
 #### Step 1: Environment Setup
 
-We recommend a new **conda** environment to install SCSES:
+We recommend to use SCSES in a conda virtual environment. Please create a new **conda** environment to install SCSES:
 
 ``` bash
 conda create -n SCSES_test python=3.11
 conda activate SCSES_test
 ```
 
-To use SCSES, you will need to install R, Python, Matlab Compiler
-Runtime(v9.13), and Java(v17.0.10).
+To use SCSES, R, Python, Matlab Compiler Runtime(MCR v9.13), and Java(v17.0.10) are all required.
 
 ``` bash
 ## install R in conda environment
 conda install -c conda-forge r-base=4.3.1
-```
 
-The MCR is quite large, so downloading may take some time.
+## install Java if JDK is not installed
+conda install -c conda-forge openjdk.
 
-``` bash
-## install MCR
+## install MCR. The MCR is quite large, Please be patient when it's installed.
 mkdir /path/to/MCR && \
 cd /path/to/MCR && \
 wget https://ssd.mathworks.com/supportfiles/downloads/R2022b/Release/10/deployment_files/installer/complete/glnxa64/MATLAB_Runtime_R2022b_Update_10_glnxa64.zip && \
 unzip -q MATLAB_Runtime_R2022b_Update_10_glnxa64.zip && \
 ./install -destinationFolder /opt/mcr -agreeToLicense yes -mode silent
+```
+
+The MCR is quite large, so downloading may take some time.
+
+``` bash
+
 ```
 
 #### Step 2: Install Python Dependencies
@@ -239,6 +185,65 @@ ln -s /usr/lib/x86_64-linux-gnu/libsz.so /path/to/miniconda/envs/SCSES_test/lib/
 ``` bash
 conda upgrade -c conda-forge --all 
 ```
+## Installation with docker file
+
+SCSES provides a Docker-based installation method to simplify the setup
+of all dependencies and requirements. Please follow the steps below to
+build the Docker image and start a container to use SCSES:
+
+### 1. Install Docker Client:
+
+Please install the [Docker
+client](https://www.docker.com/products/docker-desktop) on the host
+machine.
+
+#### 2. Download Dockerfile
+
+The Dockerfile of SCSES can be downloaded from:
+<https://github.com/lvxuan12/SCSES/blob/main/SCSES.dockerfile>.
+
+#### 3. Build Docker Image
+
+You can build the SCSES Docker image using the command:
+
+``` bash
+docker build -t scses -f SCSES.dockerfile .
+```
+
+#### 4. Create Docker Container
+
+After building the image, create a Docker container with the following
+command:
+
+``` bash
+docker run -d -p [exported port]:8787 -e PASSWORD=[user password] -v [local directory]:/data --name test scses
+```
+
+`[exported port]`: An **unused** port on the host machine to access the container. To show all **used** ports on the host machine, 
+input the following command in linux terminal `netstat -tuwanp 2|awk '{print $4}'|cut -d ":" -f 2|sort|uniq -c` 
+or ` Get-NetTCPConnection | Where-Object { $_.State -eq "Listen" } | Select-Object -ExpandProperty LocalPort|Sort-Object | Group-Object | Select-Object -Property Count, Name` in Windows Powershell.
+
+`[user password]`: A user-defined password for logging into the RStudio
+server.
+
+`[local directory]`: A local directory mapped to the container for data
+storage and sharing.
+
+#### 5. Access RStudio Server
+
+Now, you can access the RStudio server by opening a web browser and
+navigating to `[host IP]:[exported port]`. The username to log in Rstudio server is
+**`rstudio`** and the password is use-defined in the `docker run` command.
+![Login Page](image.png)
+
+In this pre-configd RStudio server environment, SCSES and all its
+dependencies are correctly installed and ready for use.
+
+Please refer to [Getting started](#getting-started) to start the first
+experience with SCSES.
+
+Enjoy!
+
 
 ## SCSES input
 
