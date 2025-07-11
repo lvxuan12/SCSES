@@ -51,7 +51,7 @@ We provide two installation options for SCSES: one is a direct installation on a
 
 ## Directly Installation
 
-#### Step 1: Environment Setup
+### Step 1: Environment Setup
 
 We recommend to use SCSES in a conda virtual environment. Please create a new **conda** environment to install SCSES:
 
@@ -76,8 +76,7 @@ wget https://ssd.mathworks.com/supportfiles/downloads/R2022b/Release/10/deployme
 unzip -q MATLAB_Runtime_R2022b_Update_10_glnxa64.zip && \
 ./install -destinationFolder /opt/mcr -agreeToLicense yes -mode silent
 ```
-
-#### Step 2: Install Python Dependencies
+### Step 2: Install Python Dependencies
 Please install following pythen dependencies in the conda environment
 
 ``` bash
@@ -85,8 +84,7 @@ pip install pandas numpy scipy scikit-learn
 pip install keras==2.15.0
 pip install tensorflow==2.15.0.post1
 ```
-
-#### Step 3: Install splicing event detection tools
+### Step 3: Install splicing event detection tools
 
 To detect splicing events, you will need to install rMATS, MAJIQ,
 IRFinder. rMATS should be built in the same environment with SCSES (same
@@ -138,23 +136,29 @@ STAR.
 
 <b>3.4 [Install samtools](https://github.com/samtools/samtools)</b>
 
-#### Step 4: Install SCSES R Package
+``` bash
+  wget https://github.com/samtools/samtools/releases/download/1.21/samtools-1.21.tar.bz2 
+  bzip2 -d samtools-1.21.tar.bz2 
+  tar -xvf samtools-1.21.tar
+  cd samtools-1.21 
+  ./configure
+  make & make install
+```
+### Step 4: Install SCSES R Package
 
-Currently SCSES can only be installed from GitHub.
-
-To install SCSES, type the following command in **R**:
+To install SCSES, type the following command in **R** console:
 
 ``` r
 install.packages("remotes")
+# The version of package "Matrix" should <=1.6-5
 remotes::install_version("Matrix", version = "1.6-5")
 install.packages("curl",config.vars='LIB_DIR=/usr/lib/x86_64-linux-gnu/pkgconfig/')
 options(download.file.method = "wget", times=100)
 remotes::install_github("lvxuan12/SCSES")
 ```
+### Tips for potential errors
 
-#### Tips for some Installation errors
-
-##### Issue 1. cannot find fftw.h
+1. Issue 1. cannot find fftw.h
 
 ``` bash
 conda install conda-forge::fftw
@@ -163,41 +167,41 @@ export FFTW_CFLAGS=" -I/path/to/miniconda3/envs/scses/include/"
 export FFTW_LIBS=" -L/path/to/miniconda3/envs/scses/lib -lfftw3"
 ```
 
-##### Issue 2. cannot find -lxml2
+2.  Issue 2. cannot find -lxml2
 
 ``` bash
 conda install conda-forge::libxml2
 ```
 
-##### Issue 3. cannot find -lsz
+3. Issue 3. cannot find -lsz
 
 ``` bash
 ln -s /usr/lib/x86_64-linux-gnu/libsz.so /path/to/miniconda/envs/SCSES_test/lib/libsz.so
 ```
 
-##### Issue 4. error: ‘::timespec_get’ has not been declared
+4. Issue 4. error: ‘::timespec_get’ has not been declared
 
 ``` bash
 conda upgrade -c conda-forge --all 
 ```
-## Installation with docker file
+## Docker-based Installation
 
 SCSES provides a Docker-based installation method to simplify the setup
 of all dependencies and requirements. Please follow the steps below to
 build the Docker image and start a container to use SCSES:
 
-### 1. Install Docker Client:
+### Step 1. Install Docker Client:
 
 Please install the [Docker
 client](https://www.docker.com/products/docker-desktop) on the host
 machine.
 
-#### 2. Download Dockerfile
+### Step 2. Download Dockerfile
 
 The Dockerfile of SCSES can be downloaded from:
 <https://github.com/lvxuan12/SCSES/blob/main/SCSES.dockerfile>.
 
-#### 3. Build Docker Image
+### Step 3. Build Docker Image
 
 You can build the SCSES Docker image using the command:
 
@@ -205,7 +209,7 @@ You can build the SCSES Docker image using the command:
 docker build -t scses -f SCSES.dockerfile .
 ```
 
-#### 4. Create Docker Container
+### Step 4. Create Docker Container
 
 After building the image, create a Docker container with the following
 command:
@@ -224,7 +228,7 @@ server.
 `[local directory]`: A local directory mapped to the container for data
 storage and sharing.
 
-#### 5. Access RStudio Server
+### Step 5. Access RStudio Server
 
 Now, you can access the RStudio server by opening a web browser and
 navigating to `[host IP]:[exported port]`. The username to log in Rstudio server is
@@ -239,22 +243,22 @@ experience with SCSES.
 
 Enjoy!
 
+## Getting started
 
-## SCSES input
-
+### Data preparation
 SCSES requires five essential input files:
 
-### 1. BAM Files
+<b> 1. BAM Files </b>
 
 - **Format**: Coordinate-sorted BAM files with index (.bai)
 
-### 2. Reference Genome Files
+<b> 2. Reference Genome Files </b>
 
 - **FASTA**: Reference genome sequence
 - **GTF**: Gene annotations
 - **GFF3**: Gene annotations
 
-### 3. Configuration File
+<b> 3. Configuration File </b>
 
 SCSES requires a json-based configuration file to set all parameters in the algorithm. Here is a [demo](https://github.com/lvxuan12/SCSES/blob/main/inst/analysis/cell_line.json) of the configure file.
 For a detailed explanation of the configuration file, please refer to the [ConfigurationGuide.txt](https://github.com/lvxuan12/SCSES/blob/main/ConfigurationGuide.txt).
@@ -303,7 +307,7 @@ Therefore, the default parameters in `createConfigshiny` are not suitable. Pleas
 which provides default values optimized for the test dataset.
 
 
-### 4. Phast conservation file in bigWig format
+<b> 4. Phast conservation file in bigWig format </b>
 
 For human and mouse, you could download it directly from UCSC browser:
 
@@ -313,7 +317,7 @@ For human and mouse, you could download it directly from UCSC browser:
 | Human (hg19) | hg19.100way.phastCons.bw | 5.4 GB | [Download](http://hgdownload.cse.ucsc.edu/goldenPath/hg19/phastCons100way/hg19.100way.phastCons.bw) |
 | Mouse (mm10) | mm10.60way.phastCons.bw | 4.3 GB | [Download](http://hgdownload.cse.ucsc.edu/goldenPath/mm10/phastCons60way/mm10.60way.phastCons.bw) |
 
-### 5. RBP
+<b> 5. RBP </b>
 
 Genes annotated as RBP are required to constructs similarity networks.
 For human and mouse, you could read from package:
@@ -354,8 +358,6 @@ cat("First 10 RBPs:", head(rbp_list, 10), sep = "\n")
 #> Cugbp2
 #> Sf3a1
 ```
-
-## Getting started
 
 ### Download Test Data
 
