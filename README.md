@@ -77,13 +77,8 @@ unzip -q MATLAB_Runtime_R2022b_Update_10_glnxa64.zip && \
 ./install -destinationFolder /opt/mcr -agreeToLicense yes -mode silent
 ```
 
-The MCR is quite large, so downloading may take some time.
-
-``` bash
-
-```
-
 #### Step 2: Install Python Dependencies
+Please install following pythen dependencies in the conda environment
 
 ``` bash
 pip install pandas numpy scipy scikit-learn
@@ -91,14 +86,14 @@ pip install keras==2.15.0
 pip install tensorflow==2.15.0.post1
 ```
 
-#### Step 3: Install Tools
+#### Step 3: Install splicing event detection tools
 
-To detect splicing events You will need to install rMATS, MAJIQ,
+To detect splicing events, you will need to install rMATS, MAJIQ,
 IRFinder. rMATS should be built in the same environment with SCSES (same
 python). MAJIQ should be built in a new environment due to conflict of
 python package version，
 
-##### 3.1 [rMATS](https://github.com/Xinglab/rmats-turbo)
+<b>3.1 [Install rMATS](https://github.com/Xinglab/rmats-turbo)</b>
 
 ``` bash
 wget https://github.com/Xinglab/rmats-turbo/releases/download/v4.3.0/rmats_turbo_v4_3_0.tar.gz
@@ -111,7 +106,7 @@ pip install Cython
 export PATH=/path/to/rmats_turbo_v4_3_0/:$PATH
 ```
 
-##### 3.2 [MAJIQ](https://biociphers.bitbucket.io/majiq-docs/index.html)
+<b>3.2 [Install MAJIQ](https://biociphers.bitbucket.io/majiq-docs/index.html)</b>
 
 ``` bash
 conda create -n MAJIQ python=3.11
@@ -129,7 +124,7 @@ export MAJIQ_LICENSE_FILE=/path/to/majiq_license_academic_official.lic
 
 **NOTE:** MAJIQ will not function without providing the license file.
 
-##### 3.3 [IRFinder](https://github.com/dgaolab/IRFinder)
+<b>3.3 [Install IRFinder](https://github.com/dgaolab/IRFinder)</b>
 
 ``` bash
 wget https://github.com/RitchieLabIGH/IRFinder/archive/refs/tags/v2.0.1.tar.gz
@@ -141,7 +136,7 @@ export PATH=/path/to/IRFinder-2.0.1/bin/:$PATH
 IRFinder reference! To run IRFinder correctly, you also need to install
 STAR.
 
-##### 3.4 [samtools](https://github.com/samtools/samtools)
+<b>3.4 [Install samtools](https://github.com/samtools/samtools)</b>
 
 #### Step 4: Install SCSES R Package
 
