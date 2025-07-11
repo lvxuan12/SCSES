@@ -1,5 +1,6 @@
 ![](logo.png)
 ================
+- [](#)
 - [Requirements](#requirements)
 - [Installation](#installation)
   - [Directly Installation](#directly-installation)
@@ -14,7 +15,7 @@
     - [Step 3. Build Docker Image](#step-3-build-docker-image)
     - [Step 4. Create Docker Container](#step-4-create-docker-container)
     - [Step 5. Access RStudio Server](#step-5-access-rstudio-server)
-- [Get started](#get-started)
+- [Get Started](#get-started)
   - [Data preparation](#data-preparation)
   - [Download Test Data](#download-test-data)
   - [Step-by-Step Analysis](#step-by-step-analysis)
@@ -243,7 +244,7 @@ experience with SCSES.
 
 Enjoy!
 
-# Get started
+# Get Started
 
 ## Data preparation
 SCSES requires five essential input files:
