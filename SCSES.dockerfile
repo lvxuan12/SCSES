@@ -152,3 +152,5 @@ RUN cd /software && \
     wget https://github.com/RitchieLabIGH/IRFinder/archive/refs/tags/v2.0.1.tar.gz && \
     tar -zxvf v2.0.1.tar.gz
 ENV PATH=$PATH:/usr/lib/jvm/java-8-openjdk-amd64/bin:/software/IRFinder-2.0.1/bin/:/software/samtools/bin:/software/subread-2.0.6-source/bin
+ENV HTSLIB_LIBRARY_DIR=/software/htslib/lib
+ENV HTSLIB_INCLUDE_DIR=/software/htslib/include
