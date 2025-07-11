@@ -1,4 +1,4 @@
-[](logo.png)
+![SCSES](logo.png)
 Menu
 ================
 
