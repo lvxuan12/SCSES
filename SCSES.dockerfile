@@ -33,7 +33,7 @@ RUN echo "" >/etc/apt/sources.list.d/ubuntu.sources && \
     apt-get install -y libtirpc-dev && \
     apt-get install -y libbz2-dev && \
     apt-get install -y liblzma-dev && \
-    #apt-get install -y libtinfo-dev=6.3-2ubuntu0.1 && \
+    @apt-get install -y libtinfo-dev=6.3-2ubuntu0.1 && \
     apt-get install -y libncurses5-dev libncursesw5-dev && \
     apt-get install -y libgsl-dev && \
     apt-get install -y cmake && \
@@ -143,11 +143,12 @@ RUN mkdir /MCR && \
     rm -rf MCR
 # Install R packages
 RUN R -e "install.packages(c('BiocManager','jsonlite','Matrix','reticulate','irlba','reshape2','R.matlab','rhdf5','hdf5r','R.oo','glmnet','caret','devtools'),dependencies=T,Ncpus=8)" && \
-#    R -e "devtools::install_github('dipterix/threeBrain',Ncpus=8)" && \
-#    R -e "devtools::install_github('jonclayden/RNifti',Ncpus=8)" && \
-#    R -e "devtools::install_github('beauchamplab/raveio',Ncpus=8)" && \
-#    R -e "BiocManager::install(c('Rsamtools','Rhtslib'),Ncpus=8)" && \
-#    R -e "BiocManager::install(c('rtracklayer', 'BSgenome', 'Biostrings', 'GenomicRanges', 'IRanges', 'rhdf5','BSgenomeForge'),Ncpus=8)" && \
+    R -e "devtools::install_github('dipterix/threeBrain',Ncpus=8)" && \
+    R -e "devtools::install_github('jonclayden/RNifti',Ncpus=8)" && \
+    R -e "devtools::install_github('beauchamplab/raveio',Ncpus=8)" && \
+    R -e "BiocManager::install(c('Rsamtools','Rhtslib'),Ncpus=8)" && \
+    R -e "BiocManager::install(c('rtracklayer', 'BSgenome', 'Biostrings', 'GenomicRanges', 'IRanges', 'rhdf5','BSgenomeForge'),Ncpus=8)" && \
+    R -e "devtools::install_version('Seurat', version = '4.4.0')"  && \
     R -e "devtools::install_github('lvxuan12/SCSES',ref='SCSES_docker',Ncpus=8)"
  #   echo PATH=/software/IRFinder-1.3.1/bin/util:$PATH >>/etc/profile
 RUN cd /software && \
