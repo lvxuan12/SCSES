@@ -1,86 +1,207 @@
-[](logo.png)
-Menu
+![](logo.png)
 ================
+- [Requirements](#requirements)
+- [Installation](#installation)
+  - [Directly Installation](#directly-installation)
+    - [Step 1: Environment Setup](#step-1-environment-setup)
+    - [Step 2: Install Python Dependencies](#step-2-install-python-dependencies)
+    - [Step 3: Install splicing event detection tools](#step-3-install-splicing-event-detection-tools)
+    - [Step 4: Install SCSES R Package](#step-4-install-scses-r-package)
+    - [Tips for potential errors](#tips-for-potential-errors)
+  - [Docker-based Installation](#docker-based-installation)
+    - [Step 1. Install Docker Client:](#step-1-install-docker-client)
+    - [Step 2. Download Dockerfile](#step-2-download-dockerfile)
+    - [Step 3. Build Docker Image](#step-3-build-docker-image)
+    - [Step 4. Create Docker Container](#step-4-create-docker-container)
+    - [Step 5. Access RStudio Server](#step-5-access-rstudio-server)
+- [Get Started](#get-started)
+  - [Data preparation](#data-preparation)
+  - [Download Test Data](#download-test-data)
+  - [Step-by-Step Analysis](#step-by-step-analysis)
+    - [Step 0. Get the cofigure file](#step-0-get-the-cofigure-file)
+    - [Step 1. Read config file](#step-1-read-config-file)
+    - [Step 2. Get gene expression](#step-2-get-gene-expression)
+      - [TPM matrix (for smart-seq2 dataset)](#tpm-matrix-for-smart-seq2-dataset)
+      - [Normalized UMI count matrix (for UMI-based dataset)](#normalized-umi-count-matrix-for-umi-based-dataset)
+    - [Step 3. Detect splicing events](#step-3-detect-splicing-events)
+      - [For Smart-seq2 dataset](#for-smart-seq2-dataset)
+      - [For UMI-based dataset](#for-umi-based-dataset)
+    - [Step 4. Quantify splicing events](#step-4-quantify-splicing-events)
+    - [Step 5. Constructs similarity networks](#step-5-constructs-similarity-networks)
+    - [Step 6. Imputation](#step-6-imputation)
+    - [Step 7. Estimation](#step-7-estimation)
+      - [7.1. Estimation based on pre-trained model](#71-estimation-based-on-pre-trained-model)
+      - [7.2. Estimation based on fine-tuned model](#72-estimation-based-on-fine-tuned-model)
+    - [Step 8. Cell Clustering](#step-8-cell-clustering)
 
-- [SCSES](#scses)
-  - [Hardware requirements](#hardware-requirements)
-  - [Software requirements](#software-requirements)
-    - [OS Requirements](#os-requirements)
-  - [Installation](#installation)
-    - [Installation with docker file](#installation-with-docker-file)
-      - [1. Install Docker Client:](#1-install-docker-client)
-      - [2. Download Dockerfile](#2-download-dockerfile)
-      - [3. Build Docker Image](#3-build-docker-image)
-      - [4. Create Docker Container](#4-create-docker-container)
-      - [5. Access RStudio Server](#5-access-rstudio-server)
-    - [Installation with conda](#installation-with-conda)
-      - [Step 1: Environment Setup](#step-1-environment-setup)
-      - [Step 2: Install Python Dependencies](#step-2-install-python-dependencies)
-      - [Step 3: Install Tools](#step-3-install-tools)
-      - [Step 4: Install SCSES R Package](#step-4-install-scses-r-package)
-      - [Tips for some Installation errors](#tips-for-some-installation-errors)
-  - [SCSES input](#scses-input)
-    - [1. BAM Files](#1-bam-files)
-    - [2. Reference Genome Files](#2-reference-genome-files)
-    - [3. Configuration File](#3-configuration-file)
-    - [4. Phast conservation file in bigWig format](#4-phast-conservation-file-in-bigwig-format)
-    - [5. RBP](#5-rbp)
-  - [Getting started](#getting-started)
-    - [Download Test Data](#download-test-data)
-      - [Setup](#setup)
-    - [Step-by-Step Analysis](#step-by-step-analysis)
-      - [Step 1. Read config file](#step-1-read-config-file)
-      - [Step 2. Get gene expression](#step-2-get-gene-expression)
-      - [Step 3. Detect splicing events](#step-3-detect-splicing-events)
-      - [Step 4. Quantify splicing events](#step-4-quantify-splicing-events)
-      - [Step 5. Constructs similarity networks](#step-5-constructs-similarity-networks)
-      - [Step 6. Imputation](#step-6-imputation)
-      - [Step 7. Estimation](#step-7-estimation)
-      - [Step 8. Cell Clustering](#step-8-cell-clustering)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-
-# SCSES
-
-<!-- badges: start -->
-
-<!-- badges: end -->
-
-Single-cell Splicing Estimation based on Network Diffusion
-
-## Hardware requirements
+# Requirements
+<b>1. Hardware requirements</b>
 
 `SCSES` package requires only a standard computer with enough RAM to
 support the in-memory operations.
 
-## Software requirements
+<b>2. Software requirements</b>
 
-### OS Requirements
+This package is supported for Linux, and has been tested on Debian-11.21.
 
-This package is supported for Linux.
+# Installation
+We provide two installation options for SCSES: one is a direct installation on a Linux system, and the other is a Docker-based installation, which supports both Windows and Linux platforms (MacOS not tested).
 
-The package has been tested on Debian-11.21.
+## Directly Installation
 
-## Installation
+### Step 1: Environment Setup
 
-### Installation with docker file
+We recommend to use SCSES in a conda virtual environment. Please create a new **conda** environment to install SCSES:
+
+``` bash
+conda create -n SCSES_test python=3.11
+conda activate SCSES_test
+```
+
+To use SCSES, R, Python, Matlab Compiler Runtime(MCR v9.13), and Java(v17.0.10) are all required.
+
+``` bash
+## install R in conda environment
+conda install -c conda-forge r-base=4.3.1
+
+## install Java if JDK is not installed
+conda install -c conda-forge openjdk.
+
+## install MCR. The MCR is quite large, Please be patient when it's installed.
+mkdir /path/to/MCR && \
+cd /path/to/MCR && \
+wget https://ssd.mathworks.com/supportfiles/downloads/R2022b/Release/10/deployment_files/installer/complete/glnxa64/MATLAB_Runtime_R2022b_Update_10_glnxa64.zip && \
+unzip -q MATLAB_Runtime_R2022b_Update_10_glnxa64.zip && \
+./install -destinationFolder /opt/mcr -agreeToLicense yes -mode silent
+```
+### Step 2: Install Python Dependencies
+Please install following pythen dependencies in the conda environment
+
+``` bash
+pip install pandas numpy scipy scikit-learn
+pip install keras==2.15.0
+pip install tensorflow==2.15.0.post1
+```
+### Step 3: Install splicing event detection tools
+
+To detect splicing events, you will need to install rMATS, MAJIQ,
+IRFinder. rMATS should be built in the same environment with SCSES (same
+python). MAJIQ should be built in a new environment due to conflict of
+python package version，
+
+<b>3.1 [Install rMATS](https://github.com/Xinglab/rmats-turbo)</b>
+
+``` bash
+wget https://github.com/Xinglab/rmats-turbo/releases/download/v4.3.0/rmats_turbo_v4_3_0.tar.gz
+tar -zxvf rmats_turbo_v4_3_0.tar.gz
+cd rmats_turbo_v4_3_0/
+# Install dependencies
+pip install Cython
+# Add to PATH
+./build_rmats
+export PATH=/path/to/rmats_turbo_v4_3_0/:$PATH
+```
+
+<b>3.2 [Install MAJIQ](https://biociphers.bitbucket.io/majiq-docs/index.html)</b>
+
+``` bash
+conda create -n MAJIQ python=3.11
+conda activate MAJIQ
+
+# install HTSlib from <https://www.htslib.org/download/>
+# change to where library/include directories are installed
+
+export HTSLIB_LIBRARY_DIR=/path/to/htslib-1.15.1/lib/
+export HTSLIB_INCLUDE_DIR=/path/to/htslib-1.15.1/include/
+
+pip install git+https://bitbucket.org/biociphers/majiq_academic.git@v2.5.7
+export MAJIQ_LICENSE_FILE=/path/to/majiq_license_academic_official.lic
+```
+
+**NOTE:** MAJIQ will not function without providing the license file.
+
+<b>3.3 [Install IRFinder](https://github.com/dgaolab/IRFinder)</b>
+
+``` bash
+wget https://github.com/RitchieLabIGH/IRFinder/archive/refs/tags/v2.0.1.tar.gz
+tar -zxvf v2.0.1.tar.gz
+export PATH=/path/to/IRFinder-2.0.1/bin/:$PATH
+```
+
+**NOTE:** [STAR](https://github.com/alexdobin/STAR) is required to build
+IRFinder reference! To run IRFinder correctly, you also need to install
+STAR.
+
+<b>3.4 [Install samtools](https://github.com/samtools/samtools)</b>
+
+``` bash
+  wget https://github.com/samtools/samtools/releases/download/1.21/samtools-1.21.tar.bz2 
+  bzip2 -d samtools-1.21.tar.bz2 
+  tar -xvf samtools-1.21.tar
+  cd samtools-1.21 
+  ./configure
+  make & make install
+```
+### Step 4: Install SCSES R Package
+
+To install SCSES, type the following command in **R** console:
+
+``` r
+install.packages("remotes")
+# The version of package "Matrix" should <=1.6-5
+remotes::install_version("Matrix", version = "1.6-5")
+install.packages("curl",config.vars='LIB_DIR=/usr/lib/x86_64-linux-gnu/pkgconfig/')
+options(download.file.method = "wget", times=100)
+remotes::install_github("lvxuan12/SCSES")
+```
+### Tips for potential errors
+
+1. Issue 1. cannot find fftw.h
+
+``` bash
+conda install conda-forge::fftw
+# config FFTW
+export FFTW_CFLAGS=" -I/path/to/miniconda3/envs/scses/include/"
+export FFTW_LIBS=" -L/path/to/miniconda3/envs/scses/lib -lfftw3"
+```
+
+2.  Issue 2. cannot find -lxml2
+
+``` bash
+conda install conda-forge::libxml2
+```
+
+3. Issue 3. cannot find -lsz
+
+``` bash
+ln -s /usr/lib/x86_64-linux-gnu/libsz.so /path/to/miniconda/envs/SCSES_test/lib/libsz.so
+```
+
+4. Issue 4. error: ‘::timespec_get’ has not been declared
+
+``` bash
+conda upgrade -c conda-forge --all 
+```
+## Docker-based Installation
 
 SCSES provides a Docker-based installation method to simplify the setup
 of all dependencies and requirements. Please follow the steps below to
 build the Docker image and start a container to use SCSES:
 
-#### 1. Install Docker Client:
+### Step 1. Install Docker Client:
 
 Please install the [Docker
 client](https://www.docker.com/products/docker-desktop) on the host
 machine.
 
-#### 2. Download Dockerfile
+### Step 2. Download Dockerfile
 
 The Dockerfile of SCSES can be downloaded from:
 <https://github.com/lvxuan12/SCSES/blob/main/SCSES.dockerfile>.
 
-#### 3. Build Docker Image
+### Step 3. Build Docker Image
 
 You can build the SCSES Docker image using the command:
 
@@ -88,7 +209,7 @@ You can build the SCSES Docker image using the command:
 docker build -t scses -f SCSES.dockerfile .
 ```
 
-#### 4. Create Docker Container
+### Step 4. Create Docker Container
 
 After building the image, create a Docker container with the following
 command:
@@ -107,12 +228,12 @@ server.
 `[local directory]`: A local directory mapped to the container for data
 storage and sharing.
 
-#### 5. Access RStudio Server
+### Step 5. Access RStudio Server
 
 Now, you can access the RStudio server by opening a web browser and
 navigating to `[host IP]:[exported port]`. The username to log in Rstudio server is
 **`rstudio`** and the password is use-defined in the `docker run` command.
-![Login Page](image.png)
+![Login Page](https://github.com/lvxuan12/SCSES/blob/main/image.png)
 
 In this pre-configd RStudio server environment, SCSES and all its
 dependencies are correctly installed and ready for use.
@@ -122,156 +243,78 @@ experience with SCSES.
 
 Enjoy!
 
-### Installation with conda
+# Get Started
 
-#### Step 1: Environment Setup
-
-We recommend a new **conda** environment to install SCSES:
-
-``` bash
-conda create -n SCSES_test python=3.11
-conda activate SCSES_test
-```
-
-To use SCSES, you will need to install R, Python, Matlab Compiler
-Runtime(v9.13), and Java(v17.0.10).
-
-``` bash
-## install R in conda environment
-conda install -c conda-forge r-base=4.3.1
-```
-
-The MCR is quite large, so downloading may take some time.
-
-``` bash
-## install MCR
-mkdir /path/to/MCR && \
-cd /path/to/MCR && \
-wget https://ssd.mathworks.com/supportfiles/downloads/R2022b/Release/10/deployment_files/installer/complete/glnxa64/MATLAB_Runtime_R2022b_Update_10_glnxa64.zip && \
-unzip -q MATLAB_Runtime_R2022b_Update_10_glnxa64.zip && \
-./install -destinationFolder /opt/mcr -agreeToLicense yes -mode silent
-```
-
-#### Step 2: Install Python Dependencies
-
-``` bash
-pip install pandas numpy scipy scikit-learn
-pip install keras==2.15.0
-pip install tensorflow==2.15.0.post1
-```
-
-#### Step 3: Install Tools
-
-To detect splicing events You will need to install rMATS, MAJIQ,
-IRFinder. rMATS should be built in the same environment with SCSES (same
-python). MAJIQ should be built in a new environment due to conflict of
-python package version，
-
-##### 3.1 [rMATS](https://github.com/Xinglab/rmats-turbo)
-
-``` bash
-wget https://github.com/Xinglab/rmats-turbo/releases/download/v4.3.0/rmats_turbo_v4_3_0.tar.gz
-tar -zxvf rmats_turbo_v4_3_0.tar.gz
-cd rmats_turbo_v4_3_0/
-# Install dependencies
-pip install Cython
-# Add to PATH
-./build_rmats
-export PATH=/path/to/rmats_turbo_v4_3_0/:$PATH
-```
-
-##### 3.2 [MAJIQ](https://biociphers.bitbucket.io/majiq-docs/index.html)
-
-``` bash
-conda create -n MAJIQ python=3.11
-conda activate MAJIQ
-
-# install HTSlib from <https://www.htslib.org/download/>
-# change to where library/include directories are installed
-
-export HTSLIB_LIBRARY_DIR=/path/to/htslib-1.15.1/lib/
-export HTSLIB_INCLUDE_DIR=/path/to/htslib-1.15.1/include/
-
-pip install git+https://bitbucket.org/biociphers/majiq_academic.git
-export MAJIQ_LICENSE_FILE=/path/to/majiq_license_academic_official.lic
-```
-
-**NOTE:** MAJIQ will not function without providing the license file.
-
-##### 3.3 [IRFinder](https://github.com/dgaolab/IRFinder)
-
-``` bash
-wget https://github.com/RitchieLabIGH/IRFinder/archive/refs/tags/v2.0.1.tar.gz
-tar -zxvf v2.0.1.tar.gz
-export PATH=/path/to/IRFinder-2.0.1/bin/:$PATH
-```
-
-**NOTE:** [STAR](https://github.com/alexdobin/STAR) is required to build
-IRFinder reference! To run IRFinder correctly, you also need to install
-STAR.
-
-##### 3.4 [samtools](https://github.com/samtools/samtools)
-
-#### Step 4: Install SCSES R Package
-
-Currently SCSES can only be installed from GitHub.
-
-To install SCSES, type the following command in **R**:
-
-``` r
-install.packages("remotes")
-remotes::install_version("Matrix", version = "1.6-5")
-install.packages("curl",config.vars='LIB_DIR=/usr/lib/x86_64-linux-gnu/pkgconfig/')
-options(download.file.method = "wget", times=100)
-remotes::install_github("lvxuan12/SCSES")
-```
-
-#### Tips for some Installation errors
-
-##### Issue 1. cannot find fftw.h
-
-``` bash
-conda install conda-forge::fftw
-# config FFTW
-export FFTW_CFLAGS=" -I/path/to/miniconda3/envs/scses/include/"
-export FFTW_LIBS=" -L/path/to/miniconda3/envs/scses/lib -lfftw3"
-```
-
-##### Issue 2. cannot find -lxml2
-
-``` bash
-conda install conda-forge::libxml2
-```
-
-##### Issue 3. cannot find -lsz
-
-``` bash
-ln -s /usr/lib/x86_64-linux-gnu/libsz.so /path/to/miniconda/envs/SCSES_test/lib/libsz.so
-```
-
-##### Issue 4. error: ‘::timespec_get’ has not been declared
-
-``` bash
-conda upgrade -c conda-forge --all 
-```
-
-## SCSES input
-
+## Data preparation
 SCSES requires five essential input files:
 
-### 1. BAM Files
+<b> 1. BAM Files </b>
 
 - **Format**: Coordinate-sorted BAM files with index (.bai)
 
-### 2. Reference Genome Files
+<b> 2. Reference Genome Files </b>
 
 - **FASTA**: Reference genome sequence
 - **GTF**: Gene annotations
 - **GFF3**: Gene annotations
 
-### 3. Configuration File
+<b> 3. Phast conservation file in bigWig format </b>
 
-SCSES requires a json-based configuration file to set all parameters in the algorithm. Here is a [demo](https://github.com/lvxuan12/SCSES/blob/main/inst/analysis/cell_line.json) of the configure file.
+For human and mouse, you could download it directly from UCSC browser:
+
+| Species | File | Size | Link |
+|----|----|----|----|
+| Human (hg38) | hg38.phastCons100way.bw | 5.5 GB | [Download](http://hgdownload.cse.ucsc.edu/goldenPath/hg38/phastCons100way/hg38.phastCons100way.bw) |
+| Human (hg19) | hg19.100way.phastCons.bw | 5.4 GB | [Download](http://hgdownload.cse.ucsc.edu/goldenPath/hg19/phastCons100way/hg19.100way.phastCons.bw) |
+| Mouse (mm10) | mm10.60way.phastCons.bw | 4.3 GB | [Download](http://hgdownload.cse.ucsc.edu/goldenPath/mm10/phastCons60way/mm10.60way.phastCons.bw) |
+
+<b> 4. RBP </b>
+
+Genes annotated as RBP are required to constructs similarity networks.
+The SCSES package includes predefined lists of RBPs (RNA-binding proteins) for both human and mouse. You can access the lists using the following command:
+
+``` r
+# Load human RBP list
+rbp_human <- system.file("extdata/rbp/human_rbp.txt", package = "SCSES")
+rbp_list <- readLines(rbp_human)
+cat("Total RBPs:", length(rbp_list), "\n")
+#> Total RBPs: 1456
+cat("First 10 RBPs:", head(rbp_list, 10), sep = "\n")
+#> First 10 RBPs:
+#> A1CF
+#> AC004381.6
+#> ACIN1
+#> ACO1
+#> AKAP1
+#> ALKBH8
+#> ALYREF
+#> ANKHD1
+#> ANKRD17
+#> APTX
+```
+``` r
+# Load mouse RBP list
+rbp_mouse <- system.file("extdata/rbp/mouse_rbp.txt", package = "SCSES")
+rbp_list <- readLines(rbp_mouse)
+cat("Total RBPs:", length(rbp_list), "\n")
+#> Total RBPs: 611
+cat("First 10 RBPs:", head(rbp_list, 10), sep = "\n")
+#> First 10 RBPs:
+#> Mcts1
+#> Mkrn2
+#> Hnrnpd
+#> Fmr1
+#> Snrpn
+#> Pcbp3
+#> Trmt1
+#> Supt6h
+#> Cugbp2
+#> Sf3a1
+```
+
+<a name='config' style="text-decoration: none;"><b> 5. Configuration File </b></a>
+
+SCSES requires a json-based configuration file to set all parameters in the algorithm. Here is a [demo config file](https://github.com/lvxuan12/SCSES/blob/main/inst/analysis/cell_line.json) of the configure file.
 For a detailed explanation of the configuration file, please refer to the [ConfigurationGuide.txt](https://github.com/lvxuan12/SCSES/blob/main/ConfigurationGuide.txt).
 
 SCSES provides a shiny app to help you to generate the confugre file. You can start the app by `createConfigshiny` function.
@@ -309,116 +352,43 @@ If you are using **test data** in this Tutorial, you should use `createDemoConfi
 function instead to build the configuration file:
 
 ``` r
+# For non-docker users
+library(SCSES)
+createDemoConfigshiny(host = "localhost", launch.browser=FALSE) 
+```
+``` r
+# For docker users
 library(SCSES)
 createDemoConfigshiny(host = "localhost", launch.browser=TRUE) 
 ```
-
 **Note**: The test dataset includes fewer cells and events to ensure faster completation of the Tutorial. 
 Therefore, the default parameters in `createConfigshiny` are not suitable. Please use the `createDemoConfigshiny` function instead, 
 which provides default values optimized for the test dataset.
 
+## Download Test Data
 
-### 4. Phast conservation file in bigWig format
+The [test dataset](https://doi.org/10.5281/zenodo.15688700) includes BAM files from 15 cells across three cell lines (HCT116, HepG2, and HL-60), with five cells per cell type. It also contains all essential input files required to run the SCSES package. 
 
-For human and mouse, you could download it directly from UCSC browser:
+The test dataset is available at https://doi.org/10.5281/zenodo.15688700. The complete list of downloadable files is provided in the table below.
 
-| Species | File | Size | Link |
+| File Type | File Name | Description | File counts |
 |----|----|----|----|
-| Human (hg38) | hg38.phastCons100way.bw | 5.5 GB | [Download](http://hgdownload.cse.ucsc.edu/goldenPath/hg38/phastCons100way/hg38.phastCons100way.bw) |
-| Human (hg19) | hg19.100way.phastCons.bw | 5.4 GB | [Download](http://hgdownload.cse.ucsc.edu/goldenPath/hg19/phastCons100way/hg19.100way.phastCons.bw) |
-| Mouse (mm10) | mm10.60way.phastCons.bw | 4.3 GB | [Download](http://hgdownload.cse.ucsc.edu/goldenPath/mm10/phastCons60way/mm10.60way.phastCons.bw) |
+| **BAM** | `*.bam` | BAM files for three cell lines, each containing five cells | 15 |
+| **BAI** | `*.bam.bai` | BAM index files | 15 |
+| **TXT** | `annotation.txt` | Cell identities | 1 |
+| **FASTA** | `test.fa` | Reference genome sequence | 1 |
+| **FAI** | `test.fa.fai` | Reference genome sequence index | 1 |
+| **Annotation** | `test.gtf` | Gene annotation file | 1 |
+| **Annotation** | `test.gff3` | Gene annotation file | 1 |
+| **TXT** | `human_rbp.txt` | RNA-binding proteins list | 1 |
+| **PhastCons** | `test_phastCons.bw` | Conservation scores | 1 |
+| **JSON** | `cell_line.json` | Parameters config file for SCSES | 1 |
 
-### 5. RBP
-
-Genes annotated as RBP are required to constructs similarity networks.
-For human and mouse, you could read from package:
-
-``` r
-# Load human RBP list
-rbp_human <- system.file("extdata/rbp/human_rbp.txt", package = "SCSES")
-rbp_list <- readLines(rbp_human)
-cat("Total RBPs:", length(rbp_list), "\n")
-#> Total RBPs: 1456
-cat("First 10 RBPs:", head(rbp_list, 10), sep = "\n")
-#> First 10 RBPs:
-#> A1CF
-#> AC004381.6
-#> ACIN1
-#> ACO1
-#> AKAP1
-#> ALKBH8
-#> ALYREF
-#> ANKHD1
-#> ANKRD17
-#> APTX
-# Load mouse RBP list
-rbp_mouse <- system.file("extdata/rbp/mouse_rbp.txt", package = "SCSES")
-rbp_list <- readLines(rbp_mouse)
-cat("Total RBPs:", length(rbp_list), "\n")
-#> Total RBPs: 611
-cat("First 10 RBPs:", head(rbp_list, 10), sep = "\n")
-#> First 10 RBPs:
-#> Mcts1
-#> Mkrn2
-#> Hnrnpd
-#> Fmr1
-#> Snrpn
-#> Pcbp3
-#> Trmt1
-#> Supt6h
-#> Cugbp2
-#> Sf3a1
-```
-
-## Getting started
-
-### Download Test Data
-
-This dataset includes BAM files for three cell lines (HCT116, HepG2,
-HL-60), each containing five cells and other input files that are
-essential for running the SCSES package.
-
-**Download**: <https://doi.org/10.5281/zenodo.15688700>
-
-| File Type | File Name | Description |
-|----|----|----|
-| **BAM** | `*.bam` | BAM files for three cell lines, each containing five cells |
-| **BAI** | `*.bam.bai` | BAM index files |
-| **TXT** | `annotation.txt` | Cell identities |
-| **FASTA** | `test.fa` | Reference genome sequence |
-| **FAI** | `test.fa.fai` | Reference genome sequence index |
-| **Annotation** | `test.gtf` | Gene annotation file |
-| **Annotation** | `test.gff3` | Gene annotation file |
-| **TXT** | `human_rbp.txt` | RNA-binding proteins list |
-| **PhastCons** | `test_phastCons.bw` | Conservation scores |
-| **JSON** | `cell_line.json` | Parameters config file |
-
-#### Setup
-
-After download, ensure you have:
-
-- 15 BAM files + index files
-
-- annotation.txt: cell identities
-
-- test.fa and test.fai: reference genome sequence
-
-- test.gtf and test.gff: gene annotation file
-
-- test_phastCons.bw: conservation scores
-
-- human_rbp.txt: RBP genes list
-
-- cell_line.json: parameters config file
-
-Move 15 BAM files and their index to `bam` directory.
-
-Move other input data to `refgenome` directory.
+**Note:** After download, please move all BAM files and their index to an empty directory (such as `bam`), and move other files into another directory (such as `refgenome`).
 
 ``` bash
 # Example:
 ls /disk/share/lvxuan/SCSES_test/bam/
-ls /disk/share/lvxuan/SCSES_test/refgenome/
 #> SRR11826368.bam
 #> SRR11826368.bam.bai
 #> SRR11826371.bam
@@ -449,6 +419,7 @@ ls /disk/share/lvxuan/SCSES_test/refgenome/
 #> SRR1275305.bam.bai
 #> SRR1275317.bam
 #> SRR1275317.bam.bai
+ls /disk/share/lvxuan/SCSES_test/refgenome/
 #> annotation.txt
 #> cell_line.json
 #> human_rbp.txt
@@ -459,17 +430,19 @@ ls /disk/share/lvxuan/SCSES_test/refgenome/
 #> test_phastCons.bw
 ```
 
-### Step-by-Step Analysis
+## Step-by-Step Analysis
 
-#### Step 0. Get the cofigure file
-The paramteter configuration for test dataset is the *cell_line.json* in the downloaded files. 
+### Step 0. Get the cofigure file
+You can create the configuration file using the Shiny app. To start the app, run `createConfigshiny` function. Details can be found in [here](#config)
 
-Alternatively, you can create the configuration file using the Shiny app.
-**Note**: The test dataset includes fewer cells and chromosomes to ensure faster completation of the Tutorial. 
+**Note1**: The test dataset includes fewer cells and chromosomes to ensure faster completation of the Tutorial. 
 Therefore, the default parameters in **`createConfigshiny`** are **not suitable**. Please use the **`createDemoConfigshiny`** function instead, 
 which provides default values optimized for the test dataset.
 
-#### Step 1. Read config file
+**Note2**:The paramteter configuration for test dataset also contained in the downloaded files as  *cell_line.json*. 
+
+
+### Step 1. Read config file
 
 The `cell_line.json` file was downloaded previously
 
@@ -488,8 +461,12 @@ library(SCSES)
 #> Warning: replacing previous import 'hdf5r::values' by 'rtracklayer::values'
 #> when loading 'SCSES'
 
-# Load configuration file
+# configure file path
+## user-defined configure file
+config_file <- "/path/to/your/config/file"
+## or pre-defied configure file for test data
 config_file <- system.file("analysis/cell_line.json", package = "SCSES")
+# Load configuration file
 paras <- readSCSESconfig(config_file)
 
 # Verify configuration
@@ -502,9 +479,9 @@ cat("Work path:", paras$Basic$work_path, "\n")
 #> Work path: /disk/share/lvxuan/SCSES_test/
 ```
 
-#### Step 2. Get gene expression
+### Step 2. Get gene expression
 
-##### TPM matrix (for smart-seq2 dataset)
+#### TPM matrix (for smart-seq2 dataset)
 
 The TPM matrix of gene expression can be obtained by different methods.
 We used
@@ -548,7 +525,7 @@ tpm[1:5,1:5]
 
 After this step, directories `expr` and `rds` will be created.
 
-##### Normalized UMI count matrix (for UMI based dataset)
+#### Normalized UMI count matrix (for UMI-based dataset)
 
 You can use `get10XEXPmatrix` to generate Normalized UMI count matrix
 from 10X CellRanger hdf5 file, which will save normalized UMI count to
@@ -560,13 +537,13 @@ from 10X CellRanger hdf5 file, which will save normalized UMI count to
 rds.path <- get10XEXPmatrix(paras, expr_path)
 ```
 
-#### Step 3. Detect splicing events
+### Step 3. Detect splicing events
 
 To define a global set of all splicing events, SCSES firstly merges all
 bam files from every single cell to construct a pseudo-bulk bam file,
 and identifies all types of splicing events by conventional algorithms.
 
-##### For Smart-seq2 dataset
+#### For Smart-seq2 dataset
 
 ``` r
 # Create pseudobulk for event detection
@@ -642,7 +619,7 @@ for(file in event_files) {
 Different types of splicing events will be saved to `work_path/events/`,
 separately.
 
-##### for UMI dataset
+#### For UMI-based dataset
 
 SCSES requires single cell bam files being saved in a directory. For
 UMI-based dataset using CellRanger for data process, the function
@@ -663,7 +640,7 @@ paras$Basic$bam_path = splitbam.path
 event.path = detectEvents(paras)
 ```
 
-#### Step 4. Quantify splicing events
+### Step 4. Quantify splicing events
 
 According to splicing events detected in the previous step, SCSES then
 quantify raw reads associated with these splicing events in each cell,
@@ -813,7 +790,7 @@ Then, data after quality control process will be saved to
 `work_path/rds_processed/`, which will be used for **subsequent
 calculations**.
 
-#### Step 5. Constructs similarity networks
+### Step 5. Constructs similarity networks
 
 To overcome the high dropout rate and limited read coverage of scRNA-seq
 techniques, SCSES constructs cell similarity and event similarity
@@ -1038,7 +1015,7 @@ integrating event sequence similarities.
 | `alpha_event` | 0.8     | 1 - Random walk restart probability |
 | `decay_event` | 0.05    | Convergence threshold               |
 
-#### Step 6. Imputation
+### Step 6. Imputation
 
 Based on these weighted similarity networks, SCSES next will use three
 imputation strategies to aggregate the information across similar cells
@@ -1106,9 +1083,9 @@ str(Imputed_seperated,max.level=3)
 Results of each imputation strategy will be saved
 into`work_path/imputation`.
 
-#### Step 7. Estimation
+### Step 7. Estimation
 
-##### 7.1. Estimation based on pre-trained model
+#### 7.1. Estimation based on pre-trained model
 
 We recommend different imputation strategies for four scenarios defined
 by the abundance of reads counts in the target cell and neighbor cells
@@ -1152,7 +1129,7 @@ object format (.rds) in `work_path/imputation/Imputed_combined*`, where
 **\*** is a random number representing different execution. The `.rds`
 file can be loaded in R environment by `readRDS` function.
 
-##### 7.2. Estimation based on fine-tuned model
+#### 7.2. Estimation based on fine-tuned model
 
 To improve the fitness of models for a new dataset, we also provide a
 procedure to fine-tune the model. For this analysis, we first build a
@@ -1309,7 +1286,7 @@ Imputed_combined[["EXP_RBP"]][1:3,1:3]
 #> isoform1=exon:chr1:169772310-169772450:+@junction:chr1:169772451-169773252:+@exon:chr1:169773253-169773381:+|isoform2=exon:chr1:169772310-169772450:+@junction:chr1:169772451-169773215:+@exon:chr1:169773216-169773381:+|C1orf112|A3SS       0.8639692
 ```
 
-#### Step 8. Cell Clustering
+### Step 8. Cell Clustering
 
 Here is an example of UMAP visualization based on test data:
 
@@ -1367,3 +1344,6 @@ print(p)
 ```
 
 <img src="man/figures/README-Cell Clustering-1.png" width="100%" />
+
+
+[def]: #
