@@ -19,7 +19,7 @@ LazyData: true
 RoxygenNote: 7.3.2
 Depends:
   R (>= 4.2.1),
-  BiocManager
+  BiocManager (=1.70.1)
 biocViews: 
 Imports: 
     shiny,

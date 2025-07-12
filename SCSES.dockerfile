@@ -1,4 +1,4 @@
-FROM rocker/rstudio
+FROM rocker/rstudio:4.3.3
 SHELL ["/bin/bash", "-c"] 
 RUN echo "" >/etc/apt/sources.list.d/ubuntu.sources && \
     echo "Types: deb" >>/etc/apt/sources.list.d/ubuntu.sources && \
