@@ -129,7 +129,8 @@ RUN cd /software && \
     tar -zxvf rmats_turbo_v4_3_0.tar.gz && \
     cd rmats_turbo_v4_3_0 && \
     bash build_rmats && \
-    rm /software/rmats_turbo_v4_3_0.tar.gz    
+    rm /software/rmats_turbo_v4_3_0.tar.gz && \
+    conda install -c conda-forge gcc=12.1.0
 ENV PATH=$PATH:$JAVA_HOME/bin:/software/rmats_turbo_v4_3_0/
 # install MCR
 RUN mkdir /MCR && \
@@ -141,10 +142,10 @@ RUN mkdir /MCR && \
     rm -rf MCR
 # Install R packages
 RUN R -e "install.packages(c('BiocManager','jsonlite','Matrix','reticulate','irlba','reshape2','R.matlab','rhdf5','hdf5r','R.oo','glmnet','caret','devtools'),dependencies=T,Ncpus=8)" && \
-    R -e "devtools::install_github('dipterix/threeBrain',Ncpus=8)" && \
-    R -e "devtools::install_github('jonclayden/RNifti',Ncpus=8)" && \
-    R -e "devtools::install_github('beauchamplab/raveio',Ncpus=8)" && \
-    R -e "BiocManager::install(c('Rsamtools','Rhtslib'),Ncpus=8)" && \
+#    R -e "devtools::install_github('dipterix/threeBrain',Ncpus=8)" && \
+#    R -e "devtools::install_github('jonclayden/RNifti',Ncpus=8)" && \
+#    R -e "devtools::install_github('beauchamplab/raveio',Ncpus=8)" && \
+#    R -e "BiocManager::install(c('Rsamtools','Rhtslib'),Ncpus=8)" && \
 #    R -e "BiocManager::install(c('rtracklayer', 'BSgenome', 'Biostrings', 'GenomicRanges', 'IRanges', 'rhdf5','BSgenomeForge'),Ncpus=8)" && \
     R -e "devtools::install_github('lvxuan12/SCSES',ref='SCSES_docker',Ncpus=8)"
  #   echo PATH=/software/IRFinder-1.3.1/bin/util:$PATH >>/etc/profile

@@ -12,14 +12,14 @@ Description: Alternative splicing (AS) significantly contributes to cellular
     framework called SCSES (Single-Cell Splicing EStimation) to improve the AS 
     profiles, which imputes the junction count matrix and fills in missing AS 
     alternations by sharing information across similar cells or events with data 
-    diffusion.
+    diffusion. This is the version for docker user.
 License: MIT License
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.3.2
 Depends:
   R (>= 4.2.1),
-  BiocManager
+  BiocManager 
 biocViews: 
 Imports: 
     shiny,
@@ -35,7 +35,6 @@ Imports:
     reticulate,
     irlba,
     reshape2,
-    BSgenome (=1.70.1),
     Biostrings,
     GenomicRanges,
     IRanges,
@@ -47,8 +46,18 @@ Imports:
     glmnet,
     caret,
     prompter,
-    dplyr,
-    Seurat (== 4.4.0)
+    dplyr
+Depends:
+  BSgenome (== 1.70.1),
+  Seurat (== 4.4.0),
+  Rsamtools,
+  Rhtslib,
+  rtracklayer,
+  Biostrings,
+  GenomicRanges,
+  IRanges,
+  rhdf5,
+  BSgenomeForge
 Remotes:
   url::https://github.com/dipterix/threeBrain/archive/refs/tags/1.0.1.tar.gz,
   url::https://github.com/jonclayden/RNifti/archive/refs/tags/v1.7.0.tar.gz,
