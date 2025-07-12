@@ -116,7 +116,7 @@ conda activate MAJIQ
 export HTSLIB_LIBRARY_DIR=/path/to/htslib-1.15.1/lib/
 export HTSLIB_INCLUDE_DIR=/path/to/htslib-1.15.1/include/
 
-pip install git+https://bitbucket.org/biociphers/majiq_academic.git
+pip install git+https://bitbucket.org/biociphers/majiq_academic.git@v2.5.7
 export MAJIQ_LICENSE_FILE=/path/to/majiq_license_academic_official.lic
 ```
 
