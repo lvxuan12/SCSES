@@ -48,8 +48,9 @@ Imports:
     prompter,
     dplyr
 Depends:
-  BSgenome (== 1.70.1),
+  BSgenome (== 1.70.2),
   Seurat (== 4.4.0),
+  S4Vectors (== 0.40.2)
   Rsamtools,
   Rhtslib,
   rtracklayer,
