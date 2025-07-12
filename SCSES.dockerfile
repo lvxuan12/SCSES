@@ -33,7 +33,7 @@ RUN echo "" >/etc/apt/sources.list.d/ubuntu.sources && \
     apt-get install -y libtirpc-dev && \
     apt-get install -y libbz2-dev && \
     apt-get install -y liblzma-dev && \
-    @apt-get install -y libtinfo-dev=6.3-2ubuntu0.1 && \
+    #apt-get install -y libtinfo-dev=6.3-2ubuntu0.1 && \
     apt-get install -y libncurses5-dev libncursesw5-dev && \
     apt-get install -y libgsl-dev && \
     apt-get install -y cmake && \
