@@ -27,7 +27,7 @@ server=function(input,output,session){
     }
   }
 
-  updateTextInput(session = session, inputId = gsub(pattern = "_", replacement = "", x = "python_path"), value = getDefaultPath(cmd = "python"))
+  #updateTextInput(session = session, inputId = gsub(pattern = "_", replacement = "", x = "python_path"), value = getDefaultPath(cmd = "python"))
   updateTextInput(session = session,inputId = gsub(pattern = "_",replacement = "",x = 'JAVA_path'),value = getDefaultPath(cmd = 'java'))
   updateTextInput(session = session,inputId = gsub(pattern = "_",replacement = "",x = 'Samtools_path'),value = getDefaultPath(cmd = 'samtools'))
   updateTextInput(session = session,inputId = gsub(pattern = "_",replacement = "",x = 'featurecounts_path'),value = getDefaultPath(cmd = 'featureCounts'))
