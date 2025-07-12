@@ -38,6 +38,7 @@ RUN echo "" >/etc/apt/sources.list.d/ubuntu.sources && \
     apt-get install -y libgsl-dev && \
     apt-get install -y cmake && \
     apt-get install -y libboost-iostreams-dev && \
+    apt-get install -y gcc-12 && \
     apt-get install -y gcc-multilib && \
 	ln /lib/x86_64-linux-gnu/libboost_iostreams.so.1.83.0 /lib/x86_64-linux-gnu/libboost_iostreams.so.1.71.0 && \
     apt-get install -y bedtools && \
