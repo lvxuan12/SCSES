@@ -50,6 +50,7 @@ Imports:
 Depends:
   BSgenome (== 1.70.1),
   Seurat (== 4.4.0),
+  S4Vectors (== 0.40.2)
   Rsamtools,
   Rhtslib,
   rtracklayer,
