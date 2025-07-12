@@ -96,9 +96,9 @@ RUN export HTSLIB_LIBRARY_DIR=/software/htslib/lib && \
     export HTSLIB_INCLUDE_DIR=/software/htslib/include && \
     chmod 777 -R /software/htslib && \
     cd /software && \
-    conda install -c conda-forge gxx=12.1.0 && \
-    conda install conda-forge::zstd && \
-    pip install git+https://bitbucket.org/biociphers/majiq_academic.git && \
+    conda install -c conda-forge gcc=12.1.0 && \
+    #conda install conda-forge::zstd && \
+    pip install git+https://bitbucket.org/biociphers/majiq_academic.git@v2.5.7 && \
     wget https://majiq.biociphers.org/app_download/majiq_license_academic_official.lic
 
 # install STAR
