@@ -143,12 +143,13 @@ RUN mkdir /MCR && \
     rm -rf MCR
 # Install R packages
 RUN R -e "install.packages(c('BiocManager','jsonlite','Matrix','reticulate','irlba','reshape2','R.matlab','rhdf5','hdf5r','R.oo','glmnet','caret','devtools'),dependencies=T,Ncpus=8)" && \
-    R -e "devtools::install_github('dipterix/threeBrain',Ncpus=8)" && \
-    R -e "devtools::install_github('jonclayden/RNifti',Ncpus=8)" && \
-    R -e "devtools::install_github('beauchamplab/raveio',Ncpus=8)" && \
-    R -e "BiocManager::install(c('Rsamtools','Rhtslib'),Ncpus=8)" && \
-    R -e "BiocManager::install(c('rtracklayer', 'BSgenome', 'Biostrings', 'GenomicRanges', 'IRanges', 'rhdf5','BSgenomeForge'),Ncpus=8)" && \
-    R -e "devtools::install_version('Seurat', version = '4.4.0')"  && \
+    R -e "devtools::install_github('dipterix/threeBrain',Ncpus=8,upgrade='never')" && \
+    R -e "devtools::install_github('jonclayden/RNifti',Ncpus=8,upgrade='never')" && \
+    R -e "devtools::install_github('beauchamplab/raveio',Ncpus=8,upgrade='never')" && \
+    R -e "BiocManager::install(c('Rsamtools','Rhtslib','S4Vectors'),Ncpus=8,update=F)" && \
+    R -e "BiocManager::install(c('rtracklayer', 'Biostrings', 'GenomicRanges', 'IRanges', 'rhdf5'),Ncpus=8,update=F)" && \
+    R -e "devtools::install_version('BSgenome', version = '1.70.2', repos = 'https://bioconductor.org/packages/3.16/bioc',upgrade='never')" && \
+    R -e "devtools::install_version('Seurat', version = '4.4.0',upgrade='never')"  && \
     R -e "devtools::install_github('lvxuan12/SCSES',ref='SCSES_docker',Ncpus=8)"
  #   echo PATH=/software/IRFinder-1.3.1/bin/util:$PATH >>/etc/profile
 RUN cd /software && \
