@@ -848,7 +848,11 @@ getEventSimilarity <- function(
             dimnames(event_similar) = list(events$event, events$event)
         }else{
           if (nrow(events) < kevent) {
-            print("The number of events is smaller than K-event!")
+            stop(sprintf(
+              "The number of events is %d, which is smaller than the specified K-event (%d).
+              Please set 'kevent' to a value less than %d and greater than 1.",
+              nrow(events), kevent, nrow(events)
+            ))
           }
           token <- paste(Sys.getpid(), rbinom(1, size = 1000000000, prob = 0.5), sep = "-")
           inpath <- paste0(dirname(output_path), "/knn_data_", token, ".h5")
