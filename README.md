@@ -237,8 +237,9 @@ docker run -d -p 1234:8787 -e PASSWORD=william -v /d/SCSES/:/data --name test sc
 ### Step 5. Access RStudio Server
 
 Now, you can access the RStudio server by opening a web browser and
-navigating to `[host IP]:[exported port]`. In the above example, you can access by `https://localhost:1234` or `https://127.0.0.1:1234`.
-The username to log in Rstudio server is **`rstudio`** and the password is use-defined in the `docker run` command (**`william`** in the example).
+navigating to `[host IP]:[exported port]`. 
+
+If you run the above example locally (not remote server), you can access by `http://localhost:1234` or `http://127.0.0.1:1234`. The username to log in Rstudio server is **`rstudio`** and the password is use-defined in the `docker run` command (**`william`** in the example).
 ![Login Page](https://github.com/lvxuan12/SCSES/blob/main/login.png)
 
 In this pre-configd RStudio server environment, SCSES and all its

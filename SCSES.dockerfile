@@ -165,7 +165,7 @@ RUN R -e "devtools::install_version('Seurat', version = '4.4.0',upgrade='never')
 RUN R -e "BiocManager::install(c('Rsamtools','Rhtslib','S4Vectors'),Ncpus=8,update=F)" 
 RUN R -e "BiocManager::install(c('rtracklayer', 'Biostrings', 'GenomicRanges', 'IRanges', 'rhdf5'),Ncpus=8,update=F)" 
 RUN R -e "devtools::install_version('BSgenome', version = '1.70.2', repos = 'https://bioconductor.org/packages/3.18/bioc',upgrade='never',dependencies=T)" 
-RUN R -e "devtools::insall_github('lvxuan12/SCSES',ref='SCSES_docker',Ncpus=8,upgrade='never')"
+RUN R -e "devtools::install_github('lvxuan12/SCSES',ref='SCSES_docker',Ncpus=8,upgrade='never')"
 RUN R -e "install.packages('umap',dependencies=T,Ncpus=8)"
  #   echo PATH=/software/IRFinder-1.3.1/bin/util:$PATH >>/etc/profile
 RUN cd /software && \
