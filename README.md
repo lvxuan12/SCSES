@@ -240,12 +240,13 @@ Now, you can access the RStudio server by opening a web browser and
 navigating to `[host IP]:[exported port]`. 
 
 If you run the above example locally (not remote server), you can access by `http://localhost:1234` or `http://127.0.0.1:1234`. The username to log in Rstudio server is **`rstudio`** and the password is use-defined in the `docker run` command (**`william`** in the example).
+
 ![Login Page](https://github.com/lvxuan12/SCSES/blob/main/login.png)
 
-In this pre-configd RStudio server environment, SCSES and all its
+In this pre-configured RStudio server environment, SCSES and all its
 dependencies are correctly installed and ready for use.
 
-Please refer to [Getting started](#getting-started) to start the first
+Please refer to [Getting Started](#getting-started) to start the first
 experience with SCSES.
 
 Enjoy!
@@ -261,7 +262,7 @@ SCSES requires five essential input files:
 
   **Note**: SCSES also supports UMI-based datasets, which should be organized following the CellRanger-standard directory structure. This includes a merged BAM file containing reads from all cells (**possorted_genome_bam.bam**), a compressed barcode file (**barcodes.tsv.gz**), and a gene expression matrix in HDF5 format (**filtered_feature_bc_matrix.h5**). You can use the `split10XBAM` function to split the merged BAM file into individual BAM files for each cell based on cell barcodes, as shown below:
   
-  ``` bash
+  ``` R
   # CellRanger_path: directory to CellRanger output
   # out_path: directory to save single cell bam
   # java_path: directory to java
