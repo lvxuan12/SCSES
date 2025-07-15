@@ -372,7 +372,7 @@ After setting all parameters, you can click `Create Config` button and a json fi
 Therefore, the default parameters in `createConfigshiny` are not suitable. Please use the `createDemoConfigshiny` function instead, 
 which provides default values optimized for the test dataset.
 
-**For docker users**:
+**For non-docker users**:
 ``` r
 # For non-docker users
 library(SCSES)
@@ -387,7 +387,7 @@ createDemoConfigshiny(host = "localhost", launch.browser=TRUE)
 
 ## Download Test Data
 
-The [test dataset](https://doi.org/10.5281/zenodo.15688700) includes BAM files from 15 cells across three cell lines (HCT116, HepG2, and HL-60), with five cells per cell type. It also contains all essential input files required to run the SCSES package. 
+The [test dataset](https://doi.org/10.5281/zenodo.15688700) includes BAM files from 15 cells across three cell lines (HCT116, HepG2, and HL-60), with five cells per cell type, which are sequenced by SMART-Seq2. It also contains all essential input files required to run the SCSES package. 
 
 The test dataset is available at https://doi.org/10.5281/zenodo.15688700. The complete list of downloadable files is provided in the table below.
 
