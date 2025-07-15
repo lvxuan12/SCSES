@@ -338,7 +338,7 @@ For a detailed explanation of the configuration file, please refer to the [Confi
 
 SCSES provides a shiny app to help you to generate the confugre file. You can start the app by `createConfigshiny` function.
 
-+ For non-docker users of SCSES, the full command should be:
+**For non-docker users of SCSES**, the full command should be:
 ``` r
 library(SCSES)
 createConfigshiny(host, port, launch.browser=FALSE) 
@@ -356,12 +356,13 @@ After running `createConfigshiny`, you will see a URL appear in
 the console. Copy this URL and paste it into your web browser to access
 the application.
 
-+ For docker users of SCSES, you can use the following command, and the web page will be opened automatically:
+**For docker users of SCSES**, you can use the following command, and the web page will be opened automatically:
 
 ``` r
 library(SCSES)
 createConfigshiny(host = "localhost",launch.browser=TRUE) 
 ```
+~~~~~~~~
 The web page allows you to specify parameters used in SCSES, such as the BAM file path, the working directory, etc. The hint of each parameter can be found by hovering the mouse over the widget.
 
 After setting all parameters, you can click `Create Config` button and a json file will be generated in the `work_path` you provided if all paramters are set correctly.
