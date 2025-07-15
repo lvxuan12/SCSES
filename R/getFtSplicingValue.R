@@ -29,6 +29,9 @@ getFtRawRC <- function(
     core = paras$Basic$core, sequence = paras$Basic$sequence,
     genome_name = paras$Basic$refgenome$genome_name) {
     options("scipen" = 100)
+    if (!genome_name %in% c("hg19", "hg38")) {
+      stop("Error: genome_name must be either 'hg19' or 'hg38'")
+    }
     # script
     jar_path <- system.file("java", package = "SCSES")
     java_path <- paras$Basic$java_path

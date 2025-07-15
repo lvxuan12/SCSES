@@ -564,9 +564,10 @@ getEventSimilarity <- function(
     msg = paste0("[", Sys.time(), "] ", "step1 Creating BSgenome for ", pkg, "=======", "")
     print(msg)
     if (!requireNamespace(pkg, quietly = TRUE)) {
-      conda_lib <- file.path(Sys.getenv("CONDA_PREFIX"), "lib", "R", "library")
+      libpath=.libPaths()
+      libpath=unlist(strsplit(libpath," "))[1]
       createBSgenome(ref_path = ref_path,
-                     out_path = output_path, pkg = pkg,install_lib = conda_lib
+                     out_path = output_path, pkg = pkg,install_lib = libpath
       )
     }
     library(pkg, character.only = T, quietly = T)
@@ -848,7 +849,11 @@ getEventSimilarity <- function(
             dimnames(event_similar) = list(events$event, events$event)
         }else{
           if (nrow(events) < kevent) {
-            print("The number of events is smaller than K-event!")
+            stop(sprintf(
+              "The number of events is %d, which is smaller than the specified K-event (%d).
+              Please set 'kevent' to a value less than %d and greater than 1.",
+              nrow(events), kevent, nrow(events)
+            ))
           }
           token <- paste(Sys.getpid(), rbinom(1, size = 1000000000, prob = 0.5), sep = "-")
           inpath <- paste0(dirname(output_path), "/knn_data_", token, ".h5")
