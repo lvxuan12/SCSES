@@ -338,7 +338,7 @@ For a detailed explanation of the configuration file, please refer to the [Confi
 
 SCSES provides a shiny app to help you to generate the confugre file. You can start the app by `createConfigshiny` function.
 
-For non-docker users of SCSES, the full command should be:
++ For non-docker users of SCSES, the full command should be:
 ``` r
 library(SCSES)
 createConfigshiny(host, port, launch.browser=FALSE) 
@@ -356,7 +356,7 @@ After running `createConfigshiny`, you will see a URL appear in
 the console. Copy this URL and paste it into your web browser to access
 the application.
 
-For docker users of SCSES, you can use the following command, and the web page will be opened automatically:
++ For docker users of SCSES, you can use the following command, and the web page will be opened automatically:
 
 ``` r
 library(SCSES)
