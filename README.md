@@ -350,21 +350,20 @@ You should set the following parameters:
 
 - launch.borwser: if launch the app in the default web browser automatically, default is FALSE. Setting launch.browser = TRUE may cause errors in headless environments (servers without GUI) or when no default browser is configured
 
+
+After running `createConfigshiny`, you will see a URL appear in
+the console. Copy this URL and paste it into your web browser to access
+the application.
+
 For docker users of SCSES, you can use the following command, and the web page will be opened automatically:
 
 ``` r
 library(SCSES)
 createConfigshiny(host = "localhost",launch.browser=TRUE) 
 ```
+The web page allows you to specify parameters used in SCSES, such as the BAM file path, the working directory, etc. The hint of each parameter can be found by hovering the mouse over the widget.
 
-After running `createConfigshiny`, you will see a URL appear in
-the console. Copy this URL and paste it into your web browser to access
-the application.
-
-An interactive window will popup, which allow you to
-fill some parameters, such as Bam File Path, and Work Path. The meaning of each parameter can be found by hovering the mouse over the widget.
-
-Finally, you can click `Create Config` button and a json file will be generated in the `work_path` you provided if successful.
+After setting all parameters, you can click `Create Config` button and a json file will be generated in the `work_path` you provided if all paramters are set correctly.
 
 If you are using **test data** in this Tutorial, you should use `createDemoConfigshiny`
 function instead to build the configuration file:
