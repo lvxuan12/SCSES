@@ -363,28 +363,27 @@ library(SCSES)
 createConfigshiny(host = "localhost",launch.browser=TRUE) 
 ```
 
--------
-
 The web page allows you to specify parameters used in SCSES, such as the BAM file path, the working directory, etc. The hint of each parameter can be found by hovering the mouse over the widget.
 
 After setting all parameters, you can click `Create Config` button and a json file will be generated in the `work_path` you provided if all paramters are set correctly.
 
-If you are using **test data** in this Tutorial, you should use `createDemoConfigshiny`
-function instead to build the configuration file:
+-------
+**Note**: The **test dataset** in this Tutorial includes a limited number of cells and events to ensure faster completation of the Tutorial. 
+Therefore, the default parameters in `createConfigshiny` are not suitable. Please use the `createDemoConfigshiny` function instead, 
+which provides default values optimized for the test dataset.
 
+**For docker users**:
 ``` r
 # For non-docker users
 library(SCSES)
 createDemoConfigshiny(host = "localhost", launch.browser=FALSE) 
 ```
+**For docker users**:
 ``` r
 # For docker users
 library(SCSES)
 createDemoConfigshiny(host = "localhost", launch.browser=TRUE) 
 ```
-**Note**: The test dataset includes fewer cells and events to ensure faster completation of the Tutorial. 
-Therefore, the default parameters in `createConfigshiny` are not suitable. Please use the `createDemoConfigshiny` function instead, 
-which provides default values optimized for the test dataset.
 
 ## Download Test Data
 
@@ -456,7 +455,7 @@ ls /disk/share/lvxuan/SCSES_test/refgenome/
 ### Step 0. Get the cofigure file
 You can create the configuration file using the Shiny app. To start the app, run `createConfigshiny` function. Details can be found in [here](#config)
 
-**Note1**: The test dataset includes fewer cells and chromosomes to ensure faster completation of the Tutorial. 
+**Note1**: The test dataset includes a limited number of cells and chromosomes to ensure faster completation of the Tutorial. 
 Therefore, the default parameters in **`createConfigshiny`** are **not suitable**. Please use the **`createDemoConfigshiny`** function instead, 
 which provides default values optimized for the test dataset.
 
