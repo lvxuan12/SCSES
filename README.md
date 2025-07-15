@@ -190,7 +190,7 @@ SCSES provides a Docker-based installation method to simplify the setup
 of all dependencies and requirements. Please follow the steps below to
 build the Docker image and start a container to use SCSES:
 
-### Step 1. Install Docker Client:
+### Step 1. Install Docker Client
 
 Please install the [Docker
 client](https://www.docker.com/products/docker-desktop) on the host
@@ -228,12 +228,18 @@ server.
 `[local directory]`: A local directory mapped to the container for data
 storage and sharing.
 
+Here is an example. In this case, We map host port `1234` to container port `8787`, set the RStudio Server login password to `william`, and mount the host directory `/d/SCSES/` (Windows system) to the container directory `/data`. This allows data located in `/d/SCSES` on the host to be accessed inside the Docker container at `/data`.
+
+``` bash
+docker run -d -p 1234:8787 -e PASSWORD=william -v /d/SCSES/:/data --name test scses
+```
+
 ### Step 5. Access RStudio Server
 
 Now, you can access the RStudio server by opening a web browser and
-navigating to `[host IP]:[exported port]`. The username to log in Rstudio server is
-**`rstudio`** and the password is use-defined in the `docker run` command.
-![Login Page](https://github.com/lvxuan12/SCSES/blob/main/image.png)
+navigating to `[host IP]:[exported port]`. In the above example, you can access by `https://localhost:1234` or `https://127.0.0.1:1234`.
+The username to log in Rstudio server is **`rstudio`** and the password is use-defined in the `docker run` command (**`william`** in the example).
+![Login Page](https://github.com/lvxuan12/SCSES/blob/main/login.png)
 
 In this pre-configd RStudio server environment, SCSES and all its
 dependencies are correctly installed and ready for use.
