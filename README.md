@@ -455,11 +455,11 @@ ls /disk/share/lvxuan/SCSES_test/refgenome/
 ### Step 0. Get the cofigure file
 You can create the configuration file using the Shiny app. To start the app, run `createConfigshiny` function. Details can be found in [here](#config)
 
-**Note1**: The test dataset includes a limited number of cells and chromosomes to ensure faster completation of the Tutorial. 
-Therefore, the default parameters in **`createConfigshiny`** are **not suitable**. Please use the **`createDemoConfigshiny`** function instead, 
+**Note1**: The **test dataset** includes a limited number of cells and chromosomes to ensure faster completation of the Tutorial. 
+Therefore, the default parameters in **`createConfigshiny`** are **not suitable**. Please use  **`createDemoConfigshiny`** function instead, 
 which provides default values optimized for the test dataset.
 
-**Note2**:The paramteter configuration for test dataset also contained in the downloaded files as  *cell_line.json*. 
+**Note2**: An example of parameter configuration for the test dataset is also included in the downloaded files as **cell_line.json**. However, users should modify the file and program paths according to their own system environments.
 
 
 ### Step 1. Read config file
