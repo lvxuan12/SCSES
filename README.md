@@ -362,7 +362,7 @@ the application.
 library(SCSES)
 createConfigshiny(host = "localhost",launch.browser=TRUE) 
 ```
-----
+=======
 The web page allows you to specify parameters used in SCSES, such as the BAM file path, the working directory, etc. The hint of each parameter can be found by hovering the mouse over the widget.
 
 After setting all parameters, you can click `Create Config` button and a json file will be generated in the `work_path` you provided if all paramters are set correctly.
