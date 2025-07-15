@@ -257,7 +257,18 @@ SCSES requires five essential input files:
 
 <b> 1. BAM Files </b>
 
-- **Format**: Coordinate-sorted BAM files with index (.bai)
+- **Format**: Coordinate-sorted BAM files with index (.bai) for each cell.
+
+  **Note**: SCSES also supports UMI-based datasets, which should be organized following the CellRanger-standard directory structure. This includes a merged BAM file containing reads from all cells (**possorted_genome_bam.bam**), a compressed barcode file (**barcodes.tsv.gz**), and a gene expression matrix in HDF5 format (**filtered_feature_bc_matrix.h5**). You can use the `split10XBAM` function to split the merged BAM file into individual BAM files for each cell based on cell barcodes, as shown below:
+  
+  ``` bash
+  # CellRanger_path: directory to CellRanger output
+  # out_path: directory to save single cell bam
+  # java_path: directory to java
+  # core: the number of threads
+
+  splitbam.path = split10XBAM(CellRanger_path,out_path,java_path,core)
+  ```
 
 <b> 2. Reference Genome Files </b>
 
@@ -534,7 +545,7 @@ After this step, directories `expr` and `rds` will be created.
 
 #### Normalized UMI count matrix (for UMI-based dataset)
 
-You can use `get10XEXPmatrix` to generate Normalized UMI count matrix
+For UMI-based dataset, SCSES provides `get10XEXPmatrix` function to generate Normalized UMI count matrix
 from 10X CellRanger hdf5 file, which will save normalized UMI count to
 `work_path/rds/`.
 
@@ -549,8 +560,6 @@ rds.path <- get10XEXPmatrix(paras, expr_path)
 To define a global set of all splicing events, SCSES firstly merges all
 bam files from every single cell to construct a pseudo-bulk bam file,
 and identifies all types of splicing events by conventional algorithms.
-
-#### For Smart-seq2 dataset
 
 ``` r
 # Create pseudobulk for event detection
@@ -625,27 +634,6 @@ for(file in event_files) {
 
 Different types of splicing events will be saved to `work_path/events/`,
 separately.
-
-#### For UMI-based dataset
-
-SCSES requires single cell bam files being saved in a directory. For
-UMI-based dataset using CellRanger for data process, the function
-`split10XBAM` can be used to get single cell bam files for each sample.
-
-``` r
-# CellRanger_path: directory to CellRanger output
-# out_path: directory to save single cell bam
-# java_path: directory to java
-# core: the number of threads
-
-splitbam.path = split10XBAM(CellRanger_path,out_path,java_path,core)
-
-# path to single cell bam files should be added to bam_path in config file
-paras$Basic$bam_path = splitbam.path
-# pseudobulk.path = createPseudobulk(paras)
-# It is not necessary to execute `createPseudobulk`, and the `possorted_genome_bam.bam`,`possorted_genome_bam.bam.bai` from `CellRanger_path` can be moved to `work_path/data/all.bam`.
-event.path = detectEvents(paras)
-```
 
 ### Step 4. Quantify splicing events
 
