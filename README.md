@@ -510,7 +510,7 @@ TPM matrix, which will save gene expression count and TPM matrix to
 `work_path/rds/`.
 
 ``` r
-# An example output by cell_line.json file in our environment#
+# An example output by cell_line.json file in our environment
 cat("Quantifying gene expression...\n")
 #> Quantifying gene expression...
 featurecounts.path = getGeneExpression(paras) 
@@ -561,7 +561,7 @@ bam files from every single cell to construct a pseudo-bulk bam file,
 and identifies all types of splicing events by conventional algorithms.
 
 ``` r
-# Create pseudobulk for event detection
+# Create pseudobulk for event detection (An example output by cell_line.json file in our environment)
 
 pseudobulk.path = createPseudobulk(paras)
 #> [1] "Input: /disk/share/lvxuan/SCSES_test/bam/"
@@ -645,7 +645,7 @@ The definition of PSI of different AS events: ![The definition of PSI of
 different AS events:](png/PSI.png)
 
 ``` r
-# Raw read counts and PSI calculation
+# Raw read counts and PSI calculation (An example output by cell_line.json file in our environment)
 rawrc.path = getRawRC(paras)
 #> [1] "Checking events..."
 #> [1] "event_type=A3SS;A5SS;MXE;RI;SE  checked"
@@ -792,7 +792,7 @@ networks by K-nearest neighbor algorithm (KNN) to learn information from
 similar cells and events.
 
 ``` r
-# Cell similarity networks
+# Cell similarity networks (An example output by cell_line.json file in our environment)
 cellnet.path = getCellSimilarity(paras)
 #> [1] "[2025-06-21 10:46:13.247895] Calculate cell similarity..."
 #> [1] "Input: /disk/share/lvxuan/SCSES_test//rds_processed/"
@@ -1016,7 +1016,7 @@ imputation strategies to aggregate the information across similar cells
 or events to impute read count or PSI value
 
 ``` r
-# Three-strategy imputation
+# Three-strategy imputation (An example output by cell_line.json file in our environment)
 Imputed.data.path = ImputationAll(paras)
 #> [1] "[2025-06-21 11:00:44.883927] Get imputed result using cell similarity and event similarity."
 #> [1] "Checking data..."
