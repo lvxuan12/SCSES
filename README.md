@@ -485,7 +485,7 @@ config_file <- "/path/to/your/config/file"
 # Load configuration file
 paras <- readSCSESconfig(config_file)
 
-# Verify configuration (An example output by cell_line.json file in our environment)
+# Verify configuration (An example output in our environment based on "cell_line.json" file in downloaded demo dataset)
 cat("Dataset:", paras$DataSet, "\n")
 #> Dataset: cell_line
 cat("BAM path:", paras$Basic$bam_path, "\n")
@@ -510,7 +510,8 @@ TPM matrix, which will save gene expression count and TPM matrix to
 `work_path/rds/`.
 
 ``` r
-# An example output by cell_line.json file in our environment
+# An example output in our environment based on "cell_line.json" file in downloaded demo dataset
+
 cat("Quantifying gene expression...\n")
 #> Quantifying gene expression...
 featurecounts.path = getGeneExpression(paras) 
@@ -561,7 +562,8 @@ bam files from every single cell to construct a pseudo-bulk bam file,
 and identifies all types of splicing events by conventional algorithms.
 
 ``` r
-# Create pseudobulk for event detection (An example output by cell_line.json file in our environment)
+# Create pseudobulk for event detection 
+# An example output in our environment based on "cell_line.json" file in downloaded demo dataset
 
 pseudobulk.path = createPseudobulk(paras)
 #> [1] "Input: /disk/share/lvxuan/SCSES_test/bam/"
@@ -645,7 +647,9 @@ The definition of PSI of different AS events: ![The definition of PSI of
 different AS events:](png/PSI.png)
 
 ``` r
-# Raw read counts and PSI calculation (An example output by cell_line.json file in our environment)
+# An example output in our environment based on "cell_line.json" file in downloaded demo dataset
+
+# Raw read counts and PSI calculation 
 rawrc.path = getRawRC(paras)
 #> [1] "Checking events..."
 #> [1] "event_type=A3SS;A5SS;MXE;RI;SE  checked"
@@ -792,6 +796,8 @@ networks by K-nearest neighbor algorithm (KNN) to learn information from
 similar cells and events.
 
 ``` r
+# An example output in our environment based on "cell_line.json" file in downloaded demo dataset
+
 # Cell similarity networks (An example output by cell_line.json file in our environment)
 cellnet.path = getCellSimilarity(paras)
 #> [1] "[2025-06-21 10:46:13.247895] Calculate cell similarity..."
@@ -1016,6 +1022,8 @@ imputation strategies to aggregate the information across similar cells
 or events to impute read count or PSI value
 
 ``` r
+# An example output in our environment based on "cell_line.json" file in downloaded demo dataset
+
 # Three-strategy imputation (An example output by cell_line.json file in our environment)
 Imputed.data.path = ImputationAll(paras)
 #> [1] "[2025-06-21 11:00:44.883927] Get imputed result using cell similarity and event similarity."
@@ -1089,6 +1097,8 @@ SCSES calculates the PSI value using a linear combination of predictions
 from the four strategies, weighted by these probabilities.
 
 ``` r
+# An example output in our environment based on "cell_line.json" file in downloaded demo dataset
+
 # Final estimation with scenario classification
 # rds_imputed_file: path to the list of three imputation strategies results generated in the previous step
 Imputed.data.final.path = Estimation(paras,rds_imputed_file = Imputed.data.path)
@@ -1136,6 +1146,8 @@ which is used to fine-tune the pre-trained model.
 The commands to perform these analyses:
 
 ``` r
+# An example output in our environment based on "cell_line.json" file in downloaded demo dataset
+
 # Final estimation with scenario classification
 ftrc.path = getFtRawRC(paras)
 #> [1] "Loading splicing events for classifer fine tune..."
