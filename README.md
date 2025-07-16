@@ -360,7 +360,7 @@ the application.
 
 ``` r
 library(SCSES)
-createConfigshiny(host = "localhost",launch.browser=TRUE) 
+createConfigshiny(host = "127.0.0.1",launch.browser=TRUE) 
 ```
 
 The web page allows you to specify parameters used in SCSES, such as the BAM file path, the working directory, etc. The hint of each parameter can be found by hovering the mouse over the widget.
@@ -382,7 +382,7 @@ createDemoConfigshiny(host = "localhost", launch.browser=FALSE)
 ``` r
 # For docker users
 library(SCSES)
-createDemoConfigshiny(host = "localhost", launch.browser=TRUE) 
+createDemoConfigshiny(host = "127.0.0.1", launch.browser=TRUE) 
 ```
 
 ## Download Test Data
@@ -452,7 +452,7 @@ ls /disk/share/lvxuan/SCSES_test/refgenome/
 
 ## Step-by-Step Analysis
 
-### Step 0. Get the cofigure file
+### Step 0. Get the configure file
 You can create the configuration file using the Shiny app. To start the app, run `createConfigshiny` function. Details can be found in [here](#config)
 
 **Note1**: The **test dataset** includes a limited number of cells and chromosomes to ensure faster completation of the Tutorial. 
@@ -462,10 +462,8 @@ which provides default values optimized for the test dataset.
 **Note2**: An example of parameter configuration for the test dataset is also included in the downloaded files as **cell_line.json**. However, users should modify the file and program paths according to their own system environments.
 
 
-### Step 1. Read config file
-
-The `cell_line.json` file was downloaded previously
-
+### Step 1. Read configure file
+Set the configure file path, and read the configure file. 
 ``` r
 ## Loading packages
 library(SCSES)
@@ -484,12 +482,10 @@ library(SCSES)
 # configure file path
 ## user-defined configure file
 config_file <- "/path/to/your/config/file"
-## or pre-defied configure file for test data
-config_file <- system.file("analysis/cell_line.json", package = "SCSES")
 # Load configuration file
 paras <- readSCSESconfig(config_file)
 
-# Verify configuration
+# Verify configuration (An example output by cell_line.json file in our environment)
 cat("Dataset:", paras$DataSet, "\n")
 #> Dataset: cell_line
 cat("BAM path:", paras$Basic$bam_path, "\n")
@@ -514,6 +510,7 @@ TPM matrix, which will save gene expression count and TPM matrix to
 `work_path/rds/`.
 
 ``` r
+# An example output by cell_line.json file in our environment#
 cat("Quantifying gene expression...\n")
 #> Quantifying gene expression...
 featurecounts.path = getGeneExpression(paras) 
