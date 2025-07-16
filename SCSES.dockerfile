@@ -84,36 +84,12 @@ RUN cd /software && \
     ./configure --prefix=/software/samtools && \
     make -j 8 && \
     make install && \
-    rm /software/samtools-1.21.tar && \
-    conda create -n MAJIQ python=3.11 -y && \
-    conda create -n SCSES python=3.11 -y
-RUN cd /software && \
-    wget https://github.com/samtools/htslib/releases/download/1.21/htslib-1.21.tar.bz2 && \
-    bzip2 -d htslib-1.21.tar.bz2 && \
-    tar -xvf htslib-1.21.tar && \
-    cd htslib-1.21 && \
-    ./configure --prefix=/software/htslib/ && \
-    make -j 8 && \
-    make install   && \  
-    rm ../htslib-1.21.tar ../htslib-1.21 -rf && \
-    # install featureCoutns
-    cd /software && \
-    wget https://sourceforge.net/projects/subread/files/subread-2.0.6/subread-2.0.6-source.tar.gz && \
-    tar -zxvf subread-2.0.6-source.tar.gz && \
-    cd subread-2.0.6-source/src && \
-    make -f Makefile.Linux -j 8 && \
-    # install samtools
-    cd /software && \
-    wget https://github.com/samtools/samtools/releases/download/1.21/samtools-1.21.tar.bz2 && \
-    bzip2 -d samtools-1.21.tar.bz2 && \
-    tar -xvf samtools-1.21.tar && \
-    cd samtools-1.21 && \
-    ./configure --prefix=/software/samtools && \
-    make -j 8 && \
-    make install && \
-    rm /software/samtools-1.21.tar && \
-    conda create -n MAJIQ python=3.11 -y && \
-    conda create -n SCSES python=3.11 -y
+    rm /software/samtools-1.21.tar
+RUN conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main/ && \
+    conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r/ && \
+    conda create -n MAJIQ python=3.11 --yes && \
+    conda create -n SCSES python=3.11 --yes
+    
 SHELL ["conda", "run", "-n", "SCSES", "/bin/bash", "-c"]
 RUN pip install pandas numpy scipy scikit-learn && \
     pip install keras==2.15.0 && \

@@ -240,12 +240,13 @@ Now, you can access the RStudio server by opening a web browser and
 navigating to `[host IP]:[exported port]`. 
 
 If you run the above example locally (not remote server), you can access by `http://localhost:1234` or `http://127.0.0.1:1234`. The username to log in Rstudio server is **`rstudio`** and the password is use-defined in the `docker run` command (**`william`** in the example).
+
 ![Login Page](https://github.com/lvxuan12/SCSES/blob/main/login.png)
 
-In this pre-configd RStudio server environment, SCSES and all its
+In this pre-configured RStudio server environment, SCSES and all its
 dependencies are correctly installed and ready for use.
 
-Please refer to [Getting started](#getting-started) to start the first
+Please refer to [Getting Started](#getting-started) to start the first
 experience with SCSES.
 
 Enjoy!
@@ -257,7 +258,18 @@ SCSES requires five essential input files:
 
 <b> 1. BAM Files </b>
 
-- **Format**: Coordinate-sorted BAM files with index (.bai)
+- **Format**: Coordinate-sorted BAM files with index (.bai) for each cell.
+
+  **Note**: SCSES also supports UMI-based datasets, which should be organized following the CellRanger-standard directory structure. This includes a merged BAM file containing reads from all cells (**possorted_genome_bam.bam**), a compressed barcode file (**barcodes.tsv.gz**), and a gene expression matrix in HDF5 format (**filtered_feature_bc_matrix.h5**). You can use the `split10XBAM` function to split the merged BAM file into individual BAM files for each cell based on cell barcodes, as shown below:
+  
+  ``` R
+  # CellRanger_path: directory to CellRanger output
+  # out_path: directory to save single cell bam
+  # java_path: directory to java
+  # core: the number of threads
+
+  splitbam.path = split10XBAM(CellRanger_path,out_path,java_path,core)
+  ```
 
 <b> 2. Reference Genome Files </b>
 
@@ -326,55 +338,56 @@ For a detailed explanation of the configuration file, please refer to the [Confi
 
 SCSES provides a shiny app to help you to generate the confugre file. You can start the app by `createConfigshiny` function.
 
-For non-docker users of SCSES, the full command should be:
+**For non-docker users of SCSES**, the full command should be:
 ``` r
 library(SCSES)
 createConfigshiny(host, port, launch.browser=FALSE) 
 ```
 You should set the following parameters:
 
-- host: the server's IP address, for local access, you can set as "localhost" or "127.0.0.1"
+- `host`: the server's IP address, for local access, you can set as "localhost" or "127.0.0.1"
 
-- port: The TCP port that the application should listen on. If the port is not specified, and the shiny.port option is set (with options(shiny.port = XX)), then that port will be used. Otherwise, use a random port between 3000:8000, excluding ports that are blocked by Google Chrome for being considered unsafe: 3659, 4045, 5060, 5061, 6000, 6566, 6665:6669 and 6697. Up to twenty random ports will be tried.
+- `port`: The TCP port that the application should listen on. If the port is not specified, and the shiny.port option is set (with options(shiny.port = XX)), then that port will be used. Otherwise, use a random port between 3000:8000, excluding ports that are blocked by Google Chrome for being considered unsafe: 3659, 4045, 5060, 5061, 6000, 6566, 6665:6669 and 6697. Up to twenty random ports will be tried.
 
-- launch.borwser: if launch the app in the default web browser automatically, default is FALSE. Setting launch.browser = TRUE may cause errors in headless environments (servers without GUI) or when no default browser is configured
+- `launch.borwser`: if launch the app in the default web browser automatically, default is FALSE. Setting launch.browser = TRUE may cause errors in headless environments (servers without GUI) or when no default browser is configured
 
-For docker users of SCSES, you can use the following command, and the web page will be opened automatically:
+
+After running `createConfigshiny`, you will see a URL appear in
+the console. Copy this URL and paste it into your web browser to access
+the application.
+
+**For docker users of SCSES**, you can use the following command, and the web page will be opened automatically:
 
 ``` r
 library(SCSES)
 createConfigshiny(host = "localhost",launch.browser=TRUE) 
 ```
 
-After running `createConfigshiny`, you will see a URL appear in
-the console. Copy this URL and paste it into your web browser to access
-the application.
+The web page allows you to specify parameters used in SCSES, such as the BAM file path, the working directory, etc. The hint of each parameter can be found by hovering the mouse over the widget.
 
-An interactive window will popup, which allow you to
-fill some parameters, such as Bam File Path, and Work Path. The meaning of each parameter can be found by hovering the mouse over the widget.
+After setting all parameters, you can click `Create Config` button and a json file will be generated in the `work_path` you provided if all paramters are set correctly.
 
-Finally, you can click `Create Config` button and a json file will be generated in the `work_path` you provided if successful.
+-------
+**Note**: The **test dataset** in this Tutorial includes a limited number of cells and events to ensure faster completation of the Tutorial. 
+Therefore, the default parameters in `createConfigshiny` are not suitable. Please use the `createDemoConfigshiny` function instead, 
+which provides default values optimized for the test dataset.
 
-If you are using **test data** in this Tutorial, you should use `createDemoConfigshiny`
-function instead to build the configuration file:
-
+**For non-docker users**:
 ``` r
 # For non-docker users
 library(SCSES)
 createDemoConfigshiny(host = "localhost", launch.browser=FALSE) 
 ```
+**For docker users**:
 ``` r
 # For docker users
 library(SCSES)
 createDemoConfigshiny(host = "localhost", launch.browser=TRUE) 
 ```
-**Note**: The test dataset includes fewer cells and events to ensure faster completation of the Tutorial. 
-Therefore, the default parameters in `createConfigshiny` are not suitable. Please use the `createDemoConfigshiny` function instead, 
-which provides default values optimized for the test dataset.
 
 ## Download Test Data
 
-The [test dataset](https://doi.org/10.5281/zenodo.15688700) includes BAM files from 15 cells across three cell lines (HCT116, HepG2, and HL-60), with five cells per cell type. It also contains all essential input files required to run the SCSES package. 
+The [test dataset](https://doi.org/10.5281/zenodo.15688700) includes BAM files from 15 cells across three cell lines (HCT116, HepG2, and HL-60), with five cells per cell type, which are sequenced by SMART-Seq2. It also contains all essential input files required to run the SCSES package. 
 
 The test dataset is available at https://doi.org/10.5281/zenodo.15688700. The complete list of downloadable files is provided in the table below.
 
@@ -442,11 +455,11 @@ ls /disk/share/lvxuan/SCSES_test/refgenome/
 ### Step 0. Get the cofigure file
 You can create the configuration file using the Shiny app. To start the app, run `createConfigshiny` function. Details can be found in [here](#config)
 
-**Note1**: The test dataset includes fewer cells and chromosomes to ensure faster completation of the Tutorial. 
-Therefore, the default parameters in **`createConfigshiny`** are **not suitable**. Please use the **`createDemoConfigshiny`** function instead, 
+**Note1**: The **test dataset** includes a limited number of cells and chromosomes to ensure faster completation of the Tutorial. 
+Therefore, the default parameters in **`createConfigshiny`** are **not suitable**. Please use  **`createDemoConfigshiny`** function instead, 
 which provides default values optimized for the test dataset.
 
-**Note2**:The paramteter configuration for test dataset also contained in the downloaded files as  *cell_line.json*. 
+**Note2**: An example of parameter configuration for the test dataset is also included in the downloaded files as **cell_line.json**. However, users should modify the file and program paths according to their own system environments.
 
 
 ### Step 1. Read config file
@@ -534,7 +547,7 @@ After this step, directories `expr` and `rds` will be created.
 
 #### Normalized UMI count matrix (for UMI-based dataset)
 
-You can use `get10XEXPmatrix` to generate Normalized UMI count matrix
+For UMI-based dataset, SCSES provides `get10XEXPmatrix` function to generate Normalized UMI count matrix
 from 10X CellRanger hdf5 file, which will save normalized UMI count to
 `work_path/rds/`.
 
@@ -549,8 +562,6 @@ rds.path <- get10XEXPmatrix(paras, expr_path)
 To define a global set of all splicing events, SCSES firstly merges all
 bam files from every single cell to construct a pseudo-bulk bam file,
 and identifies all types of splicing events by conventional algorithms.
-
-#### For Smart-seq2 dataset
 
 ``` r
 # Create pseudobulk for event detection
@@ -625,27 +636,6 @@ for(file in event_files) {
 
 Different types of splicing events will be saved to `work_path/events/`,
 separately.
-
-#### For UMI-based dataset
-
-SCSES requires single cell bam files being saved in a directory. For
-UMI-based dataset using CellRanger for data process, the function
-`split10XBAM` can be used to get single cell bam files for each sample.
-
-``` r
-# CellRanger_path: directory to CellRanger output
-# out_path: directory to save single cell bam
-# java_path: directory to java
-# core: the number of threads
-
-splitbam.path = split10XBAM(CellRanger_path,out_path,java_path,core)
-
-# path to single cell bam files should be added to bam_path in config file
-paras$Basic$bam_path = splitbam.path
-# pseudobulk.path = createPseudobulk(paras)
-# It is not necessary to execute `createPseudobulk`, and the `possorted_genome_bam.bam`,`possorted_genome_bam.bam.bai` from `CellRanger_path` can be moved to `work_path/data/all.bam`.
-event.path = detectEvents(paras)
-```
 
 ### Step 4. Quantify splicing events
 
