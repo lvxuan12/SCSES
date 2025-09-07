@@ -226,7 +226,7 @@ or ` Get-NetTCPConnection | Where-Object { $_.State -eq "Listen" } | Select-Obje
 server.
 
 `[local directory]`: A local directory mapped to the container for data
-storage and sharing.
+storage and sharing. **Please ensure that the directory is writable, as SCSES will generate and save multiple intermediate files during execution. You can modify the directory permissions with `chmod -R 777 [local directory]`. If this command does not resolve the issue, please contact your system administrator for assistance.**
 
 Here is an example. In this case, We map host port `1234` to container port `8787`, set the RStudio Server login password to `william`, and mount the host directory `/d/SCSES/` (Windows system) to the container directory `/data`. This allows data located in `/d/SCSES` on the host to be accessed inside the Docker container at `/data`.
 
