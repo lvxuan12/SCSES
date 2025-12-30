@@ -1,5 +1,8 @@
 ![](logo.png)
+[![DOI:10.1038/s41467-025-64517-5](https://img.shields.io/badge/DOI-10.1038%2Fs41467--025--64517--5-blue.svg)](https://doi.org/10.1038/s41467-025-64517-5)
+[![Nature Communications](https://img.shields.io/badge/Published%20in-Nature%20Communications-brightgreen)](https://www.nature.com/articles/s41467-025-64517-5)
 ================
+- [Citation](#citation)
 - [Requirements](#requirements)
 - [Installation](#installation)
   - [Directly Installation](#directly-installation)
@@ -34,7 +37,11 @@
       - [7.2. Estimation based on fine-tuned model](#72-estimation-based-on-fine-tuned-model)
     - [Step 8. Cell Clustering](#step-8-cell-clustering)
 
-
+# Citation
+The SCSES has been published on [Nature Communications](https://www.nature.com/articles/s41467-025-64517-5). If you find this project useful for your research, please consider citing:
+```
+Wen X, Lv X, Guo D, et al. Deciphering splicing heterogeneity at single-cell resolution by SCSES[J]. Nature Communications, 2025, 16(1): 9459.  
+```
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 # Requirements
 <b>1. Hardware requirements</b>
