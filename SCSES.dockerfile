@@ -91,7 +91,7 @@ RUN conda tos accept --override-channels --channel https://repo.anaconda.com/pkg
     conda create -n SCSES python=3.11 --yes
     
 SHELL ["conda", "run", "-n", "SCSES", "/bin/bash", "-c"]
-RUN pip install pandas numpy scipy scikit-learn && \
+RUN pip install pandas==2.3.3 numpy scipy scikit-learn && \
     pip install keras==2.15.0 && \
     pip install tensorflow==2.15.0.post1 && \
     pip install cython
