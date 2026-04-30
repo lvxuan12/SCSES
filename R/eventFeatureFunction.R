@@ -800,7 +800,7 @@ A3SS.splice.seq.extraction <- function(events.info, bs.genome, core) {
   # cluster <- makeCluster(spec = core)
   # clusterExport(cl = cluster, varlist = c("events.info"), envir = environment())
   # 1. I-5----
-  I.5.region <- mclapply(X = as.list(seq(1, nrow(events.info))),mc.core=core,FUN=function(index) {
+  I.5.region <- mclapply(X = as.list(seq(1, nrow(events.info))),mc.cores=core,FUN=function(index) {
     if (events.info$strand[index] == "+") {
       jc <- events.info$junction1[index]
 
@@ -831,7 +831,7 @@ A3SS.splice.seq.extraction <- function(events.info, bs.genome, core) {
   )
   I.5.region$seq <- as.character(seq)
   # 2. I-3----
-  I.3.region <- mclapply(X = as.list(seq(1, nrow(events.info))),mc.core=core,FUN=function(index) {
+  I.3.region <- mclapply(X = as.list(seq(1, nrow(events.info))),mc.cores=core,FUN=function(index) {
     if (events.info$strand[index] == "+") {
       jc <- events.info$junction1[index]
 
@@ -864,7 +864,7 @@ A3SS.splice.seq.extraction <- function(events.info, bs.genome, core) {
 
 
   # 3. A-3----
-  A.3.region <- mclapply(X = as.list(seq(1, nrow(events.info))),mc.core=core,FUN=function(index) {
+  A.3.region <- mclapply(X = as.list(seq(1, nrow(events.info))),mc.cores=core,FUN=function(index) {
     if (events.info$strand[index] == "+") {
       jc <- events.info$exon2[index]
 
@@ -1413,7 +1413,7 @@ A5SS.splice.seq.extraction <- function(events.info, bs.genome, core) {
   # cluster <- makeCluster(core)
   # clusterExport(cl = cluster, varlist = c("events.info"), envir = environment())
   # 1. I-5----
-  I.5.region <- mclapply(X = as.list(seq(1, nrow(events.info))),mc.core=core, FUN=function(index) {
+  I.5.region <- mclapply(X = as.list(seq(1, nrow(events.info))),mc.cores=core, FUN=function(index) {
     if (events.info$strand[index] == "+") {
       jc <- events.info$junction1[index]
 
@@ -1721,7 +1721,7 @@ MXE.splice.seq.extraction <- function(events.info, bs.genome, core) {
   # cluster <- makeCluster(core)
   # clusterExport(cl = cluster, varlist = c("events.info"), envir = environment())
   # 1. I1-5----
-  I1.5.region <- mclapply( X = as.list(seq(1, nrow(events.info))),mc.core=core,FUN=function(index) {
+  I1.5.region <- mclapply( X = as.list(seq(1, nrow(events.info))),mc.cores=core,FUN=function(index) {
     if (events.info$strand[index] == "+") {
       jc <- events.info$junction3[index]
 
