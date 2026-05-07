@@ -105,6 +105,7 @@ RUN export HTSLIB_LIBRARY_DIR=/software/htslib/lib && \
     conda install -c conda-forge gcc=12.1.0 && \
     #conda install conda-forge::zstd && \
     pip install git+https://bitbucket.org/biociphers/majiq_academic.git@v2.5.7 && \
+    pip install --force-reinstall "setuptools<70.0.0" && \
     wget https://majiq.biociphers.org/app_download/majiq_license_academic_official.lic
 # install STAR
 SHELL ["/bin/bash", "-c"] 
