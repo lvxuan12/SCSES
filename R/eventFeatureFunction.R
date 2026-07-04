@@ -192,10 +192,10 @@ MXE.info.seperation <- function(event) {
 #' @import Biostrings
 
 SE.splice.seq.extraction <- function(events.info, bs.genome,core) {
-  cluster <- makeCluster(spec = core)
-  clusterExport(cl = cluster, varlist = c("events.info"), envir = environment())
+  # cluster <- makeCluster(spec = core)
+  # clusterExport(cl = cluster, varlist = c("events.info"), envir = environment())
   # 1. I1-5----
-  I1.5.region <- parLapply(cl = cluster, X = as.list(seq(1, nrow(events.info))), function(index) {
+  I1.5.region <- mclapply(X = as.list(seq(1, nrow(events.info))), mc.cores=core, function(index) {
     if (events.info$strand[index] == "+") {
       jc <- events.info$junction1[index]
 
@@ -226,7 +226,7 @@ SE.splice.seq.extraction <- function(events.info, bs.genome,core) {
   )
   I1.5.region$seq <- as.character(I1.5.seq)
   # 2. I1-3----
-  I1.3.region <- parLapply(cl = cluster, X = as.list(seq(1, nrow(events.info))), function(index) {
+  I1.3.region <- mclapply(X = as.list(seq(1, nrow(events.info))), mc.cores=core, function(index) {
     if (events.info$strand[index] == "+") {
       jc <- events.info$junction1[index]
 
@@ -258,7 +258,7 @@ SE.splice.seq.extraction <- function(events.info, bs.genome,core) {
   I1.3.region$seq <- as.character(I1.3.seq)
 
   # 3. I2-5----
-  I2.5.region <- parLapply(cl = cluster, X = as.list(seq(1, nrow(events.info))), function(index) {
+  I2.5.region <- mclapply(X = as.list(seq(1, nrow(events.info))), mc.cores=core, function(index) {
     if (events.info$strand[index] == "+") {
       jc <- events.info$junction2[index]
 
@@ -289,7 +289,7 @@ SE.splice.seq.extraction <- function(events.info, bs.genome,core) {
   )
   I2.5.region$seq <- as.character(I2.5.seq)
   # 4. I2-3----
-  I2.3.region <- parLapply(cl = cluster, X = as.list(seq(1, nrow(events.info))), function(index) {
+  I2.3.region <- mclapply(X = as.list(seq(1, nrow(events.info))), mc.cores=core, function(index) {
     if (events.info$strand[index] == "+") {
       jc <- events.info$junction2[index]
 
@@ -337,7 +337,7 @@ SE.exon.seq.extraction <- function(events.info, bs.genome, core) {
   cluster <- makeCluster(core)
   clusterExport(cl = cluster, varlist = c("events.info"), envir = environment())
   # 1. exon1----
-  exon1.region <- parLapply(cl = cluster, X = as.list(seq(1, nrow(events.info))), function(index) {
+  exon1.region <- mclapply(X = as.list(seq(1, nrow(events.info))), mc.cores=core, function(index) {
     if (events.info$strand[index] == "+") {
       jc <- events.info$exon1[index]
 
@@ -366,7 +366,7 @@ SE.exon.seq.extraction <- function(events.info, bs.genome, core) {
   )
   exon1.region$seq <- as.character(seq)
   # 2. exon2----
-  exon2.region <- parLapply(cl = cluster, X = as.list(seq(1, nrow(events.info))), function(index) {
+  exon2.region <- mclapply(X = as.list(seq(1, nrow(events.info))), mc.cores=core, function(index) {
     if (events.info$strand[index] == "+") {
       jc <- events.info$exon2[index]
 
@@ -395,7 +395,7 @@ SE.exon.seq.extraction <- function(events.info, bs.genome, core) {
   )
   exon2.region$seq <- as.character(seq)
   # 3. exon3----
-  exon3.region <- parLapply(cl = cluster, X = as.list(seq(1, nrow(events.info))), function(index) {
+  exon3.region <- mclapply(X = as.list(seq(1, nrow(events.info))), mc.cores=core, function(index) {
     if (events.info$strand[index] == "+") {
       jc <- events.info$exon3[index]
 
@@ -541,7 +541,7 @@ RI.splice.seq.extraction <- function(events.info, bs.genome, core) {
   cluster <- makeCluster(core)
   clusterExport(cl = cluster, varlist = c("events.info"), envir = environment())
   # 1. I1-5----
-  A.5.region <- parLapply(cl = cluster, X = as.list(seq(1, nrow(events.info))), function(index) {
+  A.5.region <- mclapply(X = as.list(seq(1, nrow(events.info))), mc.cores=core, function(index) {
     if (events.info$strand[index] == "+") {
       jc <- events.info$junction1[index]
       jc <- unlist(strsplit(x = jc, split = ":|-"))
@@ -571,7 +571,7 @@ RI.splice.seq.extraction <- function(events.info, bs.genome, core) {
   )
   A.5.region$seq <- as.character(A.5.seq)
   # 2. I1-3----
-  A.3.region <- parLapply(cl = cluster, X = as.list(seq(1, nrow(events.info))), function(index) {
+  A.3.region <- mclapply(X = as.list(seq(1, nrow(events.info))), mc.cores=core, function(index) {
     if (events.info$strand[index] == "+") {
       jc <- events.info$junction1[index]
 
@@ -620,7 +620,7 @@ RI.exon.seq.extraction <- function(events.info, bs.genome, core) {
   cluster <- makeCluster(core)
   clusterExport(cl = cluster, varlist = c("events.info"), envir = environment())
   # 1. exon1----
-  exon1.region <- parLapply(cl = cluster, X = as.list(seq(1, nrow(events.info))), function(index) {
+  exon1.region <- mclapply(X = as.list(seq(1, nrow(events.info))), mc.cores=core, function(index) {
     if (events.info$strand[index] == "+") {
       jc <- events.info$exon1[index]
 
@@ -649,7 +649,7 @@ RI.exon.seq.extraction <- function(events.info, bs.genome, core) {
   )
   exon1.region$seq <- as.character(seq)
   # 2. exon2----
-  exon2.region <- parLapply(cl = cluster, X = as.list(seq(1, nrow(events.info))), function(index) {
+  exon2.region <- mclapply(X = as.list(seq(1, nrow(events.info))), mc.cores=core, function(index) {
     if (events.info$strand[index] == "+") {
       jc <- events.info$exon2[index]
 
@@ -678,7 +678,7 @@ RI.exon.seq.extraction <- function(events.info, bs.genome, core) {
   )
   exon2.region$seq <- as.character(seq)
   # 3. junction----
-  junction.region <- parLapply(cl = cluster, X = as.list(seq(1, nrow(events.info))), function(index) {
+  junction.region <- mclapply(X = as.list(seq(1, nrow(events.info))), mc.cores=core, function(index) {
     if (events.info$strand[index] == "+") {
       jc <- events.info$junction1[index]
 
@@ -800,7 +800,7 @@ A3SS.splice.seq.extraction <- function(events.info, bs.genome, core) {
   cluster <- makeCluster(spec = core)
   clusterExport(cl = cluster, varlist = c("events.info"), envir = environment())
   # 1. I-5----
-  I.5.region <- parLapply(cl = cluster, X = as.list(seq(1, nrow(events.info))), function(index) {
+  I.5.region <- mclapply(X = as.list(seq(1, nrow(events.info))), mc.cores=core, function(index) {
     if (events.info$strand[index] == "+") {
       jc <- events.info$junction1[index]
 
@@ -831,7 +831,7 @@ A3SS.splice.seq.extraction <- function(events.info, bs.genome, core) {
   )
   I.5.region$seq <- as.character(seq)
   # 2. I-3----
-  I.3.region <- parLapply(cl = cluster, X = as.list(seq(1, nrow(events.info))), function(index) {
+  I.3.region <- mclapply(X = as.list(seq(1, nrow(events.info))), mc.cores=core, function(index) {
     if (events.info$strand[index] == "+") {
       jc <- events.info$junction1[index]
 
@@ -864,7 +864,7 @@ A3SS.splice.seq.extraction <- function(events.info, bs.genome, core) {
 
 
   # 3. A-3----
-  A.3.region <- parLapply(cl = cluster, X = as.list(seq(1, nrow(events.info))), function(index) {
+  A.3.region <- mclapply(X = as.list(seq(1, nrow(events.info))), mc.cores=core, function(index) {
     if (events.info$strand[index] == "+") {
       jc <- events.info$exon2[index]
 
@@ -912,7 +912,7 @@ A3SS.exon.seq.extraction <- function(events.info, bs.genome, core) {
   cluster <- makeCluster(core)
   clusterExport(cl = cluster, varlist = c("events.info"), envir = environment())
   # 1. exon1----
-  exon1.region <- parLapply(cl = cluster, X = as.list(seq(1, nrow(events.info))), function(index) {
+  exon1.region <- mclapply(X = as.list(seq(1, nrow(events.info))), mc.cores=core, function(index) {
     if (events.info$strand[index] == "+") {
       jc <- events.info$exon1[index]
 
@@ -941,7 +941,7 @@ A3SS.exon.seq.extraction <- function(events.info, bs.genome, core) {
   )
   exon1.region$seq <- as.character(seq)
   # 2. exon2----
-  exon2.region <- parLapply(cl = cluster, X = as.list(seq(1, nrow(events.info))), function(index) {
+  exon2.region <- mclapply(X = as.list(seq(1, nrow(events.info))), mc.cores=core, function(index) {
     if (events.info$strand[index] == "+") {
       jc <- events.info$exon2[index]
 
@@ -970,7 +970,7 @@ A3SS.exon.seq.extraction <- function(events.info, bs.genome, core) {
   )
   exon2.region$seq <- as.character(seq)
   # 3. exon3----
-  exon3.region <- parLapply(cl = cluster, X = as.list(seq(1, nrow(events.info))), function(index) {
+  exon3.region <- mclapply(X = as.list(seq(1, nrow(events.info))), mc.cores=core, function(index) {
     if (events.info$strand[index] == "+") {
       jc <- events.info$exon3[index]
 
@@ -1107,7 +1107,7 @@ AL.splice.seq.extraction <- function(events.info, bs.genome, core) {
   cluster <- makeCluster(core)
   clusterExport(cl = cluster, varlist = c("events.info"), envir = environment())
   # 1. I-5----
-  I.5.region <- parLapply(cl = cluster, X = as.list(seq(1, nrow(events.info))), function(index) {
+  I.5.region <- mclapply(X = as.list(seq(1, nrow(events.info))), mc.cores=core, function(index) {
     if (events.info$strand[index] == "+") {
       jc <- events.info$junction1[index]
 
@@ -1138,7 +1138,7 @@ AL.splice.seq.extraction <- function(events.info, bs.genome, core) {
   )
   I.5.region$seq <- as.character(seq)
   # 2. I-3----
-  I.3.region <- parLapply(cl = cluster, X = as.list(seq(1, nrow(events.info))), function(index) {
+  I.3.region <- mclapply(X = as.list(seq(1, nrow(events.info))), mc.cores=core, function(index) {
     if (events.info$strand[index] == "+") {
       jc <- events.info$junction1[index]
 
@@ -1171,7 +1171,7 @@ AL.splice.seq.extraction <- function(events.info, bs.genome, core) {
 
 
   # 3. A-3----
-  A.3.region <- parLapply(cl = cluster, X = as.list(seq(1, nrow(events.info))), function(index) {
+  A.3.region <- mclapply(X = as.list(seq(1, nrow(events.info))), mc.cores=core, function(index) {
     if (events.info$strand[index] == "+") {
       jc <- events.info$exon3[index]
 
@@ -1220,7 +1220,7 @@ AL.exon.seq.extraction <- function(events.info, bs.genome, core) {
   cluster <- makeCluster(core)
   clusterExport(cl = cluster, varlist = c("events.info"), envir = environment())
   # 1. exon1----
-  exon1.region <- parLapply(cl = cluster, X = as.list(seq(1, nrow(events.info))), function(index) {
+  exon1.region <- mclapply(X = as.list(seq(1, nrow(events.info))), mc.cores=core, function(index) {
     if (events.info$strand[index] == "+") {
       jc <- events.info$exon1[index]
 
@@ -1249,7 +1249,7 @@ AL.exon.seq.extraction <- function(events.info, bs.genome, core) {
   )
   exon1.region$seq <- as.character(seq)
   # 2. exon2----
-  exon2.region <- parLapply(cl = cluster, X = as.list(seq(1, nrow(events.info))), function(index) {
+  exon2.region <- mclapply(X = as.list(seq(1, nrow(events.info))), mc.cores=core, function(index) {
     if (events.info$strand[index] == "+") {
       jc <- events.info$exon2[index]
 
@@ -1278,7 +1278,7 @@ AL.exon.seq.extraction <- function(events.info, bs.genome, core) {
   )
   exon2.region$seq <- as.character(seq)
   # 3. exon3----
-  exon3.region <- parLapply(cl = cluster, X = as.list(seq(1, nrow(events.info))), function(index) {
+  exon3.region <- mclapply(X = as.list(seq(1, nrow(events.info))), mc.cores=core, function(index) {
     if (events.info$strand[index] == "+") {
       jc <- events.info$exon3[index]
 
@@ -1413,7 +1413,7 @@ A5SS.splice.seq.extraction <- function(events.info, bs.genome, core) {
   cluster <- makeCluster(core)
   clusterExport(cl = cluster, varlist = c("events.info"), envir = environment())
   # 1. I-5----
-  I.5.region <- parLapply(cl = cluster, X = as.list(seq(1, nrow(events.info))), function(index) {
+  I.5.region <- mclapply(X = as.list(seq(1, nrow(events.info))), mc.cores=core, function(index) {
     if (events.info$strand[index] == "+") {
       jc <- events.info$junction1[index]
 
@@ -1444,7 +1444,7 @@ A5SS.splice.seq.extraction <- function(events.info, bs.genome, core) {
   )
   I.5.region$seq <- as.character(seq)
   # 2. I-3----
-  I.3.region <- parLapply(cl = cluster, X = as.list(seq(1, nrow(events.info))), function(index) {
+  I.3.region <- mclapply(X = as.list(seq(1, nrow(events.info))), mc.cores=core, function(index) {
     if (events.info$strand[index] == "+") {
       jc <- events.info$junction1[index]
 
@@ -1477,7 +1477,7 @@ A5SS.splice.seq.extraction <- function(events.info, bs.genome, core) {
 
 
   # 3. A-5----
-  A.5.region <- parLapply(cl = cluster, X = as.list(seq(1, nrow(events.info))), function(index) {
+  A.5.region <- mclapply(X = as.list(seq(1, nrow(events.info))), mc.cores=core, function(index) {
     if (events.info$strand[index] == "+") {
       jc <- events.info$exon2[index]
 
@@ -1526,7 +1526,7 @@ A5SS.exon.seq.extraction <- function(events.info, bs.genome, core) {
   cluster <- makeCluster(core)
   clusterExport(cl = cluster, varlist = c("events.info"), envir = environment())
   # 1. exon1----
-  exon1.region <- parLapply(cl = cluster, X = as.list(seq(1, nrow(events.info))), function(index) {
+  exon1.region <- mclapply(X = as.list(seq(1, nrow(events.info))), mc.cores=core, function(index) {
     if (events.info$strand[index] == "+") {
       jc <- events.info$exon1[index]
 
@@ -1555,7 +1555,7 @@ A5SS.exon.seq.extraction <- function(events.info, bs.genome, core) {
   )
   exon1.region$seq <- as.character(seq)
   # 2. exon2----
-  exon2.region <- parLapply(cl = cluster, X = as.list(seq(1, nrow(events.info))), function(index) {
+  exon2.region <- mclapply(X = as.list(seq(1, nrow(events.info))), mc.cores=core, function(index) {
     if (events.info$strand[index] == "+") {
       jc <- events.info$exon2[index]
 
@@ -1584,7 +1584,7 @@ A5SS.exon.seq.extraction <- function(events.info, bs.genome, core) {
   )
   exon2.region$seq <- as.character(seq)
   # 3. exon3----
-  exon3.region <- parLapply(cl = cluster, X = as.list(seq(1, nrow(events.info))), function(index) {
+  exon3.region <- mclapply(X = as.list(seq(1, nrow(events.info))), mc.cores=core, function(index) {
     if (events.info$strand[index] == "+") {
       jc <- events.info$exon3[index]
 
@@ -1721,7 +1721,7 @@ MXE.splice.seq.extraction <- function(events.info, bs.genome, core) {
   cluster <- makeCluster(core)
   clusterExport(cl = cluster, varlist = c("events.info"), envir = environment())
   # 1. I1-5----
-  I1.5.region <- parLapply(cl = cluster, X = as.list(seq(1, nrow(events.info))), function(index) {
+  I1.5.region <- mclapply(X = as.list(seq(1, nrow(events.info))), mc.cores=core, function(index) {
     if (events.info$strand[index] == "+") {
       jc <- events.info$junction3[index]
 
@@ -1752,7 +1752,7 @@ MXE.splice.seq.extraction <- function(events.info, bs.genome, core) {
   )
   I1.5.region$seq <- as.character(I1.5.seq)
   # 2. I1-3----
-  I1.3.region <- parLapply(cl = cluster, X = as.list(seq(1, nrow(events.info))), function(index) {
+  I1.3.region <- mclapply(X = as.list(seq(1, nrow(events.info))), mc.cores=core, function(index) {
     if (events.info$strand[index] == "+") {
       jc <- events.info$junction3[index]
 
@@ -1784,7 +1784,7 @@ MXE.splice.seq.extraction <- function(events.info, bs.genome, core) {
   I1.3.region$seq <- as.character(I1.3.seq)
 
   # 3. I2-5----
-  I2.5.region <- parLapply(cl = cluster, X = as.list(seq(1, nrow(events.info))), function(index) {
+  I2.5.region <- mclapply(X = as.list(seq(1, nrow(events.info))), mc.cores=core, function(index) {
     if (events.info$strand[index] == "+") {
       jc <- events.info$junction4[index]
 
@@ -1815,7 +1815,7 @@ MXE.splice.seq.extraction <- function(events.info, bs.genome, core) {
   )
   I2.5.region$seq <- as.character(I2.5.seq)
   # 4. I2-3----
-  I2.3.region <- parLapply(cl = cluster, X = as.list(seq(1, nrow(events.info))), function(index) {
+  I2.3.region <- mclapply(X = as.list(seq(1, nrow(events.info))), mc.cores=core, function(index) {
     if (events.info$strand[index] == "+") {
       jc <- events.info$junction1[index]
 
@@ -1847,7 +1847,7 @@ MXE.splice.seq.extraction <- function(events.info, bs.genome, core) {
   I2.3.region$seq <- as.character(I2.3.seq)
 
   # 5. I3-5----
-  I3.5.region <- parLapply(cl = cluster, X = as.list(seq(1, nrow(events.info))), function(index) {
+  I3.5.region <- mclapply(X = as.list(seq(1, nrow(events.info))), mc.cores=core, function(index) {
     if (events.info$strand[index] == "+") {
       jc <- events.info$junction2[index]
 
@@ -1878,7 +1878,7 @@ MXE.splice.seq.extraction <- function(events.info, bs.genome, core) {
   )
   I3.5.region$seq <- as.character(seq)
   # 6. I3-3----
-  I3.3.region <- parLapply(cl = cluster, X = as.list(seq(1, nrow(events.info))), function(index) {
+  I3.3.region <- mclapply(X = as.list(seq(1, nrow(events.info))), mc.cores=core, function(index) {
     if (events.info$strand[index] == "+") {
       jc <- events.info$junction2[index]
 
@@ -1926,7 +1926,7 @@ MXE.exon.seq.extraction <- function(events.info, bs.genome, core) {
   cluster <- makeCluster(core)
   clusterExport(cl = cluster, varlist = c("events.info"), envir = environment())
   # 1. exon1----
-  exon1.region <- parLapply(cl = cluster, X = as.list(seq(1, nrow(events.info))), function(index) {
+  exon1.region <- mclapply(X = as.list(seq(1, nrow(events.info))), mc.cores=core, function(index) {
     if (events.info$strand[index] == "+") {
       jc <- events.info$exon1[index]
 
@@ -1955,7 +1955,7 @@ MXE.exon.seq.extraction <- function(events.info, bs.genome, core) {
   )
   exon1.region$seq <- as.character(seq)
   # 2. exon2----
-  exon2.region <- parLapply(cl = cluster, X = as.list(seq(1, nrow(events.info))), function(index) {
+  exon2.region <- mclapply(X = as.list(seq(1, nrow(events.info))), mc.cores=core, function(index) {
     if (events.info$strand[index] == "+") {
       jc <- events.info$exon2[index]
 
@@ -1984,7 +1984,7 @@ MXE.exon.seq.extraction <- function(events.info, bs.genome, core) {
   )
   exon2.region$seq <- as.character(seq)
   # 3. exon3----
-  exon3.region <- parLapply(cl = cluster, X = as.list(seq(1, nrow(events.info))), function(index) {
+  exon3.region <- mclapply(X = as.list(seq(1, nrow(events.info))), mc.cores=core, function(index) {
     if (events.info$strand[index] == "+") {
       jc <- events.info$exon3[index]
 
@@ -2013,7 +2013,7 @@ MXE.exon.seq.extraction <- function(events.info, bs.genome, core) {
   )
   exon3.region$seq <- as.character(seq)
   # 4. exon4----
-  exon4.region <- parLapply(cl = cluster, X = as.list(seq(1, nrow(events.info))), function(index) {
+  exon4.region <- mclapply(X = as.list(seq(1, nrow(events.info))), mc.cores=core, function(index) {
     if (events.info$strand[index] == "+") {
       jc <- events.info$exon4[index]
 
