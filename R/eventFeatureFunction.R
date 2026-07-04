@@ -797,8 +797,8 @@ RI.kmer.extraction <- function(splice.region, exon.region) {
 #' @import BSgenome
 #' @import Biostrings
 A3SS.splice.seq.extraction <- function(events.info, bs.genome, core) {
-  cluster <- makeCluster(spec = core)
-  clusterExport(cl = cluster, varlist = c("events.info"), envir = environment())
+  #cluster <- makeCluster(spec = core)
+  #clusterExport(cl = cluster, varlist = c("events.info"), envir = environment())
   # 1. I-5----
   I.5.region <- mclapply(X = as.list(seq(1, nrow(events.info))), mc.cores=core, function(index) {
     if (events.info$strand[index] == "+") {
